@@ -1,0 +1,64 @@
+Usage: gdal raster tile [OPTIONS] <INPUT> <OUTPUT>
+
+Generate tiles in separate files from a raster dataset.
+
+Positional arguments:
+  -i, --dataset, --input <INPUT>                                   Input raster datasets [required]
+  -o, --output <OUTPUT>                                            Output directory [required]
+
+Common Options:
+  -h, --help                                                       Display help message and exit
+  --json-usage                                                     Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                           Configuration option [may be repeated]
+  -q, --quiet                                                      Quiet mode (no progress bar or warning message)
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>              Output format (default: PNG)
+  --co, --creation-option <KEY>=<VALUE>                            Creation option [may be repeated]
+  --tiling-scheme <TILING-SCHEME>                                  Tiling scheme. TILING-SCHEME=raster|WebMercatorQuad|WorldCRS84Quad|WorldMercatorWGS84Quad|GoogleCRS84Quad|PseudoTMS_GlobalMercator|GlobalGeodeticOriginLat270 (default: WebMercatorQuad)
+  --min-zoom <MIN-ZOOM>                                            Minimum zoom level
+  --max-zoom <MAX-ZOOM>                                            Maximum zoom level
+  --min-x <MIN-X>                                                  Minimum tile X coordinate
+  --max-x <MAX-X>                                                  Maximum tile X coordinate
+  --min-y <MIN-Y>                                                  Minimum tile Y coordinate
+  --max-y <MAX-Y>                                                  Maximum tile Y coordinate
+  --no-intersection-ok                                             Whether dataset extent not intersecting tile matrix is only a warning
+  -r, --resampling <RESAMPLING>                                    Resampling method for max zoom. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode|min|max|med|q1|q3|sum (default: cubic)
+  --overview-resampling <OVERVIEW-RESAMPLING>                      Resampling method for overviews. OVERVIEW-RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode|min|max|med|q1|q3|sum
+  --convention <CONVENTION>                                        Tile numbering convention: xyz (from top) or tms (from bottom). CONVENTION=xyz|tms (default: xyz)
+  --tile-size <TILE-SIZE>                                          Override default tile size
+  --add-alpha                                                      Whether to force adding an alpha channel
+                                                                   Mutually exclusive with --no-alpha
+  --no-alpha                                                       Whether to disable adding an alpha channel
+                                                                   Mutually exclusive with --add-alpha
+  --dst-nodata <DST-NODATA>                                        Destination nodata value
+  --skip-blank                                                     Do not generate blank tiles
+  --metadata <KEY>=<VALUE>                                         Add metadata item to output tiles [may be repeated]
+  --copy-src-metadata                                              Whether to copy metadata from source dataset
+  --aux-xml                                                        Generate .aux.xml sidecar files when needed
+  --kml                                                            Generate KML files
+  --resume                                                         Generate only missing files
+  -j, --num-threads <NUM-THREADS>                                  Number of jobs (or ALL_CPUS) (default: ALL_CPUS)
+  --parallel-method <PARALLEL-METHOD>                              Parallelization method (thread, spawn, fork). PARALLEL-METHOD=thread|spawn|fork
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                              Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                                Open options [may be repeated]
+
+Advanced Resampling Options:
+  --excluded-values <EXCLUDED-VALUES>                              Tuples of values (e.g. <R>,<G>,<B> or (<R1>,<G1>,<B1>),(<R2>,<G2>,<B2>)) that must beignored as contributing source pixels during (average) resampling
+  --excluded-values-pct-threshold <EXCLUDED-VALUES-PCT-THRESHOLD>  Minimum percentage of source pixels that must be set at one of the --excluded-values to cause the excluded value to be used as the target pixel value (default: 50)
+  --nodata-values-pct-threshold <NODATA-VALUES-PCT-THRESHOLD>      Minimum percentage of source pixels that must be set at one of nodata (or alpha=0 or any other way to express transparent pixelto cause the target pixel value to be transparent (default: 100)
+
+Publication Options:
+  --webviewer <WEBVIEWER>                                          Web viewer to generate. WEBVIEWER=none|all|leaflet|openlayers|mapml|stac (default: all) [may be repeated]
+  --url <URL>                                                      URL address where the generated tiles are going to be published
+  --title <TITLE>                                                  Title of the map
+  --copyright <COPYRIGHT>                                          Copyright for the map
+  --mapml-template <MAPML-TEMPLATE>                                Filename of a template mapml file where variables will be substituted
+
+For more details, consult https://gdal.org/programs/gdal_raster_tile.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

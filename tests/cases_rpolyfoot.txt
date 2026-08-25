@@ -1,0 +1,105 @@
+# raster polygonize / raster footprint: raster-in vector-out verbs.
+# Connected-component polygonization (4/8-connect, dtype typing, marker
+# collisions, NaN/lossy warnings), footprint mask vectorization (nodata,
+# band combination, GEOS-stub geometry options, coordinate modes, RFC7946
+# sequence semantics) and the shared update/append/overwrite choreography.
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py .
+raster polygonize plain.tif o.json
+raster polygonize hole.tif o.json -q
+raster polygonize r1.tif o.json -q
+raster polygonize disc.tif o.json -q
+raster polygonize twohole.tif o.json -q
+raster polygonize pinch.tif o.json -q
+raster polygonize pinch.tif -c o.json -q
+raster polygonize r1.tif -c o.json -q
+raster polygonize mark.tif o.json -q
+raster polygonize markf.tif o.json -q
+raster polygonize fnan.tif o.json
+raster polygonize fnanns.tif o.geojsonl
+raster polygonize u32b.tif o.json
+raster polygonize u32ns.tif o.geojsonl
+raster polygonize i64b.tif o.json -q
+raster polygonize u64b.tif o.json -q
+raster polygonize d64.tif o.json -q
+raster polygonize mb3.tif -b 2 o.json -q
+raster polygonize plain.tif --attribute-name VAL o.json -q
+raster polygonize r1.tif o.shp
+raster polygonize plain.tif o.geojsonl
+raster polygonize unisrs.tif o.geojsonl -q
+raster polygonize cplx.tif o.json -q
+raster polygonize miss.tif o.json
+raster polygonize plain.tif -b 0 o.json
+raster polygonize plain.tif -b 2 o.json
+raster polygonize plain.tif --of GDALG o.json
+raster polygonize plain.tif o.gdalg.json
+raster polygonize plain.tif miss.geojsonl --append
+raster polygonize miss.tif out.json --append
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster polygonize plain.tif o.json -q
+raster polygonize plain.tif o.json
+raster polygonize plain.tif o.json --overwrite -q
+raster polygonize plain.tif o.json --append
+raster polygonize hole.tif o.json --append -q
+raster polygonize plain.tif o.json --update
+raster polygonize plain.tif o.json --overwrite-layer
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster polygonize plain.tif o.shp -q
+raster polygonize plain.tif o.shp --append
+raster polygonize hole.tif o.shp --update
+raster polygonize hole.tif o.shp --overwrite-layer
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster polygonize r1.tif z.geojsonl -q
+raster polygonize plain.tif z.geojsonl --append --output-layer z
+raster polygonize hole.tif z.geojsonl --append --output-layer z
+raster polygonize plain.tif z.geojsonl --update
+raster polygonize plain.tif z.geojsonl --append --output-layer z --attribute-name VAL
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster polygonize uni.tif z.geojsonl -q
+raster polygonize plain.tif z.geojsonl --append --output-layer z
+raster polygonize unisrs.tif z.geojsonl --append --output-layer z
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py .
+raster footprint r1.tif f.json
+raster footprint r1.tif f.json -q
+raster footprint nd.tif f.json -q
+raster footprint disc.tif f.json -q
+raster footprint disc.tif --split-multipolygons f.json -q
+raster footprint rnogt.tif f.json -q
+raster footprint r1.tif --coordinate-system pixel f.json -q
+raster footprint srsnogt.tif f.json -q
+raster footprint r1.tif --src-nodata 3 f.json -q
+raster footprint mb2.tif f.json -q
+raster footprint mb2.tif --combine-bands intersection f.json -q
+raster footprint mb2.tif --src-nodata "0 5" f.json -q
+raster footprint mb3.tif -b 2 f.json -q
+raster footprint r1.tif --convex-hull f.json -q
+raster footprint nd.tif --simplify-tolerance 5 f.json -q
+raster footprint disc.tif --min-ring-area 500 f.json -q
+raster footprint r1.tif --densify-distance 5 f.json -q
+raster footprint r1.tif --max-points 4 f.json -q
+raster footprint r1.tif --dst-crs EPSG:4326 f.json -q
+raster footprint rnogt.tif --dst-crs EPSG:4326 f.json
+raster footprint r1.tif f.geojsonl
+raster footprint plain.tif f.geojsonl
+raster footprint uni.tif f.json
+raster footprint r1.tif --location-field src f.json -q
+raster footprint r1.tif --no-location-field f.json -q
+raster footprint rnogt.tif --coordinate-system georeferenced f.json
+raster footprint r1.tif -b 0 f.json
+raster footprint r1.tif -b 9 f.json
+raster footprint r1.tif --of GDALG f.json
+raster footprint r1.tif f.gdalg.json
+raster footprint miss.tif f.json --append
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster overview add --levels 2,4 ovr.tif >/dev/null 2>&1
+raster footprint ovr.tif --overview 0 f.json -q
+raster footprint ovr.tif --overview 1 f.json -q
+raster footprint ovr.tif --overview 5 f.json
+raster footprint ovr.tif --overview 1 --src-nodata 3 f.json
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster footprint r1.tif f.json -q
+raster footprint r1.tif f.json
+raster footprint r1.tif f.json --overwrite -q
+raster footprint r1.tif f.json --append
+raster footprint nd.tif f.json --append
+raster footprint r1.tif f.json --of GeoJSON --append
+raster footprint r1.tif f.json --of MEM --append
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster footprint r1.tif z.geojsonl --output-layer z -q 2>/dev/null
+raster footprint r1.tif z.geojsonl --append --output-layer z
+raster footprint r1.tif z.geojsonl --append --output-layer z --coordinate-system pixel
+raster footprint plain.tif z.geojsonl --append --output-layer z
+#setup: python3 /workspace/tests/mk_rpf_fixtures.py . && /home/agent/oracle/executable raster footprint disc.tif z.geojsonl --split-multipolygons --output-layer z -q 2>/dev/null
+raster footprint disc.tif z.geojsonl --append --output-layer z --split-multipolygons

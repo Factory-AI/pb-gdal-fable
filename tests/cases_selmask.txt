@@ -1,0 +1,34 @@
+# raster select --mask: chained 1-bit deflate mask directory in GTiff
+# output, GetRasterBand warning on out-of-range specs, GDALG capture
+#setup: python3 /workspace/tests/mk_selmask_fixtures.py .
+
+# band values as mask
+raster select --band 1 --mask 2 s2.tif o.tif --overwrite -q
+raster select --band 2 --mask 1 s2.tif o.tif --overwrite -q
+raster select --band 1,2 --mask 2 s2.tif o.tif --overwrite -q
+raster select --band 1 --mask 2 s2n.tif o.tif --overwrite -q
+raster select --band 3,1 --mask 2 s3.tif o.tif --overwrite -q
+
+# dataset mask and mask-of-band selections (nodata rules)
+raster select --band 1 --mask mask s2.tif o.tif --overwrite -q
+raster select --band 1 --mask mask s2n.tif o.tif --overwrite -q
+raster select --band 1 --mask mask:1 s2n.tif o.tif --overwrite -q
+raster select --band 1,2 --mask mask:2 s2n.tif o.tif --overwrite -q
+raster select --band 2,1 --mask mask s2n.tif o.tif --overwrite -q
+raster select --exclude --band 2 --mask 2 s2n.tif o.tif --overwrite -q
+
+# multi-strip masks inherit the main strip height
+raster select --band 1 --mask 2 sbig.tif o.tif --overwrite -q
+raster select --band 1 --mask mask sbig.tif o.tif --overwrite -q
+raster select --band 1,2 --mask mask:1 sbig.tif o.tif --overwrite -q
+raster select --band 1 --mask 2 sbig.tif o.tif --overwrite
+
+# out-of-range and invalid specifications
+raster select --band 1 --mask 5 s2n.tif o.tif --overwrite -q
+raster select --band 1 --mask mask:9 s2n.tif o.tif --overwrite -q
+raster select --band 1 --mask Gray s2n.tif o.tif --overwrite -q
+raster select --band 1 --mask foo! s2n.tif o.tif --overwrite -q
+raster select --band 1 --mask none s2n.tif o.tif --overwrite -q
+
+# gdalg capture keeps the option
+raster select --band 1 --mask 2 s2.tif o.gdalg.json --overwrite -q

@@ -1,0 +1,126 @@
+# generic pipeline rasterize transition: a vector chain re-transitions
+# to raster mid-stream via a cwd temp GTiff. Products, write vocabulary,
+# pre/post transforms, double transitions, info terminals, gdalg echoes
+# and the error battery. The temp name carries the pid: rztmp norm.
+#norm: rztmp
+#setup: python3 /workspace/tests/mk_rastrans_fixtures.py . && python3 /workspace/tests/mk_dem_fixtures.py .
+
+# products
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.tif
+pipeline read poly.geojson ! rasterize --resolution 0.25,0.25 --burn 3 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5.5 --burn 2 ! write o.tif
+pipeline read attr.geojson ! rasterize --size 10,10 --attribute-name A ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --all-touched ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --invert ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --nodata 9 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --init 1 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --output-data-type Byte ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --extent 0,0,4,4 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 8,8 --burn 5 --crs EPSG:4326 ! write o.tif
+pipeline read poly.geojson ! rasterize --resolution 0.25,0.25 --burn 5 --target-aligned-pixels ! write o.tif
+pipeline read z.geojson ! rasterize --size 10,10 --3d ! write o.tif
+pipeline read attr.geojson ! rasterize --size 10,10 --attribute-name A --where A>1 ! write o.tif
+pipeline read attr.geojson ! rasterize --size 10,10 --burn 7 --input-layer attr ! write o.tif
+pipeline read attr.geojson ! rasterize --size 10,10 --burn 7 -l attr ! write o.tif
+pipeline read lines.geojson ! rasterize --size 10,10 --burn 4 ! write o.tif
+pipeline read pt.geojson ! rasterize --size 10,10 --burn 2 ! write o.tif
+
+# write vocabulary and choreography
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write dsm.tif --overwrite
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write dsm.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write plain.txt
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.tif --append
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.x --output-format MEM
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.x --output-format stream
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.vrt
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.x --output-format VRT
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.x --output-format GTiff
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write p.png
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write x.y --output-format PNG
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write x.y --output-format HFA
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --quiet ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.tif --quiet
+
+# gdalg echo
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write g.gdalg.json
+pipeline read attr.geojson ! rasterize --all-touched --burn 5.5 --burn 2 --nodata 9 --extent 0,0,2,2 --size 10,10 --input-layer attr --where A>0 ! write g.gdalg.json
+
+# info terminals
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! info
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! info --format json
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 1 --burn 2 ! info
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! scale --dst-min 0 --dst-max 10 ! info --format json
+
+# post-transition raster tail
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! scale --dst-min 0 --dst-max 10 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! reproject --dst-crs EPSG:3857 ! write o.tif
+
+# double transitions
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! polygonize ! write p.geojson
+pipeline read dsm.tif ! polygonize ! rasterize --size 10,10 --burn 1 ! write o.tif
+pipeline read dsm.tif ! polygonize ! rasterize --size 10,10 --burn 1 ! info
+pipeline read dsm.tif ! contour --interval 10 ! rasterize --size 10,10 --burn 1 ! write o.tif
+pipeline read dsm.tif ! polygonize ! swap-xy ! rasterize --size 10,10 --burn 1 ! write o.tif
+
+# pre-transition vector chain
+pipeline read poly.geojson ! reproject --dst-crs EPSG:32633 ! rasterize --size 10,10 --burn 5 ! write o.tif
+pipeline read poly.geojson ! buffer --distance 1 ! rasterize --size 10,10 --burn 5 ! write o.tif
+pipeline read attr.geojson ! filter --where A>1 ! rasterize --size 10,10 --attribute-name A ! write o.tif
+
+# select as a raster pipeline step (dual-name resolution)
+pipeline read dmb.tif ! select --band 2 ! write o.tif
+pipeline read dmb.tif ! select 2,1 ! write o.tif
+pipeline read dmb.tif ! select ! write o.tif
+pipeline read dmb.tif ! select --fields a ! write o.tif
+pipeline read dmb.tif ! select --exclude ! write o.tif
+pipeline read dmb.tif ! select --band 2 --fields a ! write o.tif
+pipeline read dmb.tif ! select --band 9 ! write o.tif
+pipeline read dmb.tif ! select --band 9 --exclude ! write o.tif
+pipeline read dmb.tif ! select --band foo ! write o.tif
+pipeline read dmb.tif ! select --band Red ! write o.tif
+pipeline read dmb.tif ! select --band mask ! write o.tif
+pipeline read dmb.tif ! select --band mask ! info
+pipeline read dmb.tif ! select --band 2 ! info --format json
+pipeline read dmb.tif ! select --exclude --band 2 ! write o.gdalg.json
+pipeline read dmb.tif ! select --band 1 ! scale --dst-min 0 --dst-max 9 ! write o.tif
+pipeline read dmb.tif ! select --band 1 ! select --band 1 ! write o.vrt
+raster pipeline read dmb.tif ! select ! write o.tif
+raster pipeline read dmb.tif ! select --fields a ! write o.tif
+raster pipeline read dmb.tif ! select --band foo ! write o.tif
+vector pipeline read poly.geojson ! select --band 2 ! write o.geojson
+raster select dmb.tif o.tif 9 --exclude
+raster select dmb.tif o.tif Red,mask:9 --exclude
+raster select dmb.tif o.tif mask --exclude
+
+# more compositions
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! reproject --dst-crs EPSG:3857 ! info
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 1 --burn 2 ! select --band 2 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --add ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --sql "SELECT * FROM poly" ! write o.tif
+pipeline read attr.geojson ! rasterize --size 10,10 --burn 5 --where A>1 --dialect FOO ! write o.tif
+pipeline read poly.geojson ! reproject --dst-crs EPSG:32633 ! rasterize --size 10,10 --burn 5 ! scale --dst-min 0 --dst-max 50 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --optimization AUTO ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write dsm.tif --append
+
+# error battery
+pipeline read poly.geojson ! rasterize ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn foo ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --band 0 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --band 0 ! write g.gdalg.json
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --crs BOGUS ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --update ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --co A=B ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --output x ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --overwrite ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --layer x ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --burnx 2 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --input missing.geojson ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 --input pt.geojson ! write o.tif
+pipeline read dsm.tif ! rasterize --size 10,10 --burn 5 ! write o.tif
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! export-schema
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.tif --output-layer foo
+pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.tif --upsert
+pipeline read poly.geojson ! rasterize --size 10,10 ! write o.tif
+pipeline read missing.geojson ! rasterize --size 10,10 --burn 5 ! write o.tif
+raster pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.tif
+vector pipeline read poly.geojson ! rasterize --size 10,10 --burn 5 ! write o.geojson

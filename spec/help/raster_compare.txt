@@ -1,0 +1,34 @@
+Usage: gdal raster compare [OPTIONS] <REFERENCE> <INPUT>
+
+Compare two raster datasets.
+
+Positional arguments:
+  --reference <REFERENCE>              Reference dataset [required]
+  -i, --input <INPUT>                  Input raster dataset [required]
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+  -q, --quiet                          Quiet mode (no progress bar or warning message)
+
+Options:
+  --skip-all-optional                  Skip all optional comparisons
+  --skip-binary                        Skip binary file comparison
+  --skip-crs                           Skip CRS comparison
+  --skip-geotransform                  Skip geotransform comparison
+  --skip-overview                      Skip overview comparison
+  --skip-metadata                      Skip metadata comparison
+  --skip-rpc                           Skip RPC metadata comparison
+  --skip-geolocation                   Skip Geolocation metadata comparison
+  --skip-subdataset                    Skip subdataset comparison
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>  Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>    Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_compare.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

@@ -1,0 +1,67 @@
+{
+  "name":"sync",
+  "full_path":[
+    "gdal",
+    "vsi",
+    "sync"
+  ],
+  "description":"Synchronize source and target file\/directory located on GDAL Virtual System Interface (VSI).",
+  "short_url":"\/programs\/gdal_vsi_sync.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vsi_sync.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"source",
+      "type":"string",
+      "description":"Source file or directory name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"destination",
+      "type":"string",
+      "description":"Destination file or directory name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"recursive",
+      "type":"boolean",
+      "description":"Synchronize recursively",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"strategy",
+      "type":"string",
+      "description":"Synchronization strategy",
+      "choices":[
+        "timestamp",
+        "ETag",
+        "overwrite"
+      ],
+      "default":"timestamp",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"num-threads",
+      "type":"string",
+      "description":"Number of jobs (or ALL_CPUS)",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

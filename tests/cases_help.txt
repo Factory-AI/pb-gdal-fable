@@ -1,0 +1,42 @@
+#setup: printf '{"type":"FeatureCollection","features":[]}' > f.json && mkdir emptydir && /home/agent/oracle/executable raster create -q --size 2,2 r.tif
+driver cog validate r.tif.aux.xml
+driver cog validate f.json
+driver cog validate emptydir
+raster tile --help
+raster tile -h
+raster tile --help-doc
+raster tile --json-usage
+raster tile help
+raster info --help-doc
+vector convert --help-doc
+raster info help
+raster convert help
+vector info help
+raster info -- r.tif
+raster tile -- --help
+vector convert -- f.json o99.json
+raster info help x
+raster info x help
+--help-doc
+raster --help-doc
+raster help
+help
+vsi --help-doc
+dataset copy --help-doc
+dataset copy help
+raster reproject --help-doc
+vector pipeline --help-doc
+pipeline --help-doc
+convert --help-doc
+info --help-doc
+driver help
+dataset help
+vsi help
+vector help
+raster help info
+help raster
+driver cog help
+pipeline help
+raster pipeline help
+vector pipeline help
+mdim help

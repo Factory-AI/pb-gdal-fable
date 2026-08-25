@@ -1,0 +1,110 @@
+# raster reproject: cubic + cubicspline kernels (4-sample, scaled,
+# masked, nearest-substituted identity)
+# Known accepted residuals (4 cases): masked scaled-cubic validity at
+# strong downscales (bilinear-fallback finds samples where the
+# reference declares nodata), and cubicspline weights at per-block
+# non-unit scale factors (the reference feeds the anti-alias factor
+# into the spline kernel even for near-1:1 warps).
+#setup: python3 /workspace/tests/mk_cubic_fixtures.py .
+
+# 4-sample upscale, datatype sweep
+raster reproject -r cubic --size 97,71 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 c_Int8.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 c_Int16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 c_Int32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 c_Float64.tif o.tif --overwrite -q
+raster reproject -r cubic --size 80,60 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 80,60 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 60,45 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 60,45 c_Float64.tif o.tif --overwrite -q
+raster reproject -r cubic --size 53,38 c_Int16.tif o.tif --overwrite -q
+
+# exact 1:1 grids resolve through the substituted nearest kernel
+raster reproject -r cubic --size 40,30 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 40,30 c_Float64.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 40,30 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 40,30 n_Byte.tif o.tif --overwrite -q
+
+# mid downscale keeps the 4-sample formula (scales > 0.5)
+raster reproject -r cubic --size 24,18 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 24,18 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 24,18 c_Float64.tif o.tif --overwrite -q
+
+# scaled kernel downscale
+raster reproject -r cubic --size 20,15 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 20,15 c_Int16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 20,15 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 20,15 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 16,12 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 16,12 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 16,12 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 13,10 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 13,10 c_Int32.tif o.tif --overwrite -q
+
+# masked cubic (src nodata holes)
+raster reproject -r cubic --size 97,71 n_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 n_Int16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 n_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 n_Float64.tif o.tif --overwrite -q
+raster reproject -r cubic --size 80,60 n_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 24,18 n_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 20,15 n_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 20,15 n_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 16,12 n_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 nm2.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 --src-nodata 7,7 nm2.tif o.tif --overwrite -q
+
+# dst nodata gates the general kernel; collisions shift and warn
+raster reproject -r cubic --size 97,71 --dst-nodata 99 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 --dst-nodata 0 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 --dst-nodata -1 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 --dst-nodata 200 n_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 --dst-nodata 0 n_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --size 97,71 --src-nodata 7 --dst-nodata 42 c_Byte.tif o.tif --overwrite -q
+
+# reprojection (curved transform, 4-sample scales)
+raster reproject -r cubic --dst-crs EPSG:32631 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:32631 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:32631 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:32631 c_Float64.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:32631 n_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:32631 n_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:3857 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:32631 --size 60,45 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubic --dst-crs EPSG:32631 --bbox 428000,5095000,432000,5098000 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --dst-crs EPSG:32631 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --dst-crs EPSG:32631 c_Int16.tif o.tif --overwrite -q
+
+# cubicspline
+raster reproject -r cubicspline --size 97,71 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 97,71 c_Int16.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 97,71 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 97,71 c_Int32.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 97,71 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 80,60 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 24,18 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 20,15 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 20,15 c_UInt16.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 16,12 c_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 16,12 c_Float32.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 97,71 n_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 97,71 n_Float32.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 20,15 n_Byte.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 97,71 --dst-nodata 99 c_Byte.tif o.tif --overwrite -q
+
+# tiny sources drop to the guarded bilinear/constant behaviors
+raster reproject -r cubic --size 5,5 t22.tif o.tif --overwrite -q
+raster reproject -r cubic --size 7,6 t33.tif o.tif --overwrite -q
+raster reproject -r cubicspline --size 7,6 t33.tif o.tif --overwrite -q
+raster reproject -r cubic --size 3,3 t11.tif o.tif --overwrite -q
+raster reproject -r cubic --size 8,7 t33f.tif o.tif --overwrite -q
+
+# serialization + pipeline surfaces
+raster reproject -r cubic --dst-crs EPSG:32631 c_Byte.tif o.vrt --overwrite
+raster reproject -r cubicspline --dst-crs EPSG:32631 c_Byte.tif o.vrt --overwrite
+raster reproject -r cubic --dst-crs EPSG:32631 --src-nodata 7 --dst-nodata 42 c_Byte.tif o.vrt --overwrite
+raster reproject -r cubic --dst-crs EPSG:32631 c_Byte.tif o.gdalg.json --overwrite
+raster pipeline read c_Byte.tif ! reproject -r cubic --size 97,71 ! write o.tif --overwrite -q
+raster pipeline read n_UInt16.tif ! reproject -r cubicspline --size 20,15 ! write o.tif --overwrite -q

@@ -1,0 +1,167 @@
+{
+  "name":"info",
+  "full_path":[
+    "gdal",
+    "vector",
+    "info"
+  ],
+  "description":"Return information on a vector dataset.",
+  "short_url":"\/programs\/gdal_vector_info.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vector_info.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "choices":[
+        "json",
+        "text"
+      ],
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input vector datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"input-layer",
+      "type":"string_list",
+      "description":"Input layer name",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "mutual_exclusion_group":"layer-sql"
+    },
+    {
+      "name":"features",
+      "type":"boolean",
+      "description":"List all features (beware of RAM consumption on large layers)",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"summary-features"
+    },
+    {
+      "name":"summary",
+      "type":"boolean",
+      "description":"List the layer names and the geometry type",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"summary-features"
+    },
+    {
+      "name":"limit",
+      "type":"integer",
+      "description":"Limit the number of features per layer (implies --features)",
+      "metavar":"FEATURE-COUNT",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"sql",
+      "type":"string",
+      "description":"Execute the indicated SQL statement and return the result",
+      "metavar":"<statement>|@<filename>",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"layer-sql"
+    },
+    {
+      "name":"where",
+      "type":"string",
+      "description":"Attribute query in a restricted form of the queries used in the SQL WHERE statement",
+      "metavar":"<WHERE>|@<filename>",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"fid",
+      "type":"integer",
+      "description":"Feature identifier",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"layer-sql"
+    },
+    {
+      "name":"dialect",
+      "type":"string",
+      "description":"SQL dialect",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"crs-format",
+      "type":"string",
+      "description":"Which format to use to report CRS",
+      "choices":[
+        "AUTO",
+        "WKT2",
+        "PROJJSON"
+      ],
+      "default":"AUTO",
+      "required":false,
+      "category":"Esoteric"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+  ],
+  "supports_streamed_output":true
+}

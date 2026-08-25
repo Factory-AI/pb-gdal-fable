@@ -1,0 +1,17 @@
+Usage: blend [OPTIONS] <OVERLAY>
+
+Blend/compose two raster datasets
+
+Positional arguments:
+  --overlay <OVERLAY>     Overlay dataset [required]
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+
+Options:
+  --operator <OPERATOR>   Composition operator. OPERATOR=src-over|hsv-value|multiply|screen|overlay|hard-light|darken|lighten|color-dodge|color-burn (default: src-over)
+  --opacity <OPACITY>     Opacity percentage to apply to the overlay dataset (0=fully transparent, 100=full use of overlay opacity) (default: 100)
+
+For more details, consult https://gdal.org/programs/gdal_raster_blend.html

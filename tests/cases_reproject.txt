@@ -1,0 +1,114 @@
+# raster reproject: nearest path (leaf + pipeline + warped VRT)
+#setup: python3 /workspace/tests/mk_warp_fixtures.py .
+
+# core grid prediction
+raster reproject --dst-crs EPSG:32631 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:3857 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32731 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:4258 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 g1.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 g2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 m2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:4326 u1.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:3857 u1.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:4326 p1.tif o.tif --overwrite -q
+raster reproject big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:4326 big.tif o.tif --overwrite -q
+raster reproject --src-crs EPSG:4269 --dst-crs EPSG:32631 big.tif o.tif --overwrite -q
+
+# window / resolution / size / alignment
+raster reproject --dst-crs EPSG:32631 --bbox 440000,5050000,470000,5080000 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --resolution 150,200 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --size 100,50 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --size 100,0 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --size 0,77 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --resolution 150,200 --target-aligned-pixels big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --bbox 440000,5050000,470000,5080000 --resolution 150,200 --target-aligned-pixels big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --bbox 440000,5050000,470000,5080000 --size 30,40 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --bbox 2.1,45.6,2.9,45.9 --bbox-crs EPSG:4326 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --like g2.tif big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --bbox 900000,100000,901000,101000 big.tif o.tif --overwrite -q
+
+# nodata choreography
+raster reproject --dst-crs EPSG:32631 --dst-nodata 42 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --src-nodata 5 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --src-nodata 5 --dst-nodata 42 m2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --src-nodata 5,7 --dst-nodata 42,43 m2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --dst-nodata 42.7 m2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --dst-nodata 42.7 tt.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --dst-nodata nan f1.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --src-nodata None m2n.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 m2n.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 tt.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --dst-nodata 1,2,3 mb3.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --dst-nodata 1,1,2,2 mb4.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --dst-nodata 5,5,5,5 mb4.tif o.tif --overwrite -q
+
+# alpha
+raster reproject --dst-crs EPSG:32631 --add-alpha big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --add-alpha g2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --add-alpha m2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --add-alpha m2n.tif o.tif --overwrite -q
+
+# approx transformer / threads
+raster reproject --dst-crs EPSG:32631 --et 0 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --et 0.4 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --et 5 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --num-threads 1 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --num-threads 4 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --num-threads ALL_CPUS big.tif o.tif --overwrite -q
+
+# datatype sweep
+raster reproject --dst-crs EPSG:32631 t_Byte.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_Int8.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_UInt16.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_Int16.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_UInt32.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_Int32.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_UInt64.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_Int64.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_Float32.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 t_Float64.tif o.tif --overwrite -q
+
+# errors
+raster reproject --dst-crs EPSG:32631 nosrs.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 nogt.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --bbox 470000,5050000,440000,5080000 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --resolution 150,200 --size 10,10 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --target-aligned-pixels big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:999999 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --like g2.tif --size 10,10 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --num-threads bogus big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --et -1 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --resolution -3,5 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --dst-nodata 1,2,3 m2.tif o.tif --overwrite -q
+
+# serialization surfaces
+raster reproject --dst-crs EPSG:32631 big.tif o.vrt --overwrite
+raster reproject --dst-crs EPSG:32631 --src-nodata 5 --dst-nodata 42 big.tif o.vrt --overwrite
+raster reproject --dst-crs EPSG:32631 --add-alpha m2.tif o.vrt --overwrite
+raster reproject --dst-crs EPSG:4326 big.tif o.vrt --overwrite
+raster reproject --dst-crs EPSG:32631 --src-nodata 5,7 --dst-nodata 42,43 m2.tif o.vrt --overwrite
+raster reproject --dst-crs EPSG:32631 --et 0.4 --num-threads 4 big.tif o.vrt --overwrite
+raster reproject --dst-crs EPSG:32631 big.tif o.gdalg.json --overwrite
+raster reproject --dst-crs EPSG:32631 --resolution 150,200 --src-nodata 5 --dst-nodata 42 --et 0.4 --num-threads 4 big.tif o.gdalg.json --overwrite
+
+# pipeline
+raster pipeline read big.tif ! reproject --dst-crs EPSG:32631 ! write o.tif --overwrite -q
+raster pipeline read big.tif ! reproject --dst-crs EPSG:32631 --resolution 150,200 ! write o.tif --overwrite -q
+raster pipeline read big.tif ! reproject --dst-crs EPSG:32631 --bbox 440000,5050000,470000,5080000 ! write o.tif --overwrite -q
+raster pipeline read m2.tif ! reproject --dst-crs EPSG:32631 --src-nodata 5,7 --dst-nodata 42,43 ! write o.tif --overwrite -q
+raster pipeline read big.tif ! reproject --dst-crs EPSG:32631 ! write o.vrt --overwrite
+raster pipeline read big.tif ! reproject --dst-crs EPSG:32631 ! write o.gdalg.json --overwrite
+
+# warped VRT read-back
+raster info w.vrt
+raster info -f json w.vrt
+raster convert w.vrt o.tif --overwrite
+raster convert w.vrt o.vrt --overwrite
+raster pipeline read w.vrt ! write o.tif --overwrite -q
+raster convert wg.gdalg.json o.tif --overwrite
+raster reproject --dst-crs EPSG:32631 --resolution 100,100 --bbox 900000,100000,901000,101000 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:4326 --bbox 10,10,10.1,10.1 big.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:4326 --like u1.tif g2.tif o.tif --overwrite -q
+raster reproject --dst-crs EPSG:32631 --size 3,3 --bbox 900000,100000,901000,101000 big.tif o.tif --overwrite -q

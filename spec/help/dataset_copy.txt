@@ -1,0 +1,24 @@
+Usage: gdal dataset copy [OPTIONS] <SOURCE> <DESTINATION>
+
+Copy files of a dataset.
+
+Positional arguments:
+  --source <SOURCE>            Source dataset name [required]
+  --destination <DESTINATION>  Destination dataset name [required]
+
+Common Options:
+  -h, --help                   Display help message and exit
+  --json-usage                 Display usage as JSON document and exit
+  --config <KEY>=<VALUE>       Configuration option [may be repeated]
+
+Options:
+  --overwrite                  Whether overwriting existing output dataset is allowed
+
+Advanced Options:
+  -f, --format <FORMAT>        Dataset format
+
+For more details, consult https://gdal.org/programs/gdal_dataset_copy.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

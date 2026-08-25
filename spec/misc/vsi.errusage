@@ -1,0 +1,17 @@
+ERROR 1: vsi: Unknown command: '__no_such_subcommand__'
+Usage: gdal vsi <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - copy:   Copy files located on GDAL Virtual System Interface (VSI). (alias: cp)
+  - delete: Delete files located on GDAL Virtual System Interface (VSI). (alias: rm, rmdir, del)
+  - list:   List files of one of the GDAL Virtual System Interface (VSI). (alias: ls)
+  - move:   Move/rename a file/directory located on GDAL Virtual System Interface (VSI). (alias: mv, ren, rename)
+  - sozip:  Seek-optimized ZIP (SOZIP) commands.
+  - sync:   Synchronize source and target file/directory located on GDAL Virtual System Interface (VSI).
+
+Try 'gdal vsi --help' for help.
+
+For more details, consult https://gdal.org/programs/gdal_vsi.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

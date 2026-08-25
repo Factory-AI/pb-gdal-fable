@@ -1,0 +1,22 @@
+ERROR 1: grid: Unknown command: '__no_such_subcommand__'
+Usage: gdal vector grid <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - average:                 Create a regular grid from scattered points using moving average interpolation.
+  - average-distance:        Create a regular grid from scattered points using the average distance between the grid node (center of the search ellipse) and all of the data points in the search ellipse.
+  - average-distance-points: Create a regular grid from scattered points using the average distance between the data points in the search ellipse.
+  - count:                   Create a regular grid from scattered points using the number of points in the search ellipse.
+  - invdist:                 Create a regular grid from scattered points using weighted inverse distance interpolation.
+  - invdistnn:               Create a regular grid from scattered points using weighted inverse distance interpolation nearest neighbour.
+  - linear:                  Create a regular grid from scattered points using linear/barycentric interpolation.
+  - maximum:                 Create a regular grid from scattered points using the maximum value in the search ellipse.
+  - minimum:                 Create a regular grid from scattered points using the minimum value in the search ellipse.
+  - nearest:                 Create a regular grid from scattered points using nearest neighbor interpolation.
+  - range:                   Create a regular grid from scattered points using the difference between the minimum and maximum values in the search ellipse.
+
+Try 'gdal vector grid --help' for help.
+
+For more details, consult https://gdal.org/programs/gdal_vector_grid.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

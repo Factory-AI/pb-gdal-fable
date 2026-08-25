@@ -1,0 +1,12 @@
+ERROR 1: cog: Unknown command: '__no_such_subcommand__'
+Usage: gdal driver cog <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - validate: Validate if a TIFF file is a Cloud Optimized GeoTIFF
+
+Try 'gdal driver cog --help' for help.
+
+For more details, consult https://gdal.org/drivers/raster/cog.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

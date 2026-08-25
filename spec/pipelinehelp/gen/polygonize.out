@@ -1,0 +1,17 @@
+Usage: polygonize [OPTIONS]
+
+Create a polygon feature dataset from a raster band.
+
+Common Options:
+  -h, --help                         Display help message and exit
+  --json-usage                       Display usage as JSON document and exit
+  --config <KEY>=<VALUE>             Configuration option [may be repeated]
+  -q, --quiet                        Quiet mode (no progress bar or warning message)
+
+Options:
+  --output-layer <OUTPUT-LAYER>      Output layer name
+  -b, --band <BAND>                  Input band (1-based index) (default: 1)
+  --attribute-name <ATTRIBUTE-NAME>  Name of the field with the pixel value (default: DN)
+  -c, --connect-diagonal-pixels      Consider diagonal pixels as connected
+
+For more details, consult https://gdal.org/programs/gdal_raster_polygonize.html

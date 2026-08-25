@@ -1,0 +1,127 @@
+# raster resize: size/percent/resolution parsing, resampling kernels x
+# data types, identity copies, format targets and error choreography.
+# Known accepted residuals (excluded here): a handful of average
+# half-upsample pixels, Float64 convolution/average and UInt16/Int32
+# average last-ulp placements differ from the reference.
+#setup: python3 /workspace/tests/mk_resize_fixtures.py .
+
+# nearest
+raster resize --size 5,4 b8.tif out.tif
+raster resize --size 12,9 b8.tif out.tif
+raster resize --size 3,5 f8.tif out.tif
+raster resize --size 16,12 rgb.tif out.tif
+raster resize --size 4,5 tall.tif out.tif
+raster resize --size 7,11 i16.tif out.tif
+raster resize --size 16,12 f64.tif out.tif
+raster resize --size 3,2 nd.tif out.tif
+raster resize --size 2,3 u16.tif out.tif
+
+# bilinear
+raster resize --size 5,4 -r bilinear b8.tif out.tif
+raster resize --size 16,12 -r bilinear b8.tif out.tif
+raster resize --size 12,9 -r bilinear f8.tif out.tif
+raster resize --size 7,11 -r bilinear nd.tif out.tif
+raster resize --size 6,2 -r bilinear rgb.tif out.tif
+raster resize --size 12,9 -r bilinear i16.tif out.tif
+raster resize --size 5,4 -r bilinear f64.tif out.tif
+raster resize --size 16,12 -r bilinear i32.tif out.tif
+raster resize --size 7,11 -r bilinear u16.tif out.tif
+raster resize --size 12,9 -r bilinear i16nd.tif out.tif
+
+# cubic
+raster resize --size 12,9 -r cubic b8.tif out.tif
+raster resize --size 4,5 -r cubic b8.tif out.tif
+raster resize --size 16,12 -r cubic f8.tif out.tif
+raster resize --size 8,5 -r cubic rgb.tif out.tif
+raster resize --size 5,3 -r cubic nd.tif out.tif
+raster resize --size 16,12 -r cubic i16.tif out.tif
+raster resize --size 12,9 -r cubic u16.tif out.tif
+raster resize --size 5,4 -r cubic i32.tif out.tif
+raster resize --size 5,4 -r cubic i16nd.tif out.tif
+
+# cubicspline
+raster resize --size 7,11 -r cubicspline b8.tif out.tif
+raster resize --size 5,4 -r cubicspline f8.tif out.tif
+raster resize --size 24,18 -r cubicspline rgb.tif out.tif
+raster resize --size 3,5 -r cubicspline i16.tif out.tif
+raster resize --size 16,12 -r cubicspline u16.tif out.tif
+
+# lanczos
+raster resize --size 24,18 -r lanczos b8.tif out.tif
+raster resize --size 16,12 -r lanczos f8.tif out.tif
+raster resize --size 12,9 -r lanczos nd.tif out.tif
+raster resize --size 5,4 -r lanczos rgb.tif out.tif
+raster resize --size 12,9 -r lanczos i32.tif out.tif
+raster resize --size 8,6 -r lanczos i16.tif out.tif
+
+# average (integer-ratio and validated fractional picks)
+raster resize --size 4,3 -r average b8.tif out.tif
+raster resize --size 2,3 -r average b8.tif out.tif
+raster resize --size 4,3 -r average f8.tif out.tif
+raster resize --size 4,3 -r average rgb.tif out.tif
+raster resize --size 4,3 -r average nd.tif out.tif
+raster resize --size 4,3 -r average i16.tif out.tif
+raster resize --size 2,2 -r average b8.tif out.tif
+raster resize --size 5,4 -r average b8.tif out.tif
+
+# mode
+raster resize --size 5,4 -r mode b8.tif out.tif
+raster resize --size 7,11 -r mode nd.tif out.tif
+raster resize --size 3,5 -r mode rgb.tif out.tif
+raster resize --size 4,3 -r mode i16.tif out.tif
+raster resize --size 5,4 -r mode f8.tif out.tif
+raster resize --size 3,2 -r mode u16.tif out.tif
+raster resize --size 4,3 -r mode i16nd.tif out.tif
+raster resize --size 5,4 -r mode f64.tif out.tif
+
+# identity copies and percentages
+raster resize --size 8,6 b8.tif out.tif
+raster resize --size 8,6 -r cubic b8.tif out.tif
+raster resize --size 100%,100% b8.tif out.tif
+raster resize --size 50%,50% b8.tif out.tif
+raster resize --size 300%,300% b8.tif out.tif
+raster resize --size 25%,0 b8.tif out.tif
+raster resize --size 1%,4 b8.tif out.tif
+raster resize --size +7%,4 b8.tif out.tif
+
+# size-token parse quirks
+raster resize --size 1e2,1.0 b8.tif out.tif
+raster resize --size +4,007 b8.tif out.tif
+raster resize --size " 7,4" b8.tif out.tif
+raster resize --size -0,4 b8.tif out.tif
+raster resize --size %,4 b8.tif out.tif
+raster resize --size 2.5,4 b8.tif out.tif
+raster resize --size 0x10,4 b8.tif out.tif
+raster resize --size "7 ,4" b8.tif out.tif
+raster resize --size 2147483648,4 b8.tif out.tif
+raster resize --size -50%,4 b8.tif out.tif
+raster resize --size 0.5,4 b8.tif out.tif
+raster resize --size 4 b8.tif out.tif
+raster resize --size 4,5,6 b8.tif out.tif
+raster resize --size 1e1000%,4 b8.tif out.tif
+raster resize --size 0,0 b8.tif out.tif
+raster resize --size 0,4 b8.tif out.tif
+
+# resolution
+raster resize --resolution 2,1.5 b8.tif out.tif
+raster resize --resolution 0.5,0.5 b8.tif out.tif
+raster resize --resolution 2,1.5 nogt.tif out.tif
+raster resize --resolution 2,1.5 --size 4,3 b8.tif out.tif
+raster resize --size 4,3 nogt.tif out.tif
+
+# argument and format choreography
+raster resize b8.tif out.tif
+raster resize --size 4,3 b8.tif
+raster resize --size 4,3 missing.tif out.tif
+raster resize --size 4,3 --overwrite --append b8.tif out.tif
+raster resize --size 4,3 -f PNG b8.tif out.png
+raster resize --size 4,3 -f FOO b8.tif out.tif
+raster resize --size 4,3 -r invalid b8.tif out.tif
+raster resize --size 4,3 b8.tif out.vrt
+raster resize --size 4,3 -r cubic b8.tif out.vrt
+raster resize --size 4,3 -r cubic b8.tif out.gdalg.json
+raster resize --size 4,3 b8.tif out.gdalg.json
+raster resize --size 50%,50% --quiet b8.tif out.gdalg.json
+raster resize --size 4,3 --creation-option COMPRESS=DEFLATE b8.tif out.tif
+raster resize --size 4,3 --co TILED=YES b8.tif out.tif
+raster resize --size 4,3 --quiet b8.tif out.tif

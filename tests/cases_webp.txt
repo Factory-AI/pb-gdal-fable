@@ -1,0 +1,123 @@
+# WEBP codec in GTiff: convert/create encode (level, lossless, tiled,
+# bigtiff), option-warning choreography, band/type gates and their stubs,
+# decode/read-back (including band-separate failure), IMAGE_STRUCTURE
+# reporting order, and overview inheritance/cascade.
+# Band-separate encodes are exercised only through the pre-baked wpl.tif:
+# the reference writes uninitialized heap tails into non-first planes.
+#setup: python3 /workspace/tests/mk_webp_fixtures.py .
+
+# encode: rgb
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=1
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=50
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=100
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=101
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=0
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=-5
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=abc
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LOSSLESS=YES
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LOSSLESS=NO
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LOSSLESS=TRUE
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=50 --co WEBP_LOSSLESS=YES
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co WEBP_LOSSLESS=YES --co WEBP_LEVEL=abc
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co TILED=YES
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co TILED=YES --co BLOCKXSIZE=16 --co BLOCKYSIZE=16
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co BLOCKYSIZE=8
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co BIGTIFF=YES
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co BIGTIFF=YES --co TILED=YES
+raster convert src_rgb.tif out.tif --co compress=webp --co webp_level=40
+raster convert src_big.tif out.tif --co COMPRESS=WEBP
+
+# encode: rgba
+raster convert src_rgba.tif out.tif --co COMPRESS=WEBP
+raster convert src_rgba.tif out.tif --co COMPRESS=WEBP --co WEBP_LOSSLESS=YES
+raster convert src_rgba.tif out.tif --co COMPRESS=WEBP --co WEBP_LEVEL=10
+raster convert src_rgba.tif out.tif --co COMPRESS=WEBP --co TILED=YES
+
+# encode: photometric games
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co PHOTOMETRIC=YCBCR
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co PHOTOMETRIC=MINISWHITE
+
+# option warnings on other codecs / codec fetch repetition
+raster convert src_rgb.tif out.tif --co COMPRESS=LZW --co WEBP_LEVEL=50
+raster convert src_rgb.tif out.tif --co COMPRESS=LZW --co WEBP_LEVEL=abc
+raster convert src_rgb.tif out.tif --co COMPRESS=LZW --co WEBP_LOSSLESS=YES
+raster convert src_rgb.tif out.tif --co WEBP_LEVEL=50
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co PREDICTOR=2
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co ZSTD_LEVEL=abc --co WEBP_LEVEL=abc
+raster convert src_rgb.tif out.tif --co COMPRESS=ZSTD --co ZSTD_LEVEL=abc --co WEBP_LEVEL=abc
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co JPEG_QUALITY=abc
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co ZSTD_LEVEL=abc --co JPEG_QUALITY=abc --co WEBP_LEVEL=abc
+
+# gates: convert
+raster convert src_gray.tif out.tif --co COMPRESS=WEBP
+raster convert src_gray.tif out.tif --co COMPRESS=WEBP --co TILED=YES
+raster convert src_2b.tif out.tif --co COMPRESS=WEBP
+raster convert src_5b.tif out.tif --co COMPRESS=WEBP
+raster convert src_u16.tif out.tif --co COMPRESS=WEBP
+raster convert src_rgb.tif out.tif --co COMPRESS=WEBP --co NBITS=7
+raster convert srcn7.tif out.tif --co COMPRESS=WEBP
+
+# gates: create (failed directories leave MINISBLACK stubs)
+raster create --size 32,32 --band-count 1 --co COMPRESS=WEBP out.tif
+raster create --size 32,32 --band-count 2 --co COMPRESS=WEBP out.tif
+raster create --size 32,32 --band-count 3 --co COMPRESS=WEBP out.tif
+raster create --size 32,32 --band-count 4 --co COMPRESS=WEBP out.tif
+raster create --size 32,32 --band-count 5 --co COMPRESS=WEBP out.tif
+raster create --size 32,32 --band-count 3 --datatype UInt16 --co COMPRESS=WEBP out.tif
+raster create --size 32,32 --band-count 4 --datatype UInt16 --co COMPRESS=WEBP out.tif
+raster create --size 32,32 --band-count 3 --co COMPRESS=WEBP --co WEBP_LOSSLESS=YES out.tif
+raster create --size 32,32 --band-count 3 --co COMPRESS=WEBP --co WEBP_LEVEL=20 out.tif
+
+# read: decode back to lossless / re-encode
+raster convert w75.tif out.tif --co COMPRESS=LZW
+raster convert w20.tif out.tif --co COMPRESS=LZW
+raster convert wll.tif out.tif --co COMPRESS=LZW
+raster convert wrgba.tif out.tif --co COMPRESS=LZW
+raster convert wtl.tif out.tif --co COMPRESS=LZW
+raster convert wbig.tif out.tif --co COMPRESS=LZW
+raster convert w75.tif out.tif --co COMPRESS=WEBP
+raster convert wpl.tif out.tif --co COMPRESS=LZW
+raster convert wcor.tif out.tif --co COMPRESS=LZW
+
+# read: IMAGE_STRUCTURE reporting (reversibility, level, COG layout order)
+raster info w75.tif
+raster info w20.tif
+raster info wll.tif
+raster info wtl.tif
+raster info wpl.tif
+raster info wrgba.tif
+raster edit w75.tif --metadata FOO=BAR
+
+# overviews: level/reversibility inherit from the main dataset
+raster overview add w75.tif --levels 2
+raster overview add w75.tif --levels 2,4
+raster overview add w20.tif --levels 2
+raster overview add wll.tif --levels 2,4
+raster overview add wrgba.tif --levels 2
+raster overview add wtl.tif --levels 2
+raster overview add w75.tif --levels 2,4 -r average
+raster overview add wbig.tif --levels 2,4
+raster overview add wbig.tif --levels 2,4,8
+raster overview add wbig.tif --levels 2,4 -r average
+raster overview add w75.tif --levels 2 --co WEBP_LEVEL=30
+raster overview add w75.tif --levels 2 --co WEBP_LOSSLESS=YES
+raster overview add wll.tif --levels 2 --co WEBP_LOSSLESS=NO
+raster overview add w75.tif --levels 2 --co BLOCKSIZE=64
+raster overview add src_rgb.tif --levels 2 --co COMPRESS=WEBP
+raster overview add src_rgb.tif --levels 2 --co COMPRESS=WEBP --co WEBP_LEVEL=10
+raster overview add src_gray.tif --levels 2 --co COMPRESS=WEBP
+raster overview add src_u16.tif --levels 2 --co COMPRESS=WEBP
+raster overview add w75.tif --levels 2 --external
+raster overview add src_rgb.tif --levels 2 --external --co COMPRESS=WEBP
+raster overview add src_rgb.tif --levels 2 --external --co COMPRESS=WEBP --co WEBP_LOSSLESS=YES
+
+# overviews on a dataset that already has one (reuse/method change/append)
+raster overview add wov.tif --levels 2
+raster overview add wov.tif --levels 2,4
+raster overview add wov.tif --levels 4
+raster overview add wov.tif --levels 2 -r average
+raster overview refresh wov.tif
+raster overview delete wov.tif
+raster info wov.tif

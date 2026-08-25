@@ -1,0 +1,33 @@
+Usage: footprint [OPTIONS]
+
+Compute the footprint of a raster dataset.
+
+Common Options:
+  -h, --help                                 Display help message and exit
+  --json-usage                               Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                     Configuration option [may be repeated]
+  -q, --quiet                                Quiet mode (no progress bar or warning message)
+
+Options:
+  --output-layer <OUTPUT-LAYER>              Output layer name (default: footprint)
+  -b, --band <BAND>                          Input band(s) (1-based index) [may be repeated]
+  --combine-bands <COMBINE-BANDS>            Defines how the mask bands of the selected bands are combined to generate a single mask band, before being vectorized.. COMBINE-BANDS=union|intersection (default: union)
+  --overview <OVERVIEW>                      Which overview level of source file must be used
+                                             Mutually exclusive with --src-nodata
+  --src-nodata <SRC-NODATA>                  Set nodata values for input bands. [1.. values]
+                                             Mutually exclusive with --overview
+  --coordinate-system <COORDINATE-SYSTEM>    Target coordinate system. COORDINATE-SYSTEM=georeferenced|pixel
+  --dst-crs <DST-CRS>                        Destination CRS
+  --split-multipolygons                      Whether to split multipolygons as several features each with one single polygon
+  --convex-hull                              Whether to compute the convex hull of the footprint
+  --densify-distance <DENSIFY-DISTANCE>      Maximum distance between 2 consecutive points of the output geometry.
+  --simplify-tolerance <SIMPLIFY-TOLERANCE>  Tolerance used to merge consecutive points of the output geometry.
+  --min-ring-area <MIN-RING-AREA>            Minimum value for the area of a ring
+  --max-points <MAX-POINTS>                  Maximum number of points of each output geometry (default: 100)
+  --location-field <LOCATION-FIELD>          Name of the field where the path of the input dataset will be stored. (default: location)
+                                             Mutually exclusive with --no-location-field
+  --no-location-field                        Disable creating a field with the path of the input dataset
+                                             Mutually exclusive with --location-field
+  --absolute-path                            Whether the path to the input dataset should be stored as an absolute path
+
+For more details, consult https://gdal.org/programs/gdal_raster_footprint.html

@@ -1,0 +1,59 @@
+# raster scale rounding/working-type calibration + scaled-VRT analysis
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); from mk_tail_fixtures import write_tif; write_tif('gb.tif','Byte',16,16,[[str(i) for i in range(256)]],gt=(0,1,0,0,0,-1)); write_tif('gf.tif','Float64',16,16,[[repr(i/2) for i in range(256)]],gt=(0,1,0,0,0,-1)); write_tif('gu.tif','UInt16',16,16,[[str(i*257) for i in range(256)]],gt=(0,1,0,0,0,-1)); write_tif('gi.tif','Int16',16,16,[[str(i*100-12800) for i in range(256)]],gt=(0,1,0,0,0,-1)); write_tif('g32.tif','Float32',16,16,[[repr(i-0.5) for i in range(256)]],gt=(0,1,0,0,0,-1))" && /home/agent/oracle/executable raster pipeline read gb.tif ! scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! write vo.vrt -q && /home/agent/oracle/executable raster pipeline read gb.tif ! scale --no-clip --exponent 2 --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! write v1.vrt -q && /home/agent/oracle/executable raster pipeline read gb.tif ! scale --no-clip --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! write v2.vrt -q && /home/agent/oracle/executable raster pipeline read gb.tif ! scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 --ot Float64 ! write v4.vrt -q && /home/agent/oracle/executable raster pipeline read gf.tif ! scale ! write v5.vrt -q
+raster scale gb.tif o.tif -q
+raster scale gf.tif o.tif -q
+raster scale gu.tif o.tif -q
+raster scale gi.tif o.tif -q
+raster scale --ot Byte gf.tif o.tif -q
+raster scale --ot Byte gu.tif o.tif -q
+raster scale --ot Byte gi.tif o.tif -q
+raster scale --ot Byte g32.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 114.75 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 19.375 gb.tif o.tif -q
+raster scale --no-clip --src-min 0 --src-max 255 --dst-min 0 --dst-max 19.375 gb.tif o.tif -q
+raster scale --no-clip --exponent 1 --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 gb.tif o.tif -q
+raster scale --exponent 1 --src-min 0 --src-max 255 --dst-min 76.5 --dst-max 0 gb.tif o.tif -q
+raster scale --exponent 2 --src-min 0 --src-max 255 --dst-min 0 --dst-max 112.5 gb.tif o.tif -q
+raster scale --exponent 2 --src-min 0 --src-max 255 --dst-min 0 --dst-max 144.5 gb.tif o.tif -q
+raster scale --exponent 0.5 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 4000000001 --ot UInt32 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 2000000001 --ot Int32 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 4000000001 --ot UInt64 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 19.375 --ot Int8 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 19.375 --ot Int16 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 19.375 --ot UInt16 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 19.375 --ot Float32 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 --ot Float64 gb.tif o.tif -q
+raster scale --src-min 0 --src-max 127.5 --dst-min 0 --dst-max 76.5 --ot Byte gf.tif o.tif -q
+raster scale --src-min 0 --src-max 65535 --dst-min 0 --dst-max 76.5 --ot Byte gu.tif o.tif -q
+raster scale --src-min 0 --src-max 65535 --dst-min 0 --dst-max 76.5 gu.tif o.tif -q
+raster scale --src-min -12800 --src-max 12700 --dst-min 0 --dst-max 255 --ot Byte gi.tif o.tif -q
+raster scale --src-min 200 --src-max 100 --dst-min 0 --dst-max 76.5 gb.tif o.tif -q
+raster scale --no-clip gi.tif o.tif -q
+raster scale --no-clip --ot Byte gi.tif o.tif -q
+raster pipeline read gb.tif ! scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! write o.tif -q
+raster pipeline read gb.tif ! scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! write o.vrt -q
+raster pipeline read gb.tif ! scale --exponent 2 --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! write o.vrt -q
+raster pipeline read gb.tif ! scale --no-clip --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! write o.vrt -q
+raster pipeline read gb.tif ! scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! info --stats
+raster pipeline read gb.tif ! scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! info --checksum
+raster pipeline read gb.tif ! scale --src-min 0 --src-max 255 --dst-min 0 --dst-max 76.5 ! info --hist
+raster pipeline read gf.tif ! scale ! info --stats
+raster convert vo.vrt o.tif -q
+raster convert v1.vrt o.tif -q
+raster convert v2.vrt o.tif -q
+raster convert v4.vrt o.tif -q
+raster convert v5.vrt o.tif -q
+raster info --stats vo.vrt
+raster info --checksum vo.vrt
+raster info --hist vo.vrt
+raster info --stats v1.vrt
+raster info --checksum v1.vrt
+raster info --hist v1.vrt
+raster info --stats v2.vrt
+raster info --stats v4.vrt
+raster info --hist v4.vrt
+raster info --stats v5.vrt
+raster info --hist v5.vrt
+raster info --stats --checksum --hist v4.vrt

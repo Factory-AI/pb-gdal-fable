@@ -1,0 +1,58 @@
+#setup: mkdir -p sub/deep && echo hello > a.txt && echo x > sub/b.bin && echo y > sub/deep/c.txt && ln -s a.txt link.txt && touch -d "2024-03-05 06:07:08 UTC" a.txt sub/b.bin sub/deep/c.txt sub/deep sub
+vsi list .
+vsi list --of=json .
+vsi list -l .
+vsi list -l --of=json .
+vsi list -R .
+vsi list -lR .
+vsi list --tree -R .
+vsi list --tree --of=json -R .
+vsi list --tree --of=json -lR .
+vsi list a.txt
+vsi list -l a.txt
+vsi list --of=json a.txt
+vsi list --of=json -l a.txt
+vsi list nope
+vsi list -R --depth 1 .
+vsi list -R --depth 2 .
+vsi list sub
+vsi list sub/
+vsi ls .
+vsi list --of=json sub/deep
+vsi copy a.txt copied.txt
+vsi copy -q a.txt copied.txt
+vsi copy nope dst
+vsi copy a.txt sub
+vsi copy sub sub2
+vsi copy -r sub sub2
+vsi copy a.txt a.txt
+vsi delete a.txt
+vsi delete nope
+vsi delete sub
+vsi delete -r sub
+vsi rm nope
+vsi move a.txt moved.txt
+vsi move nope dst
+vsi move a.txt sub
+vsi sync sub target
+vsi sync sub/ target
+vsi sync nope target
+vsi sync a.txt target
+suggestions
+raster ti
+vsi lss
+convert2
+dataset rm
+raster mosaic
+raster mosaic out.vrt
+vsi sozip create
+dataset identify
+translate
+raster warp x.tif y.tif
+gri
+#setup: mkdir -p s/d ex ex2 td && echo 1 > s/f && echo old > ex/s && echo tf > tfile && touch -d "2024-03-05 06:07:08 UTC" s/f ex/s tfile
+vsi copy -r s ex
+vsi copy -r s ex2
+vsi sync s/f tfile
+vsi sync s/f td
+vsi sync s/f newfile

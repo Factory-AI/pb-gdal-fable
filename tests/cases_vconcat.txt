@@ -1,0 +1,194 @@
+# vector concat: union engine (merge-per-layer-name/stack/single), field
+# union/intersection with scalar-only type promotion (Int+Int64->Int64,
+# ints under Real->Real, everything else String), GetFieldAsString
+# re-serialization for datetime members landing in String slots, SRS
+# consolidation (dst-crs reproject, SRS-less member error, UnionLayer SRS
+# consistency warning per terminal), first-member geometry type with
+# multi-member SHPT pinning (Unknown->ARC), source-layer-field templating,
+# update-family gates (append creates, update/overwrite-layer/upsert need
+# an existing output, '-overwrite not allowed with -append'), gdalg echo
+# and gates, MEM/stream silent unions, GeoJSON/shapefile writer dup-field
+# renames (exact vs case-insensitive with first-free suffix).
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1,"b":"x","c":2},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > x1.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"B":"q","a":3},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > x2.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":true},"geometry":null}]}' > f_b.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":7},"geometry":null}]}' > f_i.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":30000000000},"geometry":null}]}' > f_i64.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":1.5},"geometry":null}]}' > f_r.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":"t"},"geometry":null}]}' > f_s.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":"2021-03-04"},"geometry":null}]}' > f_d.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":"2021-03-04T05:06:07"},"geometry":null}]}' > f_dt.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":"2021-03-04T05:06:07+02:00"},"geometry":null}]}' > f_tz.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":[1,2]},"geometry":null}]}' > l_i.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"v":[30000000000]},"geometry":null}]}' > l_i64.json && printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"v":1},"geometry":null},{"type":"Feature","properties":{"v":30000000000},"geometry":null}]}' > w1.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1,"b":"x","c":2},"geometry":{"type":"Point","coordinates":[1.0,2.0]}},{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1.0,2.0]}}]}' > ws.json && printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{"p":1},"geometry":{"type":"Point","coordinates":[500000,4649776]}}]}' > gp.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"x":1,"X":2,"x2":3},"geometry":null}]}' > tt.json && printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"a":1,"a2":1},"geometry":{"type":"Point","coordinates":[1.0,2.0]}}]}' > sq.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"b":"x","B":"q","n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > src.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"b":"o","n":0},"geometry":{"type":"Point","coordinates":[0,0]}},{"type":"Feature","properties":{"b":"q","n":1},"geometry":{"type":"Point","coordinates":[1.0,2.0]}}]}' > tgt.json && printf %s '{"type":"FeatureCollection","name":"aa2_m","features":[{"type":"Feature","properties":{"a":1,"a2":2},"geometry":null}]}' > aa2.json && printf %s '{"type":"FeatureCollection","name":"bn","features":[{"type":"Feature","properties":{"k":1},"geometry":null}]}' > bn.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","id":7,"properties":{"a":1},"geometry":null}]}' > id1.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","id":7,"properties":{"a":2},"geometry":null}]}' > id2.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":null},"geometry":null}]}' > nv1.json && printf %s '{"type":"FeatureCollection","name":"m","features":[]}' > nl1.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4]]}}]}' > mixg.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":null}]}' > g_none.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > g_pt.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4]]}}]}' > g_ls.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2,3]}}]}' > g_ptz.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":null},{"type":"Feature","properties":{"a":2},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > nfirst.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[1,2]}]}}]}' > gcx.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1,"b":"x","c":2},"geometry":{"type":"Point","coordinates":[1.0,2.0]}},{"type":"Feature","properties":{"a":3,"B":"q"},"geometry":{"type":"Point","coordinates":[3.0,4.0]}}]}' > m1.json && cp f_b.json exist1.json && cp f_s.json exmem.json && printf %s x > bad.gdalg.json && /home/agent/oracle/executable vector concat f_b.json f_i.json good.gdalg.json --quiet && /home/agent/oracle/executable vector convert g_pt.json np --of "ESRI Shapefile" --quiet && rm -f np/*.prj
+# ---- leaf: merge-per-layer-name basics, overwrite, exists refusal
+vector concat x1.json x2.json m1o.json
+vector concat x1.json x2.json exist1.json
+vector concat x1.json x2.json exist1.json --overwrite
+vector concat x1.json x2.json m2o.json -q
+vector concat x1.json m3o.json
+vector concat x1.json m4o
+# ---- leaf: type promotion matrix
+vector concat f_b.json f_i64.json t1.json -q
+vector concat f_i64.json f_b.json t2.json -q
+vector concat f_b.json f_r.json t3.json -q
+vector concat f_r.json f_b.json t4.json -q
+vector concat f_i64.json f_r.json t5.json -q
+vector concat f_r.json f_i64.json t6.json -q
+vector concat f_i.json f_i64.json t7.json -q
+vector concat f_i.json f_b.json t8.json -q
+vector concat f_d.json f_dt.json t9.json -q
+vector concat f_dt.json f_d.json t10.json -q
+vector concat f_d.json f_s.json t11.json -q
+vector concat f_tz.json f_d.json t12.json -q
+vector concat l_i.json l_i64.json t13.json -q
+vector concat f_b.json f_s.json t14.json -q
+vector concat f_s.json f_b.json t15.json -q
+vector concat f_b.json f_i.json t16.json
+vector concat f_i.json f_b.json t17.json -q
+# ---- leaf: SRS handling
+vector concat np gp.json s1.json -q
+vector concat gp.json np s2.json -q
+vector concat np gp.json s3.json --dst-crs EPSG:32631
+vector concat x1.json x2.json s4.json --dst-crs EPSG:32631 -q
+vector concat x1.json x2.json s5.json --src-crs EPSG:4326 --dst-crs EPSG:32631 -q
+vector concat x1.json x2.json s6.json --src-crs EPSG:32631 -q
+vector concat w1.json ws.json s7.json
+vector concat gp.json gp.json s8.json --dst-crs EPSG:4326 -q
+vector concat g_pt.json gp.json s9.json --mode single
+# ---- leaf: field strategy, source-layer-field, shadow mapping
+vector concat x1.json x2.json i1.json --field-strategy intersection -q
+vector concat x1.json x2.json u1.json --source-layer-field-name a -q
+vector concat x1.json x2.json u2.json --source-layer-field-name s --source-layer-field-content {DS_INDEX}:{LAYER_INDEX}:{DS_NAME}:{DS_BASENAME}:{LAYER_NAME}:{AUTO_NAME} -q
+vector concat aa2.json u3.json --source-layer-field-name a -q
+vector concat sq.json u4.json --source-layer-field-name a --mode stack -q
+vector concat src.json tgt.json sh1.json -q
+vector concat tgt.json src.json sh2.json -q
+# ---- leaf: stack / single modes
+vector concat x1.json st1.json --mode stack -q
+vector concat bn.json st2.json --mode stack -q
+vector concat x1.json x2.json st3.json --mode stack
+vector concat x1.json x2.json st4 --of "ESRI Shapefile" --mode stack
+vector concat x1.json x2.json st5.json --mode stack --output-layer both -q
+vector concat x1.json x2.json st6.json --mode stack --output-layer {DS_BASENAME} -q
+vector concat x1.json x2.json sg1.json --mode single -q
+vector concat x1.json x2.json sg2.json --mode single --output-layer q -q
+vector concat x1.json sg3.json --mode single -q
+vector concat x1.json x2.json bl.json --output-layer q
+# ---- leaf: ids, null values, empty layers, layer selection
+vector concat id1.json id2.json id.json -q
+vector concat nv1.json x2.json nv.json -q
+vector concat nl1.json x2.json nl.json -q
+vector concat x1.json x2.json ml.json -l m
+vector concat x1.json x2.json ml2.json -l nope
+vector concat x1.json x2.json ml3 --of "ESRI Shapefile" -l nope
+vector concat bn.json x1.json ml4.json -l m -q
+vector concat x1.json x2.json cp1.json --co COORDINATE_PRECISION=1 -q
+# ---- leaf: errors
+vector concat nope.json x2.json e1.json
+vector concat x1.json nope.json e1.json
+vector concat f_b.json e2.json --src-crs FOO
+vector concat f_b.json e2.json --dst-crs FOO
+vector concat nope.json e2.json --dst-crs FOO --mode bad
+vector concat np x1.json e3.json --dst-crs EPSG:32631
+vector concat x1.json x2.json e4.xyz
+# ---- leaf: geometry union (first member verbatim) + SHPT pinning
+vector concat tt.json sq.json rn.shp --of "ESRI Shapefile" --mode single -q
+vector concat tt.json sq.json rs2 --of "ESRI Shapefile" --mode single -q --skip-errors
+vector concat g_none.json g_pt.json c1 --of "ESRI Shapefile" --mode single -q
+vector concat nfirst.json nfirst.json c3 --of "ESRI Shapefile" --mode single -q
+vector concat g_pt.json g_none.json dA --of "ESRI Shapefile" --mode single -q
+vector concat g_none.json g_ls.json dB --of "ESRI Shapefile" --mode single -q
+vector concat mixg.json dC --of "ESRI Shapefile" --mode stack -q
+vector concat g_none.json mixg.json dD --of "ESRI Shapefile" --mode single -q
+vector concat g_none.json mixg.json dS --of "ESRI Shapefile" --mode single -q --skip-errors
+vector concat g_none.json tt.json dG --of "ESRI Shapefile" --mode single -q
+vector concat g_none.json g_none.json dH --of "ESRI Shapefile" --mode single -q
+vector concat gcx.json gcx.json gc1 --of "ESRI Shapefile" --mode single -q
+vector concat g_ptz.json g_pt.json z1.json --mode single -q
+vector concat mixg.json g_pt.json mg1.json -q
+vector concat g_none.json g_pt.json gj1.json --mode single -q
+vector concat g_pt.json g_ls.json gj2.json --mode single -q
+# ---- leaf: update family
+vector concat x1.json x2.json up1.json --update
+vector concat f_b.json f_i.json exist1.json --update
+vector concat f_b.json f_i.json exist1.json --update -q
+vector concat f_b.json f_i.json exist1.json --append -q
+vector concat f_b.json f_i.json exist1.json --update --append -q
+vector concat f_b.json f_i.json exist1.json --overwrite-layer -q
+vector concat f_b.json f_i.json exist1.json --upsert
+vector concat f_b.json f_i.json exist1.json --update --overwrite-layer -q
+vector concat f_b.json f_i.json exist1.json --overwrite --append -q
+vector concat f_b.json f_i.json exist1.json --overwrite-layer --append -q
+vector concat f_b.json f_i.json miss.json --update --append -q
+vector concat f_b.json f_i.json miss.json --update --append --overwrite -q
+vector concat f_b.json f_i.json miss.json --overwrite-layer --append
+vector concat f_b.json f_i.json miss.json --upsert --append
+vector concat f_b.json miss.json --update --append -q
+vector concat f_b.json miss.json --overwrite-layer --append
+vector concat f_b.json exist1.json --overwrite-layer --append -q
+vector concat f_b.json miss.json --upsert
+vector concat f_b.json miss.json --overwrite-layer
+vector concat nope.json f_i.json miss.json --overwrite-layer --append
+vector concat tgt.json src.json exist1.json --append -q
+# ---- leaf: gdalg echo and gates
+vector concat x1.json x2.json g1.gdalg.json
+vector concat x1.json g2.gdalg.json
+vector concat nope.json g3.gdalg.json
+vector concat f_b.json f_i.json g4.gdalg.json --input-layer m --update --append --skip-errors --co COORDINATE_PRECISION=5 --lco WRITE_NAME=NO --mode single --output-layer q --source-layer-field-name s --field-strategy union --src-crs EPSG:4326 --dst-crs EPSG:32631
+vector concat f_b.json f_i.json g5.gdalg.json --overwrite --upsert
+vector concat f_b.json f_i.json g6.gdalg.json --overwrite-layer --append
+vector concat f_b.json f_i.json bad.gdalg.json
+vector concat f_b.json f_i.json bad.gdalg.json --append
+vector concat f_b.json f_i.json bad.gdalg.json --update
+vector concat f_b.json f_i.json bad.gdalg.json --update --append
+vector concat f_b.json f_i.json good.gdalg.json
+vector concat f_b.json f_i.json good.gdalg.json --upsert
+vector concat f_b.json f_i.json good.gdalg.json --overwrite-layer --append
+vector concat f_b.json f_i.json good.gdalg.json --overwrite
+vector concat f_b.json f_i.json miss.gdalg.json --update
+vector concat f_b.json f_i.json miss.gdalg.json --overwrite-layer
+vector concat f_b.json f_i.json miss.gdalg.json --upsert
+# ---- leaf: stream output (silent union; member errors still fire)
+vector concat x1.json x2.json so1 --of stream
+vector concat x1.json so2 --of stream
+vector concat f_b.json f_i.json so3 --of stream
+vector concat w1.json ws.json so4 --of stream
+vector concat nope.json so5 --of stream
+vector concat np x1.json so6 --of stream --dst-crs EPSG:32631
+vector concat f_b.json f_i.json so7 --of stream --overwrite-layer --append
+vector concat f_b.json so8 --of stream -l nope
+vector concat x1.json x2.json so9 --of stream --mode stack
+vector concat f_b.json so10 --of stream --update
+vector concat f_b.json f_i.json exmem.json --of stream --update -q
+# ---- leaf: MEM output (silent union warnings; driver renames; exists)
+vector concat x1.json x2.json mo1 --of MEM
+vector concat x1.json x2.json mo2 --of MEM -q
+vector concat f_b.json f_i.json mo3 --of MEM
+vector concat w1.json ws.json mo4 --of MEM -q
+vector concat f_b.json f_i.json mo5 --of MEM --overwrite-layer --append
+vector concat f_b.json f_i.json mo6 --of MEM --update -q
+vector concat f_b.json f_i.json exmem.json --of MEM --update -q
+vector concat f_b.json mo8 --of MEM -l nope -q
+vector concat x1.json x2.json mo9 --of MEM --mode stack -q
+vector concat f_b.json f_i.json exmem.json --of MEM -q
+vector concat f_b.json f_i.json exmem.json --of MEM --overwrite -q
+vector concat x1.json mo12 --of MEM
+vector concat x1.json exmem.json --of MEM
+vector concat x1.json x2.json mo14 --of Memory
+vector concat f_b.json mo15 --of MEM -l nope -q
+# ---- pipeline step
+vector pipeline concat x1.json x2.json ! info
+vector pipeline concat x1.json x2.json --mode stack ! info
+vector pipeline concat x1.json x2.json --mode single ! info --features
+vector pipeline concat f_d.json f_dt.json ! info --features
+vector pipeline concat x1.json x2.json ! write pw1.json
+vector pipeline concat x1.json x2.json --mode stack ! write pw2 --of "ESRI Shapefile"
+vector pipeline concat np gp.json --dst-crs EPSG:32631 ! write pw3.json
+vector pipeline concat x1.json x2.json --source-layer-field-name s ! write pw4.json
+vector pipeline concat w1.json ws.json ! write pw5.json
+vector pipeline concat w1.json ws.json ! info
+vector pipeline concat w1.json ws.json ! export-schema
+vector pipeline concat w1.json ws.json ! write pg.gdalg.json
+vector pipeline concat tt.json sq.json --mode single ! info
+vector pipeline concat g_none.json g_pt.json --mode single ! info
+# ---- convert regressions shared with the concat writer paths
+vector convert mixg.json cvm --of "ESRI Shapefile" -q
+vector convert mixg.json cvs --of "ESRI Shapefile" -q --skip-errors
+vector convert nfirst.json cvn --of "ESRI Shapefile" -q
+vector convert m1.json cv1 --of MEM
+vector convert m1.json exmem.json --of MEM
+vector convert m1.json cv3.json -q
+vector convert m1.json cv4 --of "ESRI Shapefile" -q
+vector convert tt.json cv5 --of "ESRI Shapefile" -q
+vector concat m1.json m1.json cc1.json --mode single -q

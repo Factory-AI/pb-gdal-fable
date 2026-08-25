@@ -1,0 +1,22 @@
+Usage: gdal dataset check [OPTIONS] <INPUT>
+
+Check whether there are errors when reading the content of a dataset.
+
+Positional arguments:
+  -i, --input <INPUT>                  Input raster, vector or multidimensional raster dataset [required]
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+  -q, --quiet                          Quiet mode (no progress bar or warning message)
+
+Advanced Options:
+  --oo, --open-option <KEY>=<VALUE>    Open options [may be repeated]
+  --if, --input-format <INPUT-FORMAT>  Input formats [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_dataset_check.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

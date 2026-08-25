@@ -1,0 +1,72 @@
+{
+  "name":"check",
+  "full_path":[
+    "gdal",
+    "dataset",
+    "check"
+  ],
+  "description":"Check whether there are errors when reading the content of a dataset.",
+  "short_url":"\/programs\/gdal_dataset_check.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_dataset_check.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Input raster, vector or multidimensional raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster",
+        "vector",
+        "multidim_raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"return-code",
+      "type":"integer",
+      "description":"Return code",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+  ]
+}

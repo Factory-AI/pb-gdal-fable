@@ -1,0 +1,13 @@
+Usage: tee [OPTIONS] [<PIPELINE>...]
+
+Pipes the input into the output stream and side nested pipelines.
+
+Positional arguments:
+  --tee-pipeline <PIPELINE>  Nested pipeline [1.. values]
+
+Common Options:
+  -h, --help                 Display help message and exit
+  --json-usage               Display usage as JSON document and exit
+  --config <KEY>=<VALUE>     Configuration option [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_pipeline.html

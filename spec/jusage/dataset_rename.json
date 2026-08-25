@@ -1,0 +1,53 @@
+{
+  "name":"rename",
+  "full_path":[
+    "gdal",
+    "dataset",
+    "rename"
+  ],
+  "description":"Rename files of a dataset.",
+  "short_url":"\/programs\/gdal_dataset_rename.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_dataset_rename.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"source",
+      "type":"string",
+      "description":"Source dataset name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"destination",
+      "type":"string",
+      "description":"Destination dataset name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"format",
+      "type":"string",
+      "description":"Dataset format",
+      "required":false,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_OPEN"
+        ]
+      }
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

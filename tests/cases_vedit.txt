@@ -1,0 +1,173 @@
+# vector edit (leaf + pipeline step + generic-pipeline dual dispatch),
+# dataset metadata rendering in vector info, generic info json-default
+# flip, layer-filter driver identity, /vsistdout/ GDALG --quiet echo and
+# trailing-warp laziness; merged-stream compare pins error interleaving
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[10,20]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4],[5,6]]}},{"type":"Feature","properties":{"n":3},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}},{"type":"Feature","properties":{"n":4},"geometry":null},{"type":"Feature","properties":{"n":5},"geometry":{"type":"Point","coordinates":[7,8,9]}}]}' > p.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","id":7,"properties":{"k":"a"},"geometry":{"type":"MultiPoint","coordinates":[[1,2],[3,4]]}},{"type":"Feature","id":9,"properties":{"k":"b"},"geometry":{"type":"Point","coordinates":[9,9]}}]}' > mp2.json && printf %s '{"type":"FeatureCollection","name":"c","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[500000,4649776]}}]}' > crs.json && printf %s '{"type":"FeatureCollection","name":"c","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{"a":0},"geometry":{"type":"Point","coordinates":[500000,4649776]}},{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[500000,4649777]}}]}' > crs2.json && printf %s '{"type":"FeatureCollection","name":"f","features":[{"type":"Feature","id":5,"properties":{"a":1},"geometry":null}]}' > fidc.json && python3 /workspace/tests/mk_pipeedit_fixtures.py .
+# ---- leaf: outputs
+vector edit --metadata k=v --quiet --of GeoJSON p.json /vsistdout/
+vector edit --layer-metadata lk=lv --quiet --of GeoJSON p.json /vsistdout/
+vector edit --crs EPSG:32631 --quiet --of GeoJSON p.json /vsistdout/
+vector edit --crs null --quiet --of GeoJSON crs.json /vsistdout/
+vector edit --geometry-type MULTIPOINT --quiet --of GeoJSON p.json /vsistdout/
+vector edit --unset-fid --quiet --of GeoJSON mp2.json /vsistdout/
+vector edit --unset-fid --quiet --of GeoJSON fidc.json /vsistdout/
+vector edit --metadata a=b p.json out.json
+vector edit p.json out.json
+vector edit --unset-fid p.json out.json
+# ---- leaf: GDALG echoes
+vector edit --crs EPSG:4326 --metadata a=b --unset-metadata z --layer-metadata c=d --unset-layer-metadata y --geometry-type POINT --active-layer pts --unset-fid p.json o.gdalg.json
+vector edit -l pts --output-layer q --skip-errors --metadata k=v p.json o.gdalg.json
+vector edit --unset-metadata a,b --unset-layer-metadata c,d p.json o.gdalg.json
+vector edit --unset-metadata a --unset-metadata b p.json o.gdalg.json
+vector edit --if GeoJSON --oo FLATTEN_NESTED_ATTRIBUTES=YES --metadata a=b p.json o.gdalg.json
+vector edit --of GDALG --metadata a=b p.json /vsistdout/
+# ---- leaf: parse failures
+vector edit --metadata novalue p.json out.json
+vector edit --layer-metadata novalue p.json out.json
+vector edit --crs bogus p.json out.json
+vector edit --geometry-type Foo p.json out.json
+vector edit --geometry-type Foo p.json o.gdalg.json
+vector edit --append --upsert p.json out.json
+vector edit p.json
+vector edit
+# ---- pipeline step: info rendering (text + json + summary)
+vector pipeline read p.json ! edit --metadata a=1 --layer-metadata lk=lv ! info
+vector pipeline read p.json ! edit --metadata a=1 ! info --of json
+vector pipeline read p.json ! edit --metadata a=1 --layer-metadata b=2 ! info --of json
+vector pipeline read p.json ! edit --metadata a=1 ! info --summary
+vector pipeline read p.json ! edit --metadata a=1 ! info --of json --summary
+# ---- pipeline step: metadata semantics
+vector pipeline read p.json ! edit --metadata a=1 --metadata b=2 --metadata a=3 ! info
+vector pipeline read p.json ! edit --metadata KEY=1 --metadata key=2 ! info
+vector pipeline read p.json ! edit --metadata key=2 --unset-metadata KEY ! info
+vector pipeline read p.json ! edit --layer-metadata KEY=1 --layer-metadata key=2 --layer-metadata KeY=3 ! info
+vector pipeline read p.json ! edit --layer-metadata key=2 --unset-layer-metadata KEY ! info
+raster pipeline read pe2.tif ! edit --metadata a=b --metadata z=1 ! info
+raster pipeline read pe2.tif ! edit --metadata area_or_point=Custom ! info
+raster pipeline read pe2.tif ! edit --metadata AREA_OR_POINs=2 --metadata AREA_OR_POINTX=1 ! info
+raster pipeline read pe2.tif ! edit --unset-metadata area_or_point ! info
+raster edit --metadata a=b pe2.tif oe.tif
+raster edit --metadata area_or_point=Custom pe2.tif oe.tif
+vector pipeline read p.json ! edit --metadata a=1 --unset-metadata a ! info
+vector pipeline read p.json ! edit --unset-metadata a --metadata a=1 ! info
+vector pipeline read p.json ! edit --unset-metadata nope --unset-layer-metadata nope ! info
+vector pipeline read p.json ! edit --metadata k= ! info
+vector pipeline read p.json ! edit --metadata =v ! info
+vector pipeline read p.json ! edit --metadata k=v=w ! info
+vector pipeline read p.json ! edit --metadata a=1 --metadata b=2 --unset-metadata a,b ! info
+vector pipeline read p.json ! edit --active-layer nope --layer-metadata a=b ! info
+# ---- pipeline step: crs / geometry-type / unset-fid
+vector pipeline read crs.json ! edit --crs EPSG:4326 ! info
+vector pipeline read crs.json ! edit --crs none ! info
+vector pipeline read crs.json ! edit --crs null ! info
+vector pipeline read p.json ! edit --geometry-type MULTIPOINTZM ! info
+vector pipeline read mp2.json ! edit --unset-fid ! info --features
+vector pipeline read fidc.json ! edit --unset-fid ! info
+vector pipeline read mp2.json ! edit --unset-fid ! swap-xy ! write --of GeoJSON /vsistdout/
+# ---- pipeline step: write + GDALG echoes
+vector pipeline read p.json ! edit --metadata a=b ! write out.json
+vector pipeline read p.json ! edit ! write out.json
+vector pipeline read p.json ! edit --metadata k=v --crs EPSG:4326 --geometry-type POINT --unset-fid ! write o.gdalg.json
+vector pipeline read p.json ! edit --active-layer pts --layer-metadata a=b --unset-metadata u --unset-layer-metadata w ! write o.gdalg.json
+vector pipeline read p.json ! edit --unset-metadata a --unset-metadata b ! write o.gdalg.json
+vector pipeline read p.json ! swap-xy ! edit --metadata a=b ! write o.gdalg.json
+vector pipeline read p.json ! edit --metadata a=b ! write --of GDALG /vsistdout/
+# ---- pipeline step: failures (multi-token usage + single-token no-usage)
+vector pipeline read p.json ! edit --metadata novalue ! write out.json
+vector pipeline read p.json ! edit --layer-metadata novalue ! write out.json
+vector pipeline read p.json ! edit --crs bogus ! write out.json
+vector pipeline read p.json ! edit --geometry-type Foo ! write out.json
+vector pipeline read p.json ! edit --scale 2 ! write out.json
+vector pipeline read p.json ! edit --nodata 5 ! write out.json
+vector pipeline read p.json ! edit --append --upsert ! write out.json
+vector pipeline read p.json ! edit foo ! write out.json
+vector pipeline read p.json ! edit --input p.json ! write out.json
+vector pipeline read p.json ! edit --input nosuch.json ! write out.json
+vector pipeline read nosuch.json ! edit --scale 2 ! write out.json
+vector pipeline read nosuch.json ! edit --crs bogus ! write out.json
+vector pipeline "read p.json ! edit --metadata novalue ! write out.json"
+vector pipeline "read p.json ! edit --metadata a=b ! write /vsistdout/"
+# ---- generic pipeline: dual dispatch by input and by arg side
+pipeline read p.json ! edit --metadata a=b ! info
+pipeline read p.json ! edit --crs EPSG:4326 ! info
+pipeline read p.json ! edit --nodata 5 ! write out.json
+pipeline read p.json ! edit --nodata abc ! write out.json
+pipeline read p.json ! edit --scale abc ! write out.json
+pipeline read p.json ! edit --bbox 0,0,1,1 ! write out.json
+pipeline read pe2.tif ! edit --metadata a=b ! info
+pipeline read pe2.tif ! edit --nodata 5 ! write out.tif
+pipeline read pe2.tif ! edit --nodata abc ! write out.tif
+pipeline read pe2.tif ! edit --scale abc ! write out.tif
+pipeline read pe2.tif ! edit --layer-metadata a=b ! write out.tif
+pipeline read pe2.tif ! edit --unset-fid ! write out.tif
+pipeline read pe2.tif ! edit --geometry-type Foo ! write out.tif
+pipeline read pe2.tif ! edit --geometry-type POINT ! write out.tif
+pipeline read pe2.tif ! edit --crs bogus ! write out.tif
+pipeline read pe2.tif ! edit --crs EPSG:4326 ! write out.tif
+pipeline read pe2.tif ! edit --metadata novalue ! write out.tif
+pipeline read nosuch.json ! edit --layer-metadata a=b ! write out.json
+pipeline read nosuch.json ! edit --crs bogus ! write out.json
+raster pipeline read pe2.tif ! edit --layer-metadata a=b ! write out.tif
+raster pipeline read pe2.tif ! edit --unset-fid ! write out.tif
+# ---- generic pipeline: info default-format flip on vector-only options
+pipeline read mp2.json ! info
+pipeline read mp2.json ! info --features
+pipeline read mp2.json ! info --summary
+pipeline read mp2.json ! info --limit 1
+pipeline read mp2.json ! info -l m
+pipeline read mp2.json ! info --fid 7
+pipeline read mp2.json ! info --where 1=1
+pipeline read mp2.json ! info --crs-format WKT2
+pipeline read mp2.json ! info --of text --features
+pipeline read mp2.json ! info --of json
+pipeline read mp2.json ! edit ! info
+pipeline read mp2.json ! edit --unset-fid ! info --features
+pipeline read mp2.json ! edit --metadata a=b ! info --features
+pipeline read pe2.tif ! info --features
+pipeline concat p.json ! info --features
+pipeline concat p.json ! info --summary
+pipeline read mp2.json ! info --summary -l m
+# ---- layer filter origin decides driver identity and relationships
+vector pipeline read mp2.json ! info -l m
+vector pipeline read mp2.json ! info --of json -l m
+vector pipeline read mp2.json -l m ! info
+vector pipeline read mp2.json -l m ! info --of json
+vector pipeline read mp2.json -l m ! info --of json -l m
+vector info -l m mp2.json
+vector info --of json -l m mp2.json
+# ---- /vsistdout/ GDALG serialization echoes forced --quiet
+vector swap-xy --of GDALG p.json /vsistdout/
+vector swap-xy --of GDALG p.json -
+vector select --fields n --of GDALG p.json /vsistdout/
+vector convert --of GDALG p.json /vsistdout/
+vector reproject --dst-crs EPSG:4326 --of GDALG crs.json /vsistdout/
+raster convert --of GDALG pe2.tif /vsistdout/
+vector convert --if GeoJSON --oo X=Y -l pts --output-open-option A=B --co C=D --lco E=F --output-layer q --skip-errors p.json o.gdalg.json
+vector convert -l pts --co COORDINATE_PRECISION=5 p.json o.gdalg.json
+# ---- trailing-warp laziness: terminal pulls decide transform errors
+vector pipeline read crs2.json ! edit --crs EPSG:4326 ! reproject --dst-crs EPSG:3857 ! info
+vector pipeline read crs2.json ! edit --crs EPSG:4326 ! reproject --dst-crs EPSG:3857 ! info --features
+vector pipeline read crs2.json ! edit --crs EPSG:4326 ! reproject --dst-crs EPSG:3857 ! info --summary
+vector pipeline read crs2.json ! edit --crs EPSG:4326 ! reproject --dst-crs EPSG:3857 ! write out.json
+vector pipeline read crs2.json ! edit --crs EPSG:4326 ! reproject --dst-crs EPSG:3857 ! write --of GeoJSON /vsistdout/
+vector pipeline read crs.json ! swap-xy ! reproject --dst-crs EPSG:4326 ! info
+vector pipeline read crs.json ! swap-xy ! reproject --dst-crs EPSG:4326 ! write out.json
+vector pipeline read crs.json ! filter --where a=0 ! reproject --dst-crs EPSG:4326 ! info
+vector pipeline read crs.json ! reproject --dst-crs EPSG:4326 ! edit --metadata a=b ! info
+vector pipeline read crs.json ! reproject --dst-crs EPSG:4326 ! select --fields a ! info
+# ---- edit chained with warps and verbs, valid coords
+vector pipeline read crs.json ! edit --crs EPSG:4326 ! reproject --dst-crs EPSG:3857 ! info --features
+vector pipeline read crs.json ! edit --metadata a=b --crs EPSG:32631 ! swap-xy ! write --of GeoJSON /vsistdout/
+# ---- leaf write bars: count-hiding verbs render the whole bar at end
+vector filter --where n>0 p.json wb.json
+vector explode-collections p.json wb.json
+vector swap-xy p.json wb.json
+vector select --fields n p.json wb.json
+vector segmentize --max-length 2 p.json wb.json
+vector set-geom-type --multi p.json wb.json
+vector convert p.json wb.json
+# ---- help surfaces
+vector edit --help
+vector pipeline --help
+completion gdal vector edit --

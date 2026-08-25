@@ -1,0 +1,39 @@
+# VSI edges: recursive-copy progress wiring, sync --recursive walk order,
+# non-streaming zip entries with source mtime, gzip .properties cache
+#setup: mkdir -p src/sub tiny flat edir eftree && echo hello > src/a.txt && echo world > src/sub/b.txt && touch -d "2020-03-04 05:06:07" src/a.txt src/sub/b.txt && echo aa > tiny/t1.txt && echo bb > tiny/t2.txt && python3 -c "open('flat/big.bin','wb').write(b'z'*3000000)" && echo small > flat/s.txt && : > emp.bin && : > eftree/e.bin && python3 -c "import zipfile,gzip,shutil,os;  z=zipfile.ZipFile('x.zip','w');  z.writestr(zipfile.ZipInfo('d/e.txt',(2024,3,5,6,7,8)),'abc');  z.writestr(zipfile.ZipInfo('f.txt',(2024,3,5,6,7,8)),'xyz');  z.close();  f=open('x.zip','rb');  g=gzip.GzipFile('x.zip.gz','wb',mtime=0);  shutil.copyfileobj(f,g);  g.close();  os.remove('x.zip')"
+vsi copy --recursive src dcp
+vsi copy --recursive tiny dt
+vsi copy --recursive flat df
+vsi copy --recursive edir edo
+vsi copy --recursive eftree efo
+vsi copy --recursive -q flat dfq
+vsi copy src/a.txt one.bin
+vsi copy emp.bin eo.bin
+vsi copy src/a.txt /vsizip/z1.zip/a.txt
+vsi sync --recursive src/ so
+vsi sync --recursive src sr
+vsi sync src sn
+vsi list --recursive /vsizip//vsigzip/x.zip.gz
+vsi list /vsizip//vsigzip/x.zip.gz
+vsi copy /vsigzip/x.zip.gz out.zip
+#setup: mkdir -p src/sub tiny && echo hello > src/a.txt && echo world > src/sub/b.txt && touch -d "2020-03-04 05:06:07" src/a.txt src/sub/b.txt && echo aa > tiny/t1.txt && /home/agent/oracle/executable vsi copy -q src/a.txt /vsizip/z1.zip/a.txt && /home/agent/oracle/executable vsi sync --recursive -q src sr
+vsi copy src/sub/b.txt /vsizip/z1.zip/b.txt
+#setup: mkdir -p src/sub && echo hello > src/a.txt && echo world > src/sub/b.txt && /home/agent/oracle/executable vsi sync --recursive -q src sr
+vsi sync --recursive src sr
+#setup: mkdir -p B/deep E/deep E/e2 F/d1 F/d2 G/d1/dd && echo x > B/b.bin && echo y > B/deep/c.txt && echo x > E/b.bin && echo y > E/deep/c.txt && echo x > F/d1/f1 && echo x > G/za.bin && echo y > G/d1/dd/deepf
+vsi sync B tB
+vsi sync E tE
+vsi sync --recursive E rE
+vsi sync --recursive F rF
+vsi sync --recursive G rG
+#setup: mkdir -p s dnew deq && echo hi > s/f.txt && echo hi > dnew/f.txt && echo hi > deq/f.txt && touch -d "2024-01-01 00:00:00" s/f.txt deq/f.txt && touch -d "2025-01-01 00:00:00" dnew/f.txt && echo hi > sf.txt && cp -p sf.txt sf2.txt
+vsi sync s/ dnew
+vsi sync s/ deq
+vsi sync sf.txt sf2.txt
+#setup: python3 -c "import os; [os.makedirs(d,exist_ok=True) for d in ('n1/deep','n2/deep/deeper','n3/deep','n4/x/y','n4/z','n5/deep')]; w=lambda p,n: open(p,'wb').write(b'q'*n); w('n1/a.tif',5000); w('n1/deep/b.geojson',3000); w('n2/deep/deeper/f',12285); w('n3/deep/e',0); w('n3/deep/f',4094); w('n4/x/y/n',941); w('n4/x/m',2222); w('n4/z/e',0); w('n4/top',7000); w('n5/deep/f',4095)"
+vsi copy --recursive n1 o1
+vsi copy --recursive n2 o2
+vsi copy --recursive n3 o3
+vsi copy --recursive n4 o4
+vsi copy --recursive n5 o5
+vsi copy --recursive -q n1 oq

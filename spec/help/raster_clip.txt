@@ -1,0 +1,49 @@
+Usage: gdal raster clip [OPTIONS] <INPUT> <OUTPUT>
+
+Clip a raster dataset.
+
+Positional arguments:
+  -i, --input <INPUT>                                  Input raster datasets [required]
+  -o, --output <OUTPUT>                                Output raster dataset [required]
+
+Common Options:
+  -h, --help                                           Display help message and exit
+  --json-usage                                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                               Configuration option [may be repeated]
+  -q, --quiet                                          Quiet mode (no progress bar or warning message)
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>  Output format ("GDALG" allowed)
+  --co, --creation-option <KEY>=<VALUE>                Creation option [may be repeated]
+  --overwrite                                          Whether overwriting existing output dataset is allowed
+                                                       Mutually exclusive with --append
+  --append                                             Append as a subdataset to existing output
+                                                       Mutually exclusive with --overwrite
+  --bbox <BBOX>                                        Clipping bounding box as xmin,ymin,xmax,ymax
+                                                       Mutually exclusive with --window, --geometry, --like
+  --bbox-crs <BBOX-CRS>                                CRS of clipping bounding box
+  --window <WINDOW>                                    Raster window as col,line,width,height in pixels
+                                                       Mutually exclusive with --bbox, --geometry, --like
+  --geometry <GEOMETRY>                                Clipping geometry (WKT or GeoJSON)
+                                                       Mutually exclusive with --bbox, --window, --like
+  --geometry-crs <GEOMETRY-CRS>                        CRS of clipping geometry
+  --like <DATASET>                                     Dataset to use as a template for bounds
+                                                       Mutually exclusive with --bbox, --window, --geometry
+  --like-sql <SELECT-STATEMENT>                        SELECT statement to run on the 'like' dataset
+                                                       Mutually exclusive with --like-where
+  --like-layer <LAYER-NAME>                            Name of the layer of the 'like' dataset
+  --like-where <WHERE-EXPRESSION>                      WHERE SQL clause to run on the 'like' dataset
+                                                       Mutually exclusive with --like-sql
+  --only-bbox                                          For 'geometry' and 'like', only consider their bounding box
+  --allow-bbox-outside-source                          Allow clipping box to include pixels outside input dataset
+  --add-alpha                                          Adds an alpha mask band to the destination when the source raster have none.
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                  Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                    Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_clip.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

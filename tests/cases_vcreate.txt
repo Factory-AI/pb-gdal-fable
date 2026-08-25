@@ -1,0 +1,239 @@
+# vector create: leaf + pipeline step. Field defs (NAME:TYPE(W,P)), schema
+# ingestion (OGR_SCHEMA semantics, sorted fields, geometryFields), --like
+# templates (export-schema render + ERROR3 noise), mutex pair/combined
+# errors, exists/overwrite/update/overwrite-layer flows for GeoJSON and
+# shapefile, GDALG echo, driver guessing, pipeline first/mid/terminal
+# placement with template-from-chain semantics.
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"My Layer-Name","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > ml.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"i":1,"r":1.5,"s":"x","b":true,"il":[1,2],"sl":["a"],"dt":"2020-01-02T03:04:05Z","d":"2020-01-02","big":1234567890123,"nul":null},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4]]}}]}' > ty.json && printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[10,20]}}]}' > zp.json && printf %s '{"type":"FeatureCollection","name":"c","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[500000,4649776]}}]}' > crs.json && printf %s '{"type":"FeatureCollection","name":"AA","features":[]}' > ex.json && printf %s '{"type":"FeatureCollection","name":"AA","features":[]}' > ex2.json && printf %s '{"type":"FeatureCollection","name":"AA","features":[]}' > ex3.json && printf %s '{"type":"FeatureCollection","name":"ow","features":[]}' > ow.json && printf %s '{"type":"gdal_streamed_alg","command_line":"gdal vector create --output-format stream --output streamed_dataset","gdal_version":"3130000"}' > g0.gdalg.json && printf %s '{"layers":[{"name":"filelayer","fields":[{"name":"ff","type":"Integer64"}]}]}' > schf.json && printf %s '{"type":"FeatureCollection","name":"Aa B","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > l1.json && printf %s '{"type":"FeatureCollection","name":"Cc D","features":[{"type":"Feature","properties":{"n":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > l2.json && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" l1.json shpd2 --output-layer AaB && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" l2.json shpd2 --output-layer CcD --update && python3 /workspace/tests/mk_pipeedit_fixtures.py .
+# ---- leaf basics
+vector create out1.json
+vector create --output-layer mylayer out2.json
+vector create sub.geojson
+vector create noext
+vector create --of GeoJSON noext2
+vector create -o dashout.json
+vector create --output dashout2.json
+# ---- geometry type
+vector create --geometry-type POINT gp.json
+vector create --geometry-type MULTIPOLYGONZ gp2.json
+vector create --geometry-type POINTZM gp3.json
+vector create --geometry-type GEOMETRY gp4.json
+vector create --geometry-type point gp5.json
+vector create --geometry-type "MULTI POINT" gp6.json
+vector create --geometry-type NONE gbad.json
+vector create --geometry-type nosuch gbad.json
+# ---- crs
+vector create --crs EPSG:4326 --geometry-type POINT c1.json
+vector create --crs EPSG:32631 --geometry-type POINT c2.json
+vector create --crs OGC:CRS84 --geometry-type POINT c3.json
+vector create --crs "+proj=longlat +datum=WGS84" --geometry-type POINT c4.json
+vector create --crs nosuch c5.json
+vector create --crs none c6.json
+vector create --crs null c7.json
+# ---- fid / geometry-field
+vector create --fid myfid f1.json
+vector create --geometry-field gg --geometry-type POINT gf.json
+# ---- --field
+vector create --field a:Integer fld1.json
+vector create --field z:String --field a:Integer fld2.json
+vector create --field "r:Real(12,4)" fld3.json
+vector create --field "s:String(33)" fld4.json
+vector create --field a:integer fld5.json
+vector create --field a:Boolean fldb.json
+vector create --field bad fldbad.json
+vector create --field :Integer fldbad.json
+vector create --field "a:" fldbad.json
+vector create --field "a:Integer(x)" fldbad.json
+vector create --field "a:b:Integer" fldbad.json
+vector create --field a:Integer64 --field b:Date --field c:Time --field d:DateTime --field e:Binary --field f:IntegerList --field g:Integer64List --field h:RealList --field i:StringList fldall.json
+# ---- shapefile output
+vector create --of "ESRI Shapefile" --field a:Integer shp1
+vector create --of "ESRI Shapefile" --geometry-type POINT shp2
+vector create --of "ESRI Shapefile" --crs EPSG:32631 --geometry-type POINT shp3
+vector create sf2.dbf
+vector create --of "ESRI Shapefile" --field a:Integer --field b:Integer64 --field c:Real --field d:String --field e:Date shpw
+# ---- GDALG
+vector create --of GDALG g1.gdalg.json
+vector create g2.gdalg.json
+vector create --of GDALG --overwrite --update --overwrite-layer --geometry-type POINTM --geometry-field gg --crs EPSG:4326 --field a:Integer --field "b:Real(5,2)" gm.gdalg.json
+vector create --of GDALG --schema '{"layers":[]}' gs.gdalg.json
+vector create --of GDALG --like ml.json -l "My Layer-Name" --if GeoJSON --oo A=B --output-oo C=D --co E=F --lco G=H --output-layer OL ga.gdalg.json
+vector create --of GDALG --output-layer OL --fid myfid gc.gdalg.json
+# ---- other drivers
+vector create --of MEM memout
+vector create --of stream stx.json
+vector create --of GTiff bad.tif
+vector create --of nosuchdrv bad.x
+vector create --of GeoJSONSeq q.geojsonl
+vector create --of GeoJSONSeq --crs EPSG:4326 --geometry-type POINT q3.geojsonl
+vector create --like shpd2 --of GeoJSONSeq sq.geojsonl
+# ---- exists / overwrite / update family (GeoJSON)
+vector create ex.json
+vector create g0.gdalg.json
+vector create --overwrite ex2.json
+vector create --update --output-layer AA ex.json
+vector create --update --output-layer aa ex.json
+vector create --update --output-layer NEW ex.json
+vector create --overwrite-layer --output-layer AA ex.json
+vector create --overwrite-layer --output-layer NEW ex.json
+vector create --update nosuchupd.json
+vector create --overwrite --update --output-layer zz ex3.json
+vector create --overwrite-layer --update dup.json
+vector create --update --overwrite-layer --output-layer AA ex.json
+vector convert --overwrite-layer --update ml.json cv.json
+# ---- update family (shapefile dir)
+vector create --of "ESRI Shapefile" --update --output-layer NEWL --geometry-type POINT shpd2
+vector create --of "ESRI Shapefile" --update --output-layer AaB shpd2
+vector create --of "ESRI Shapefile" --update --output-layer aab shpd2
+vector create --of "ESRI Shapefile" --overwrite-layer --output-layer AaB --geometry-type MULTIPOINT shpd2
+vector create --of "ESRI Shapefile" --overwrite-layer --output-layer NOPE shpd2
+vector create --update --of "ESRI Shapefile" nosuchdir
+# ---- like templates
+vector create --like ml.json lk1.json
+vector create --like crs.json lk2.json
+vector create --like ty.json lk3.json
+vector create --like shpd2 lkm.json
+vector create --like shpd2 -l AaB lksel.json
+vector create --like shpd2 -l aab lkbad.json
+vector create --like shpd2 -l AaB -l CcD lk2sel.json
+vector create --like nosuch.json lkno.json
+vector create --like ml.json --output-layer QQ lkol.json
+vector create --like ml.json --of "ESRI Shapefile" lkshp
+vector create --like ty.json --of "ESRI Shapefile" tshp
+vector create --like pe2.tif lkras.json
+vector create -i ml.json lki.json
+vector create --input ml.json lkin.json
+# ---- schema
+vector create --schema '{"layers":[]}' s1.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"name":"q","type":"Integer"}]}]}' s2.json
+vector create --schema '{"layers":[{"name":"x","schemaType":"Full","fields":[{"name":"q"}]}]}' s4.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"name":"q"}]}]}' sbad.json
+vector create --schema '{"layers":[{"name":"x","fields":[]}]}' sbad.json
+vector create --schema '{"layers":[{"fields":[{"name":"q","type":"Integer"}]}]}' sbad.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"type":"Integer"}]}]}' sbad.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"name":"q","type":"nope"}]}]}' sbad.json
+vector create --schema '{"lay' sbad.json
+vector create --schema notjson sbad.json
+vector create --schema schf.json sfile.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"name":"q","type":"Integer"}],"geometryFields":[{"name":"g","type":"MultiPointZ","coordinateSystem":{"authid":"EPSG:32631"}}]}]}' sg.json
+vector create --schema '{"layers":[{"name":"x","schemaType":"Full","geometryFields":[{"name":"g","type":"Point"}]}]}' sgf.json
+vector create --schema '{"layers":[{"name":"x","geometryFields":[{"name":"g","type":"Point"}]}]}' sbad.json
+vector create --schema '{"layers":[{"name":"x","schemaType":"Patch","fields":[{"name":"q","type":"Integer"}]}]}' sp.json
+vector create --schema '{"layers":[]}' --output-layer QQ sol.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"name":"q","type":"Integer"}]},{"name":"y","fields":[{"name":"r","type":"Real"}]}]}' -l y ssel.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"name":"q","type":"Integer"}]},{"name":"y","fields":[{"name":"r","type":"Real"}]}]}' -l nope ssel2.json
+vector create --schema '{"layers":[{"name":"x","fields":[{"name":"q","type":"Integer"}]},{"name":"y","fields":[{"name":"r","type":"Real"}]}]}' smulti.json
+# ---- mutual exclusion
+vector create --like ml.json --field a:Integer mx1.json
+vector create --schema '{"layers":[]}' --field a:Integer mx2.json
+vector create --field a:Integer --schema '{"layers":[]}' mx3.json
+vector create --like ml.json --fid q mx4.json
+vector create --like ml.json --crs EPSG:4326 mx5.json
+vector create --like ml.json --geometry-type POINT mx6.json
+vector create --schema '{"layers":[]}' --geometry-field g mx7.json
+vector create --schema '{"layers":[]}' --field a:Integer ex.json
+# ---- misc leaf
+vector create
+vector create --help
+vector create /vsistdout/
+vector create --of GeoJSON /vsistdout/
+vector create --of GeoJSON --output-layer named /vsistdout/
+# ---- pipeline: terminal create
+vector pipeline read ml.json ! create pc1.json
+vector pipeline read ml.json ! create --of GeoJSON pc2.json
+vector pipeline read crs.json ! create pcc.json
+vector pipeline read shpd2 ! create shmulti.json
+vector pipeline read shpd2 -l AaB ! create shsel2.json
+vector pipeline read shpd2 ! create -l AaB shsel3.json
+vector pipeline read shpd2 ! create -l aab shsel4.json
+vector pipeline read ml.json ! create --of GDALG o.gdalg.json
+vector pipeline read ml.json ! create o.gdalg.json
+vector pipeline read ml.json ! create --of "ESRI Shapefile" pshp
+vector pipeline -q read ml.json ! create q1.json
+vector pipeline read ml.json ! create --overwrite ow.json
+vector pipeline read ml.json ! create --update --output-layer AA ex.json
+# ---- pipeline: parse and mutex errors
+vector pipeline read ml.json ! create
+vector pipeline read ml.json ! create --geometry-type nosuch o.json
+vector pipeline read nosuch.json ! create --geometry-type nosuch o.json
+vector pipeline read ml.json ! create --field bad o.json
+vector pipeline read ml.json ! create --field a:Integer o.json
+vector pipeline read ml.json ! create --schema '{"layers":[]}' o.json
+vector pipeline read ml.json ! create --crs EPSG:4326 o.json
+vector pipeline read ml.json ! create --fid q o.json
+vector pipeline read ml.json ! create --like zp.json o.json
+vector pipeline create --output alone.json
+# ---- pipeline: create first / mid
+vector pipeline create fs.json ! info
+vector pipeline create --output fso.json ! info
+vector pipeline create --like ml.json fl.json ! info
+vector pipeline create --field z:Integer --field a:String --output dor.json ! export-schema
+vector pipeline create --geometry-type POINTZ --crs EPSG:32631 --output cy.json ! export-schema
+vector pipeline create --schema '{"layers":[{"name":"x","fields":[{"name":"q","type":"Integer","subType":"Boolean","width":1,"nullable":false,"uniqueConstraint":true},{"name":"dt","type":"DateTime","timezone":"+05:30"}]}]}' --output cx.json ! export-schema
+vector pipeline create --schema '{"layers":[{"name":"x","fields":[{"name":"zz","type":"Integer"},{"name":"AA","type":"Integer"},{"name":"a1","type":"Integer"},{"name":"B","type":"Integer"}]}]}' --output srt.json ! export-schema
+vector pipeline create --geometry-field gg --geometry-type POINT --output gfd.json ! export-schema
+vector pipeline read ml.json ! create mid1.json ! info
+vector pipeline read ml.json ! create mid2.json ! export-schema
+vector pipeline read ml.json ! create mid3.json ! write mid4.json
+vector pipeline read ty.json ! create tyx.json ! export-schema
+# ---- pipeline: routing errors
+raster pipeline read pe2.tif ! create o.json
+pipeline read pe2.tif ! create o.json
+pipeline create gi.json ! info
+pipeline create gt.tif ! info
+# ---- mutex combos and spec-order anchoring
+vector create --like ml.json --schema '{"layers":[]}' mx8.json
+vector create --schema '{"layers":[]}' --like ml.json mx9.json
+vector create --like ml.json --schema '{"layers":[]}' --field a:Integer mx10.json
+vector pipeline create --like ml.json --field a:Integer o.json ! info
+vector pipeline create --schema '{"layers":[]}' --field a:Integer o.json ! info
+vector pipeline create --field a:Integer --crs EPSG:4326 pok.json ! info
+# ---- geometry-type space and exotic bases
+vector create --geometry-type MULTIPOINT25D m25.json
+vector create --geometry-type CIRCULARSTRING csx.json
+vector create --geometry-type CURVE cux.json
+vector create --geometry-type TIN tinx.json
+vector edit --geometry-type "MULTI POINT" ml.json emp.json
+# ---- gdalg echo quoting
+vector create --of GDALG --field "a,b:String" qc1.gdalg.json
+vector create --of GDALG --output-layer 'a\b' qc2.gdalg.json
+vector create --of GDALG --field bad qf.gdalg.json
+# ---- like + update chains (schema wording, original layer names)
+vector create --like ml.json --update ex.json
+vector create --like ml.json --overwrite-layer --output-layer NOPE ex.json
+vector create --like ml.json --overwrite-layer --output-layer AA ex.json
+vector create --like ml.json --update --output-layer AA ex.json
+# ---- shapefile unsupported-field wording per defs source
+vector create --of "ESRI Shapefile" --field il:IntegerList fshp
+vector create --of "ESRI Shapefile" --schema '{"layers":[{"name":"x","fields":[{"name":"il","type":"IntegerList"}]}]}' sshp
+vector create --of "ESRI Shapefile" --field a:Integer ovs
+vector convert ty.json --of "ESRI Shapefile" cshp
+vector pipeline read ty.json ! create --of "ESRI Shapefile" pshp2
+# ---- single-step create pipelines
+vector pipeline create --output single.json
+pipeline create --output single.json
+vector pipeline create single.json
+raster pipeline create --output single.tif
+vector pipeline create
+# ---- RFC7946 no-SRS warning (fires when the layer got no SRS: --crs
+# without --geometry-type is ignored) + seq co/lco validation
+vector create --lco RFC7946=YES rf1.json
+vector create --lco RFC7946=YES --crs EPSG:4326 rf2.json
+vector create --lco RFC7946=YES --crs EPSG:32631 --geometry-type POINT rf3.json
+vector create --lco RFC7946=YES --crs EPSG:4326 --geometry-type GEOMETRY rf4.json
+vector create --lco RFC7946=FOO rf5.json
+vector create --lco RFC7946=NO rf6.json
+vector create --lco rfc7946=yes rf7.json
+vector create --co XX=1 --lco NOSUCH=1 --lco RFC7946=YES rf8.json
+vector create --lco WRITE_BBOX=YES --lco RFC7946=YES rf9.json
+vector create --lco COORDINATE_PRECISION=3 --lco RFC7946=YES rf10.json
+vector create --lco RFC7946=YES sq1.geojsonl
+vector create --of GeoJSONSeq --co XX=1 sq2.geojsonl
+vector create --of GeoJSONSeq --co XX=1 --lco RFC7946=YES --lco YY=2 sq3.geojsonl
+vector create --crs EPSG:32631 nocrs1.json
+vector create --field "a:Real(0,4)" xf1.json
+vector create --field "a:String(0)" xf2.json
+vector create --field "a:Integer(5,2)" xf3.json
+vector create --geometry-field "" xgf.json
+vector create --fid "" xfid.json

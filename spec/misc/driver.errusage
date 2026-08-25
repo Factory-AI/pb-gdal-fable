@@ -1,0 +1,10 @@
+ERROR 1: driver: Unknown command: '__no_such_subcommand__'
+Usage: gdal driver <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - cog: Command for COG driver specific operations.
+
+Try 'gdal driver --help' for help.
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

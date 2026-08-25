@@ -1,0 +1,101 @@
+# gdal raster reclassify: mapping grammar (exact values, intervals with
+# the CPLStrtod inf/nan quirks, NO_DATA/DEFAULT/PASS_THROUGH), @file
+# resolution, --ot validation timing, per-block unmapped-value failures,
+# and the GDALG raw-mapping serialization that skips all validation
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_calc_fixtures as f; f.make()"
+raster reclassify -m "2=5;3=6;7=8" g1.tif out.tif
+raster reclassify -m "2=5;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "2=5;DEFAULT=PASS_THROUGH" g1.tif out.tif
+raster reclassify -m "2=5" g1.tif out.tif
+raster reclassify -m "[2,3]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "(2,7)=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[3,infinity]=9;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[-inf,3)=9;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "NO_DATA=1;DEFAULT=0" ndA.tif out.tif
+raster reclassify -m "4=NO_DATA;DEFAULT=0" ndA.tif out.tif
+raster reclassify -m "NO_DATA=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "2=NO_DATA" g1.tif out.tif
+raster reclassify -m "[2,3]=1;[3,7]=2;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "2=5;DEFAULT=0" --ot Int16 g1.tif out.tif
+raster reclassify -m "2=300;DEFAULT=0" --ot Byte g1.tif out.tif
+raster reclassify -m "2=5.5;DEFAULT=0" --ot Byte g1.tif out.tif
+raster reclassify -m "2=" g1.tif out.tif
+raster reclassify -m "=5" g1.tif out.tif
+raster reclassify -m "abc=5" g1.tif out.tif
+raster reclassify -m "[5,2]=1" g1.tif out.tif
+raster reclassify -m "DEFAULT=1;DEFAULT=2" g1.tif out.tif
+raster reclassify -m @map1.txt g1.tif out.tif
+raster reclassify -m @map2.txt g1.tif out.tif
+raster reclassify -m @map3.txt g1.tif out.tif
+raster reclassify -m @map4.txt gb.tif out.tif
+raster reclassify -m @nosuch.txt g1.tif out.tif
+raster reclassify -m "1=10;2=20;DEFAULT=0" mb2.tif out.tif
+raster reclassify -m "1=10" mb2.tif out.tif
+raster reclassify -m "2=5;DEFAULT=PASS_THROUGH" g1.tif out.vrt
+raster reclassify -m "2=5;DEFAULT=0" --ot Int16 g1.tif out.vrt
+raster reclassify -m "2=5" g1.tif out.vrt
+raster reclassify -m "2=5;DEFAULT=0" g1.tif out.gdalg.json
+raster reclassify -m @map1.txt g1.tif out.gdalg.json
+raster reclassify -m "2=5" g1.tif out.gdalg.json
+raster reclassify -m "2=5;DEFAULT=0" -f MEM g1.tif out.mem
+raster reclassify -m "2=5;DEFAULT=0" -f stream g1.tif out.stream
+raster reclassify -m "2=5" -f stream g1.tif out.stream
+raster reclassify -q -m "2=5;DEFAULT=0" g1.tif out.tif
+raster reclassify -q -m "2=5" g1.tif out.tif
+raster reclassify -m "2=5;DEFAULT=0" g1.tif mb2.tif
+raster reclassify -m "[0,1]=1;DEFAULT=9" g2.tif out.tif
+raster reclassify -m "2=nan;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "2=nan;DEFAULT=0" --ot Byte g1.tif out.tif
+raster reclassify -m "2=5" nosuch.tif out.tif
+raster reclassify -m "2=5;DEFAULT=0" --co COMPRESS=LZW g1.tif out.tif
+raster reclassify -m "[3,infinity]=9;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[infinity,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[-infinity,3)=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[+infinity,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[inf,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[-inf,-1]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[INFINITY,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[3,INF]=9;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,+inf]=9;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[3,-inf]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[nan,3]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,nan]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,nanx]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[nan,3e]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,3e]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1x,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1e,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1e2,200]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[5]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[5 6]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[5=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1 ,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1, 9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[ 1,9]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,9 ]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[,3]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[ ,3]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,x]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,2,3]=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[2,3]x=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[2,3] =1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[2,3]=1x;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[1,2)x=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "infinity=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "-infinity=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "-inf=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "nan=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "nanx=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "3e=1;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "2=infinity;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "2=-infinity;DEFAULT=0" g1.tif out.tif
+raster reclassify -m "[2,3]=1;DEFAULT=0" g1.tif out.gdalg.json
+raster reclassify -m "2 =5" g1.tif out.gdalg.json
+raster reclassify -m "abc=5" g1.tif out.gdalg.json
+raster reclassify -m @nosuch.txt g1.tif out.gdalg.json
+raster reclassify -m "2=300" --ot Byte g1.tif out.gdalg.json
+raster reclassify -m "[5,2]=1" g1.tif out.gdalg.json
+raster reclassify -m @map5.txt g1.tif out.tif
+raster reclassify -m @map5.txt g1.tif out.gdalg.json
+raster reclassify -m @map2.txt gb.tif out.tif

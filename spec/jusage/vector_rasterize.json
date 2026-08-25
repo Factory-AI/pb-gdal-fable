@@ -1,0 +1,346 @@
+{
+  "name":"rasterize",
+  "full_path":[
+    "gdal",
+    "vector",
+    "rasterize"
+  ],
+  "description":"Burns vector geometries into a raster.",
+  "short_url":"\/programs\/gdal_vector_rasterize.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vector_rasterize.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATE"
+        ],
+        "vrt_compatible":[
+          "false"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input vector datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"band",
+      "type":"integer_list",
+      "description":"The band(s) to burn values into (1-based index)",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"invert",
+      "type":"boolean",
+      "description":"Invert the rasterization",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"all-touched",
+      "type":"boolean",
+      "description":"Enables the ALL_TOUCHED rasterization option",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"burn",
+      "type":"real_list",
+      "description":"Burn value",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"attribute-name",
+      "type":"string",
+      "description":"Attribute name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"3d",
+      "type":"boolean",
+      "description":"Indicates that a burn value should be extracted from the Z values of the feature",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"input-layer",
+      "type":"string",
+      "description":"Input layer name",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"layer-name-or-sql"
+    },
+    {
+      "name":"where",
+      "type":"string",
+      "description":"SQL where clause",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"sql",
+      "type":"string",
+      "description":"SQL select statement",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"layer-name-or-sql"
+    },
+    {
+      "name":"dialect",
+      "type":"string",
+      "description":"SQL dialect",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"nodata",
+      "type":"real",
+      "description":"Assign a specified nodata value to output bands",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"init",
+      "type":"real_list",
+      "description":"Pre-initialize output bands with specified value",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"crs",
+      "type":"string",
+      "description":"Override the projection for the output file",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"transformer-option",
+      "type":"string_list",
+      "description":"Set a transformer option suitable to pass to GDALCreateGenImgProjTransformer2",
+      "metavar":"<NAME>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"extent",
+      "type":"real_list",
+      "description":"Set the target georeferenced extent",
+      "metavar":"<xmin>,<ymin>,<xmax>,<ymax>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":4,
+      "max_count":4,
+      "category":"Base"
+    },
+    {
+      "name":"resolution",
+      "type":"real_list",
+      "description":"Set the target resolution",
+      "metavar":"<xres>,<yres>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":2,
+      "max_count":2,
+      "category":"Base",
+      "mutual_exclusion_group":"size-or-resolution"
+    },
+    {
+      "name":"target-aligned-pixels",
+      "type":"boolean",
+      "description":"(target aligned pixels) Align the coordinates of the extent of the output file to the values of the resolution",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"size",
+      "type":"integer_list",
+      "description":"Set the target size in pixels and lines",
+      "metavar":"<xsize>,<ysize>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":2,
+      "max_count":2,
+      "category":"Base",
+      "mutual_exclusion_group":"size-or-resolution"
+    },
+    {
+      "name":"output-data-type",
+      "type":"string",
+      "description":"Output data type",
+      "choices":[
+        "UInt8",
+        "Int8",
+        "UInt16",
+        "Int16",
+        "UInt32",
+        "Int32",
+        "UInt64",
+        "Int64",
+        "CInt16",
+        "CInt32",
+        "Float16",
+        "Float32",
+        "Float64",
+        "CFloat32",
+        "CFloat64"
+      ],
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "type":[
+          "GDALDataType"
+        ]
+      }
+    },
+    {
+      "name":"optimization",
+      "type":"string",
+      "description":"Force the algorithm used (results are identical)",
+      "choices":[
+        "AUTO",
+        "RASTER",
+        "VECTOR"
+      ],
+      "default":"AUTO",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"add",
+      "type":"boolean",
+      "description":"Add to existing raster",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"update",
+      "type":"boolean",
+      "description":"Whether to open existing dataset in update mode",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

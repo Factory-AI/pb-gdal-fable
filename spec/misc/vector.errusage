@@ -1,0 +1,48 @@
+ERROR 1: vector: Unknown command: '__no_such_subcommand__'
+Usage: gdal vector <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - buffer:              Compute a buffer around geometries of a vector dataset.
+  - check-coverage:      Check a polygon coverage for validity
+  - check-geometry:      Check a dataset for invalid geometries
+  - clean-coverage:      Alter polygon boundaries to make shared edges identical, removing gaps and overlaps
+  - clip:                Clip a vector dataset.
+  - combine:             Combine features into collections
+  - concat:              Concatenate vector datasets.
+  - concave-hull:        Compute the concave hull of geometries of a vector dataset.
+  - convert:             Convert a vector dataset.
+  - convex-hull:         Compute the convex hull of geometries of a vector dataset.
+  - create:              Create a vector dataset.
+  - dissolve:            Dissolves multipart features
+  - edit:                Edit metadata of a vector dataset.
+  - explode-collections: Explode geometries of type collection of a vector dataset.
+  - export-schema:       Export the OGR_SCHEMA from a vector dataset.
+  - filter:              Filter a vector dataset.
+  - grid:                Create a regular grid from scattered points.
+  - index:               Create a vector index of vector datasets.
+  - info:                Return information on a vector dataset.
+  - layer-algebra:       Perform algebraic operation between 2 layers.
+  - make-point:          Create point geometries from attribute fields
+  - make-valid:          Fix validity of geometries of a vector dataset.
+  - partition:           Partition a vector dataset into multiple files.
+  - pipeline:            Process a vector dataset applying several steps.
+  - rasterize:           Burns vector geometries into a raster.
+  - rename-layer:        Rename layer(s) of a vector dataset.
+  - reproject:           Reproject a vector dataset.
+  - segmentize:          Segmentize geometries of a vector dataset.
+  - select:              Select a subset of fields from a vector dataset.
+  - set-field-type:      Modify the type of a field of a vector dataset.
+  - set-geom-type:       Modify the geometry type of a vector dataset.
+  - simplify:            Simplify geometries of a vector dataset.
+  - simplify-coverage:   Simplify shared boundaries of a polygonal vector dataset.
+  - sort:                Spatially order the features in a layer
+  - sql:                 Apply SQL statement(s) to a dataset.
+  - swap-xy:             Swap X and Y coordinates of geometries of a vector dataset.
+  - update:              Update an existing vector dataset with an input vector dataset.
+
+Try 'gdal vector --help' for help.
+
+For more details, consult https://gdal.org/programs/gdal_vector.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

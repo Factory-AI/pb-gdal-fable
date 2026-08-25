@@ -1,0 +1,76 @@
+# gdal vsi sozip create/list/validate/optimize
+# fixture zips are produced by the reference binary in setup so both
+# sandboxes hold oracle-authentic bytes; our writer is verified byte-equal
+# by the create cases themselves
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_sozip_fixtures as m; m.write_inputs(); m.write_foreign()"
+vsi sozip create a.txt out.zip
+vsi sozip create big.bin big.zip
+vsi sozip create a.txt big.bin multi.zip
+vsi sozip create mb.bin mb.zip
+vsi sozip create mb2.bin mb2.zip
+vsi sozip create empty.bin emp.zip
+vsi sozip create a.txt empty.bin z1.zip
+vsi sozip create -r sub dirr.zip
+vsi sozip create -r nest deepz.zip
+vsi sozip create -r -j sub dirj.zip
+vsi sozip create sub dir.zip
+vsi sozip create a.txt sub q2.zip
+vsi sozip create --enable-sozip yes --sozip-chunk-size 4 a.txt h.zip
+vsi sozip create --enable-sozip yes big.bin y.zip
+vsi sozip create --enable-sozip no big.bin g.zip
+vsi sozip create --enable-sozip maybe a.txt bad.zip
+vsi sozip create --sozip-chunk-size 16K --enable-sozip yes big.bin i.zip
+vsi sozip create --sozip-min-file-size 1000 mb.bin j.zip
+vsi sozip create --sozip-chunk-size 0 a.txt k0.zip
+vsi sozip create --content-type text/plain a.txt k3.zip
+vsi sozip create --content-type text/x-foo a.txt b.txt ct2.zip
+vsi sozip create -q a.txt q1.zip
+vsi sozip create /tmp/does/not/exist.txt m.zip
+vsi sozip create sub/f1.txt out.txt
+vsi sozip create a.txt nodir/out.zip
+vsi sozip create a.txt bare.zip
+vsi sozip create a.txt garbage.zip
+vsi sozip create -q a.txt garbage.zip
+vsi sozip list garbage.zip
+vsi sozip list bare.zip
+vsi sozip list missing.zip
+vsi sozip list a.txt
+vsi sozip list py.zip
+vsi sozip list old.zip
+vsi sozip validate garbage.zip
+vsi sozip validate bare.zip
+vsi sozip validate missing.zip
+vsi sozip validate -v py.zip
+vsi sozip validate py.zip
+vsi sozip optimize garbage.zip og.zip
+vsi sozip optimize missing.zip om.zip
+vsi sozip optimize py.zip optpy.zip
+vsi sozip optimize py.zip badext.txt
+vsi sozip optimize self.zip optself.zip
+vsi sozip optimize -q py.zip oq.zip
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_sozip_fixtures as m; m.write_inputs(); m.write_foreign()" && o=/home/agent/oracle/executable && $o vsi sozip create a.txt out.zip >/dev/null 2>&1 && $o vsi sozip create a.txt big.bin multi.zip >/dev/null 2>&1 && $o vsi sozip create --enable-sozip yes --sozip-chunk-size 4 a.txt h.zip >/dev/null 2>&1 && $o vsi sozip create --content-type text/plain a.txt k3.zip >/dev/null 2>&1 && $o vsi sozip create big.bin bigz.zip >/dev/null 2>&1 && $o vsi sozip create -r nest odeep.zip >/dev/null 2>&1 && python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_sozip_fixtures as m; m.corrupt('bigz.zip')" && python3 -c "import os; [os.utime(f,(1623053350,1623053350)) for f in ['out.zip','multi.zip','h.zip','k3.zip','bigz.zip','odeep.zip']]"
+vsi sozip list out.zip
+vsi sozip list multi.zip
+vsi sozip list h.zip
+vsi sozip list k3.zip
+vsi sozip validate out.zip
+vsi sozip validate multi.zip
+vsi sozip validate -v multi.zip
+vsi sozip validate h.zip
+vsi sozip validate --verbose h.zip
+vsi sozip list odeep.zip
+vsi sozip validate -v odeep.zip
+vsi sozip optimize odeep.zip odopt.zip
+vsi sozip validate -v corrupt1.zip
+vsi sozip validate corrupt2.zip
+vsi sozip validate -v corrupt2.zip
+vsi sozip create b.txt out.zip
+vsi sozip create a.txt out.zip
+vsi sozip create a.txt out.zip --overwrite
+vsi sozip optimize multi.zip opt.zip
+vsi sozip optimize h.zip opt2.zip
+vsi sozip optimize k3.zip optct.zip
+vsi sozip optimize multi.zip out.zip
+vsi sozip optimize multi.zip out.zip --overwrite
+vsi sozip optimize --sozip-chunk-size 4 --enable-sozip yes k3.zip optf.zip
+vsi sozip optimize -q multi.zip oq.zip

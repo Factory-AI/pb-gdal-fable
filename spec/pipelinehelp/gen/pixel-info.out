@@ -1,0 +1,26 @@
+Usage: pixel-info [OPTIONS] <INPUT> [<POSITION-DATASET>]
+
+Return information on a pixel of a raster dataset.
+
+Positional arguments:
+  -i, --dataset, --input <INPUT>                Input raster datasets [required]
+  --position-dataset <POSITION-DATASET>         Vector dataset with coordinates
+                                                Mutually exclusive with --position
+
+Common Options:
+  -h, --help                                    Display help message and exit
+  --json-usage                                  Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                        Configuration option [may be repeated]
+
+Options:
+  -l, --layer, --input-layer <INPUT-LAYER>      Input layer name
+  -b, --band <BAND>                             Input band(s) (1-based index) [may be repeated]
+  --overview <OVERVIEW>                         Which overview level of source file must be used
+  -p, --pos, --position <column,line> or <X,Y>  Pixel position [may be repeated]
+                                                Mutually exclusive with --position-dataset
+  --position-crs <POSITION-CRS>                 CRS of position (default is 'pixel' if 'position-dataset' not specified)
+  -r, --resampling <RESAMPLING>                 Resampling algorithm for interpolation. RESAMPLING=nearest|bilinear|cubic|cubicspline (default: nearest)
+  --promote-pixel-value-to-z                    Whether to set the pixel value as Z component of GeoJSON geometry
+  --include-field <INCLUDE-FIELD>               Fields from coordinate dataset to include in output (special values: ALL and NONE) (default: ALL) [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_pixel_info.html

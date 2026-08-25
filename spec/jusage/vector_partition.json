@@ -1,0 +1,195 @@
+{
+  "name":"partition",
+  "full_path":[
+    "gdal",
+    "vector",
+    "partition"
+  ],
+  "description":"Partition a vector dataset into multiple files.",
+  "short_url":"\/programs\/gdal_vector_partition.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vector_partition.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input vector datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output",
+      "type":"string",
+      "description":"Output directory",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Whether appending to existing layer is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"field",
+      "type":"string_list",
+      "description":"Attribute or geometry field(s) on which to partition",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"scheme",
+      "type":"string",
+      "description":"Partitioning scheme",
+      "choices":[
+        "hive",
+        "flat"
+      ],
+      "default":"hive",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"pattern",
+      "type":"string",
+      "description":"Filename pattern ('part_%010d' for scheme=hive, '{LAYER_NAME}_{FIELD_VALUE}_%010d' for scheme=flat)",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"feature-limit",
+      "type":"integer",
+      "description":"Maximum number of features per file",
+      "min_value":0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-file-size",
+      "type":"string",
+      "description":"Maximum file size (MB or GB suffix can be used)",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"omit-partitioned-field",
+      "type":"boolean",
+      "description":"Whether to omit partitioned fields from target layer definition",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"skip-errors",
+      "type":"boolean",
+      "description":"Skip errors when writing features",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ],
+  "supports_streamed_output":true
+}

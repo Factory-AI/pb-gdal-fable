@@ -1,0 +1,411 @@
+# D1 datum/ensemble geokey reconstruction differential: known-code
+# routes, citation variants, datum classes, custom projections over
+# coded bases, unit lookups, and geokey bounds validation.
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_bad_ascii.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_bad_ascii.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_bad_dbl.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_bad_dbl.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_bad_dir.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_bad_dir.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_cit_datum.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_cit_datum.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_cit_ell.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_cit_ell.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_cit_empty.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_cit_empty.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_cit_gcs.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_cit_gcs.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_cit_raw.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_cit_raw.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_code4258.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_code4258.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_code4267.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_code4267.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_code4936.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_code4936.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_code7789.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_code7789.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_code9000.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_code9000.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat1165.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat1165.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat32767.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat32767.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat6258.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat6258.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat6267.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat6267.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat6326_arow.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat6326_arow.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat6326_nwl.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat6326_nwl.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat6760.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat6760.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_dat6760b.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_dat6760b.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_datbad.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_datbad.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_datwgs.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_datwgs.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_eng_cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_eng_cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_eng_lunits.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_eng_lunits.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc29999.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc29999.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc4326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc4326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc4936d.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc4936d.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc_9036.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc_9036.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc_badlin.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc_badlin.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc_name.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc_name.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc_name2.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc_name2.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc_no2048.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc_no2048.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geoc_nolin.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geoc_nolin.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geog4936.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geog4936.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_geog_no2048.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_geog_no2048.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_ok_nulcount.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_ok_nulcount.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_ok_overrun.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_ok_overrun.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_pe_mt327.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_pe_mt327.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_pe_proj.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_pe_proj.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_prj_lunits9002.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_prj_lunits9002.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_prj_pcsname.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_prj_pcsname.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_prj_seg.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_prj_seg.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj29999.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj29999.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj4326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj4326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj4807.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj4807.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj9000.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj9000.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj_badunit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj_badunit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj_keys.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj_keys.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj_km.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj_km.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj_lunits.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj_lunits.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_proj_noang.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_proj_noang.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1_projuser_ft.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1_projuser_ft.tif
+# c4: coded-PCS flavor rebuilds, vertical directories, promotion,
+# registry warnings and text summary gating
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_utm.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_utm.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_utm.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_utmcit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_utmcit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_utmcit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format WKT1 d1x_utmcit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_etrscit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_etrscit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_units9002.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_units9002.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_ang9104.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_ang9104.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_ang9104.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_gcs4326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_gcs4326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_dat6326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_dat6326.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_gcs4258.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_gcs4258.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_gcsproj.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_gcsproj.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_gcsproj.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_userdat.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_userdat.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_userdat.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format WKT1 d1x_userdat.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_gcsuser.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_gcsuser.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_gcsuser.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_utmzone.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_utmzone.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_parm.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_parm.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_lcc2154.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_lcc2154.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_laea3035.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_laea3035.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_laea3035.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_ups32661.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_ups32661.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_ups32661.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format WKT1 d1x_ups32661.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_merc3857.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_merc3857.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_utm26911.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_utm26911.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_v5773.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_v5773.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_v5773.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format WKT1 d1x_v5773.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_v5773cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_v5773cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_v5773cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_v5773citx.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_v5773citx.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_v5773citx.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_v4097.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_v4097.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_v4097.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_vunit9003.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_vunit9003.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_vunit9003.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_vuser.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_vuser.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_vuser.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_v5773r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_v5773r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_v5773r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_v5773r1cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_v5773r1cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_vunitr1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_vunitr1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_vdat5100r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_vdat5100r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_vdat5100r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_p4979.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_p4979.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_p4979.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format WKT1 d1x_p4979.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_p4979r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_p4979r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_p4979r1.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_p4979cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_p4979cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_p4979cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_p4979r1cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_p4979r1cit.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_geog3d.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_geog3d.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --crs-format PROJJSON d1x_geog3d.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_eng_gcsproj.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_eng_gcsproj.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_eng_geoc.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_eng_geoc.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info d1x_eng_geog.tif
+#setup: python3 /workspace/tests/mk_d1_fixtures.py .
+raster info --format json d1x_eng_geog.tif

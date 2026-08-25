@@ -1,0 +1,50 @@
+# raster contour: marching-squares lines + polygonize buckets
+#setup: python3 /workspace/tests/mk_dem_fixtures.py .
+raster contour --interval 10 dsm.tif c.shp
+raster contour --interval 10 dsm.tif c.shp -q
+raster contour --interval 10 dsm.tif c.geojson -q
+raster contour --interval 10 dsm.tif c.geojsonl -q
+raster contour --interval 10 dsm.tif c.csv -q
+raster contour --interval 10 --3d dsm.tif c.shp -q
+raster contour --interval 10 --3d dsm.tif c.geojson -q
+raster contour --interval 10 --elevation-name elev dsm.tif c.shp -q
+raster contour --interval 10 --elevation-name elev --3d dsm.tif c.geojson -q
+raster contour --levels 15 --levels 30 dsm.tif c.geojson -q
+raster contour --levels MIN dsm.tif c.geojson -q
+raster contour --exp-base 2 dsm.tif c.geojson -q
+raster contour --interval 10 --offset 3 dsm.tif c.geojson -q
+raster contour --interval 7.5 dsm.tif c.geojson -q
+raster contour --interval 1000 dsm.tif c.geojson -q
+raster contour --interval 10 -p dsm.tif c.shp -q
+raster contour --interval 10 -p dsm.tif cpg.shp -q
+raster contour --interval 10 -p --min-name MIN --max-name MAX dsm.tif c.shp -q
+raster contour --interval 10 -p --3d dsm.tif c.shp -q
+raster contour --levels 15 --levels 30 -p dsm.tif c.shp -q
+raster contour --exp-base 2 -p dsm.tif c.shp -q
+raster contour --interval 20 dbig.tif c.shp -q
+raster contour --interval 20 dbig.tif c.geojson -q
+raster contour --interval 13 -p dnond.tif c.shp -q
+raster contour --interval 20 --src-nodata 55.35 dbig.tif c.geojson -q
+raster contour --exp-base 2 --src-nodata 55.35 dbig.tif c.geojson -q
+raster contour --levels 15 --levels 40 --src-nodata 55.35 dbig.tif c.geojson -q
+raster contour --interval 20 --src-nodata 30 dbig.tif c.shp -q
+raster contour --interval 20 dbig.tif c.shp
+raster contour --interval 10 dnond.tif c.geojson -q
+raster contour --interval 10 dnogt.tif c.geojson -q
+raster contour --interval 10 -b 2 dmb.tif c.geojson -q
+raster contour --interval 10 -b 3 dmb.tif c.geojson
+raster contour --interval 10 --output-layer lyr dsm.tif c.geojson -q
+raster contour dsm.tif c.shp
+raster contour --interval 0 dsm.tif c.shp
+raster contour --interval 10 dsm.tif c.gdalg.json
+raster contour -f GDALG --interval 10 dsm.tif c.gdalg.json
+raster contour --interval 10 dsm.tif c.xyz
+#setup: python3 /workspace/tests/mk_dem_fixtures.py . && touch c.geojson
+raster contour --interval 10 dsm.tif c.geojson -q
+#setup: python3 /workspace/tests/mk_dem_fixtures.py . && touch c.geojson
+raster contour --interval 10 --overwrite dsm.tif c.geojson -q
+raster contour --interval 30 -p dhill.tif c.geojson -q
+raster contour --interval 30 -p dhill.tif c.geojsonl -q
+raster contour --interval 10 -p dhill.tif c.geojson -q
+raster contour --interval 20 -p dhill.tif c.shp -q
+raster contour --interval 30 dhill.tif c.geojson -q

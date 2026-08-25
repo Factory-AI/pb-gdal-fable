@@ -1,0 +1,143 @@
+# raster update: in-place paste into an existing GTiff (aligned fast
+# path, warp nearest/bilinear kernels, cutlines, INIT_DEST), the
+# directory-rewrite-to-EOF relocation that a georeferenced source
+# triggers, internal overview refresh with the chosen resampling, and
+# the error/warning choreography. Reprojected sources into overview-
+# carrying or disjoint destinations hit reference crash paths and are
+# excluded, as are non-nearest/bilinear kernels on misaligned grids.
+#setup: python3 /workspace/tests/mk_update_fixtures.py .
+
+# aligned pastes
+raster update srcA.tif dst.tif
+raster update -q srcA.tif dst.tif
+raster update srcA.tif dstf.tif
+raster update srcA.tif dstnd.tif
+raster update srcN.tif dst.tif
+raster update srcN.tif dstnd.tif
+raster update src2.tif dstb2.tif
+raster update srcA.tif dstb2.tif
+raster update srcNoCrs.tif dst.tif
+raster update srcNoCrs.tif dstNoCrs.tif
+raster update srcA.tif dstNoCrs.tif
+raster update srcbig.tif dstbig.tif
+raster update -r cubic srcA.tif dst.tif
+raster update -r sum srcA.tif dst.tif
+
+# warp nearest on shifted/finer/quirky grids
+raster update srcM.tif dst.tif
+raster update srcF.tif dst.tif
+raster update srcF2.tif dst.tif
+raster update srcQ.tif dst.tif
+raster update srcQ2.tif dst.tif
+raster update srcT45.tif dst.tif
+raster update srcT52.tif dst.tif
+raster update srcTax.tif dst.tif
+raster update srcTpo.tif dst.tif
+raster update srcR60.tif dstf.tif
+raster update srcM.tif dstnd.tif
+raster update srcF.tif dstb2.tif
+
+# warp bilinear (plain 4-sample and scale-widened kernels)
+raster update -r bilinear srcM.tif dst.tif
+raster update -r bilinear srcF.tif dst.tif
+raster update -r bilinear srcF2.tif dst.tif
+raster update -r bilinear srcQ.tif dst.tif
+raster update -r bilinear srcQ2.tif dst.tif
+raster update -r bilinear srcT45.tif dst.tif
+raster update -r bilinear srcT48.tif dst.tif
+raster update -r bilinear srcT52.tif dst.tif
+raster update -r bilinear srcTax.tif dst.tif
+raster update -r bilinear srcTpo.tif dst.tif
+raster update -r bilinear srcR55.tif dst.tif
+raster update -r bilinear srcR60.tif dst.tif
+raster update -r bilinear srcR90.tif dst.tif
+raster update -r bilinear srcN.tif dst.tif
+raster update -r bilinear srcM.tif dstf.tif
+raster update -r bilinear srcQ.tif dstnd.tif
+raster update -r bilinear srcMnd.tif dst.tif
+raster update -r bilinear srcFnd.tif dst.tif
+raster update srcFnd.tif dst.tif
+raster update --geometry "POLYGON((2 7.9,4 7.9,4 9,2 9,2 7.9))" -r bilinear srcFnd.tif dst.tif
+
+# INIT_DEST warp option
+raster update --warp-option INIT_DEST=0 srcA.tif dst.tif
+raster update --warp-option INIT_DEST=42 srcM.tif dst.tif
+raster update --warp-option INIT_DEST=NO_DATA srcA.tif dstnd.tif
+raster update --warp-option INIT_DEST=NO_DATA srcA.tif dst.tif
+
+# cutlines
+raster update --geometry "POLYGON((2 7.9,4 7.9,4 9,2 9,2 7.9))" srcA.tif dst.tif
+raster update --geometry "MULTIPOLYGON(((2 7.9,4 7.9,4 9,2 9,2 7.9)))" srcA.tif dst.tif
+raster update --geometry "POLYGON((50 50,60 50,60 60,50 60,50 50))" srcA.tif dst.tif
+raster update --geometry '{"type":"Polygon","coordinates":[[[2,7.9],[4,7.9],[4,9],[2,9],[2,7.9]]]}' srcA.tif dst.tif
+raster update --geometry "POLYGON((3.0 43.5,3.1 43.5,3.1 43.6,3.0 43.6,3.0 43.5))" --geometry-crs EPSG:4326 srcA.tif dst.tif
+raster update --geometry "POLYGON((2 7.9,4 7.9,4 9,2 9,2 7.9))" -r bilinear srcF.tif dst.tif
+raster update --geometry "POLYGON((2 7.9,4 7.9,4 9,2 9,2 7.9))" srcNoCrs.tif dstNoCrs.tif
+
+# cutline rasterization boundary conventions (source centers exactly on
+# polygon edges) and ring/part structure
+raster update --geometry "POLYGON((2.6 7.5,5.6 7.5,5.6 9,2.6 9,2.6 7.5))" srcM.tif dst.tif
+raster update --geometry "POLYGON((2.6 6.4,5.6 6.4,5.6 8.5,2.6 8.5,2.6 6.4))" srcM.tif dst.tif
+raster update --geometry "POLYGON((3.0 7.0,5.6 7.0,5.6 9,3.0 9,3.0 7.0))" srcM.tif dst.tif
+raster update --geometry "POLYGON((2.0 7.0,4.0 7.0,4.0 9,2.0 9,2.0 7.0))" srcM.tif dst.tif
+raster update --geometry "POLYGON((2.6 7.5,3.4 7.5,3.4 9,2.6 9,2.6 7.5))" -r bilinear srcF.tif dst.tif
+raster update --geometry "POLYGON((2.6 7.5,3.4 7.5,3.4 9,2.6 9,2.6 7.5))" -r bilinear srcQ.tif dst.tif
+raster update --geometry "MULTIPOLYGON(((2 7.9,4 7.9,4 9,2 9,2 7.9)),((5.9 7.9,7 7.9,7 9,5.9 9,5.9 7.9)))" srcbig.tif dstbig.tif
+raster update --geometry "POLYGON((2 7.9,4 7.9,4 9,2 9,2 7.9),(2.4 8.2,3.6 8.2,3.6 8.8,2.4 8.8,2.4 8.2))" srcbig.tif dstbig.tif
+
+# internal overview refresh with the chosen resampling
+raster update srcA.tif dsto.tif
+raster update -r average srcA.tif dsto.tif
+raster update -r cubic srcA.tif dsto.tif
+raster update -r cubicspline srcA.tif dsto.tif
+raster update -r lanczos srcA.tif dsto.tif
+raster update -r bilinear srcA.tif dsto.tif
+raster update -r mode srcA.tif dsto.tif
+raster update -r rms srcA.tif dsto.tif
+raster update -r bilinear srcF.tif dsto.tif
+raster update -r bilinear srcM.tif dsto.tif
+raster update srcF.tif dsto.tif
+raster update srcM.tif dsto.tif
+raster update srcN.tif dsto.tif
+raster update src2.tif dsto.tif
+raster update -q -r average srcA.tif dsto.tif
+raster update --warp-option INIT_DEST=0 srcA.tif dsto.tif
+raster update --geometry "POLYGON((2 7.9,4 7.9,4 9,2 9,2 7.9))" srcA.tif dsto.tif
+raster update --no-update-overviews srcA.tif dsto.tif
+raster update --no-update-overviews -r sum srcA.tif dsto.tif
+
+# multi-level cascade
+raster update srcA.tif dsto2.tif
+raster update -r average srcA.tif dsto2.tif
+raster update -r cubic srcA.tif dsto2.tif
+raster update -r bilinear srcM.tif dsto2.tif
+raster update -r mode srcA.tif dsto2.tif
+
+# overview refresh refusals
+raster update -r sum srcA.tif dsto.tif
+raster update -r min srcA.tif dsto.tif
+raster update -r q1 srcA.tif dsto.tif
+raster update -q -r sum srcA.tif dsto.tif
+raster update srcNoCrs.tif dsto.tif
+raster update -q srcNoCrs.tif dsto.tif
+raster update srcA.tif dstoNoCrs.tif
+raster update srcNoCrs.tif dstoNoCrs.tif
+raster update -r average srcNoCrs.tif dstoNoCrs.tif
+
+# error choreography
+raster update srcA.tif srcA.tif
+raster update srcA.tif dv.vrt
+raster update missing.tif dst.tif
+raster update srcA.tif missingout.tif
+raster update missing.tif missingout.tif
+raster update --geometry "POLYGON((0 0,1 0" srcA.tif dst.tif
+raster update --geometry "POINT (1 2)" srcA.tif dst.tif
+raster update --geometry "POLYGON((2 7.9,4 7.9,4 9,2 9,2 7.9))" --geometry-crs bogus srcA.tif dst.tif
+raster update --error-threshold -1 srcA.tif dst.tif
+raster update --error-threshold 0.5 srcM.tif dst.tif
+raster update --input-format FOO srcA.tif dst.tif
+raster update --transform-option METHOD=GCP_POLYNOMIAL srcA.tif dst.tif
+raster update srcNoGt.tif dst.tif
+raster update srcSrsNoGt.tif dst.tif
+raster update srcA.tif dstNoGt.tif
+raster update src2.tif dst.tif

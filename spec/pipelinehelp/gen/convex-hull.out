@@ -1,0 +1,14 @@
+Usage: convex-hull [OPTIONS]
+
+Compute the convex hull of geometries of a vector dataset.
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>        Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>  Geometry field name to which to restrict the processing (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_convex_hull.html

@@ -1,0 +1,25 @@
+Usage: gdal vsi sozip optimize [OPTIONS] <INPUT> <OUTPUT>
+
+Create a Seek-optimized ZIP (SOZIP) file from a regular ZIP file.
+
+Positional arguments:
+  -i, --input <INPUT>                                          Input ZIP filename [required]
+  -o, --output <OUTPUT>                                        Output ZIP filename [required]
+
+Common Options:
+  -h, --help                                                   Display help message and exit
+  --json-usage                                                 Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                       Configuration option [may be repeated]
+  -q, --quiet                                                  Quiet mode (no progress bar or warning message)
+
+Options:
+  --overwrite                                                  Whether overwriting existing output dataset is allowed
+  --enable-sozip <ENABLE-SOZIP>                                Whether to automatically/systematically/never apply the SOZIP optimization. ENABLE-SOZIP=auto|yes|no (default: auto)
+  --sozip-chunk-size <value in bytes or with K/M suffix>       Chunk size for a seek-optimized file (default: 32768)
+  --sozip-min-file-size <value in bytes or with K/M/G suffix>  Minimum file size to decide if a file should be seek-optimized (default: 1 MB)
+
+For more details, consult https://gdal.org/programs/gdal_vsi_sozip.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

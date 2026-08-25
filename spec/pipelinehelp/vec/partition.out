@@ -1,0 +1,30 @@
+Usage: partition [OPTIONS] <OUTPUT>
+
+Partition a vector dataset into multiple files.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                Output directory [required]
+
+Common Options:
+  -h, --help                                           Display help message and exit
+  --json-usage                                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                               Configuration option [may be repeated]
+  -q, --quiet                                          Quiet mode (no progress bar or warning message)
+
+Options:
+  --overwrite                                          Whether overwriting existing output dataset is allowed
+                                                       Mutually exclusive with --append
+  --append                                             Whether appending to existing layer is allowed
+                                                       Mutually exclusive with --overwrite
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>  Output format
+  --co, --creation-option <KEY>=<VALUE>                Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>         Layer creation option [may be repeated]
+  --field <FIELD>                                      Attribute or geometry field(s) on which to partition [may be repeated]
+  --scheme <SCHEME>                                    Partitioning scheme. SCHEME=hive|flat (default: hive)
+  --pattern <PATTERN>                                  Filename pattern ('part_%010d' for scheme=hive, '{LAYER_NAME}_{FIELD_VALUE}_%010d' for scheme=flat)
+  --feature-limit <FEATURE-LIMIT>                      Maximum number of features per file
+  --max-file-size <MAX-FILE-SIZE>                      Maximum file size (MB or GB suffix can be used)
+  --omit-partitioned-field                             Whether to omit partitioned fields from target layer definition
+  --skip-errors                                        Skip errors when writing features
+
+For more details, consult https://gdal.org/programs/gdal_vector_partition.html

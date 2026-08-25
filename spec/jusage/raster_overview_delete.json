@@ -1,0 +1,60 @@
+{
+  "name":"delete",
+  "full_path":[
+    "gdal",
+    "raster",
+    "overview",
+    "delete"
+  ],
+  "description":"Deleting overviews.",
+  "short_url":"\/programs\/gdal_raster_overview_delete.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_overview_delete.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Dataset (to be updated in-place, unless --external)",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"external",
+      "type":"boolean",
+      "description":"Delete external overviews",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

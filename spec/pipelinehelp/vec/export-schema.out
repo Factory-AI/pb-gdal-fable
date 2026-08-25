@@ -1,0 +1,15 @@
+Usage: export-schema [OPTIONS]
+
+Export the OGR_SCHEMA from a vector dataset.
+
+Positional arguments:
+
+Common Options:
+  -h, --help                                Display help message and exit
+  --json-usage                              Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                    Configuration option [may be repeated]
+
+Options:
+  -l, --layer, --input-layer <INPUT-LAYER>  Input layer name [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_export_schema.html

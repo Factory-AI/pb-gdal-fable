@@ -1,0 +1,164 @@
+# vector clip (leaf + pipeline step + generic dual dispatch): GEOS-less
+# drop choreography (envelope-disjoint drop silently, intersecting emit
+# GEOS errors + layer failure), bbox/geometry/like resolution, CRS
+# transforms, info pull counts, GDALG arg order; plus GeoJSON in-place
+# append splicing with SetFrom field coercion warnings
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"Point","coordinates":[10,20]}}]}' > t.json && printf %s '{"type":"FeatureCollection","name":"p1","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[5,0],[5,5],[0,5],[0,0]]]}}]}' > poly1.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > in1.json && printf %s '{"type":"FeatureCollection","name":"mix","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}}]}' > mix.json && printf %s '{"type":"FeatureCollection","name":"mp","features":[{"type":"Feature","properties":{},"geometry":{"type":"MultiPolygon","coordinates":[[[[0,0],[4,0],[4,4],[0,4],[0,0]]]]}}]}' > mp.json && printf %s '{"type":"FeatureCollection","name":"gc","features":[{"type":"Feature","properties":{},"geometry":{"type":"GeometryCollection","geometries":[{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}]}}]}' > gc.json && printf %s '{"type":"FeatureCollection","name":"gcp","features":[{"type":"Feature","properties":{},"geometry":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[1,1]}]}}]}' > gcp.json && printf %s '{"type":"FeatureCollection","name":"ng","features":[{"type":"Feature","properties":{},"geometry":null},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}}]}' > ng.json && printf %s '{"type":"FeatureCollection","name":"m2","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[0,0],[1,1]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}}]}' > m2b.json && printf %s '{"type":"FeatureCollection","name":"mixa","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}}]}' > mixa.json && printf %s '{"type":"FeatureCollection","name":"e","features":[]}' > emptyfc.json && printf %s '{"type":"FeatureCollection","name":"two","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1]}}]}' > like_a.json && printf %s '{"type":"FeatureCollection","name":"p","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[3.0,40.70]}}]}' > pt.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","id":5,"properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","id":8,"properties":{"n":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > src_id.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[7,7]}}]}' > ap.json && printf %s '{"type":"FeatureCollection","name":"t","features":[]}' > empty_t.json && /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4326 nogt.tif && /home/agent/oracle/executable raster create --size 2,2 --bbox 0,0,4,4 nocrs.tif && /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4326 --bbox 0,0,4,4 r.tif && mkdir lik shpm && /home/agent/oracle/executable vector convert -q poly1.json lik/LA.shp && /home/agent/oracle/executable vector convert -q like_a.json lik/LB.shp && /home/agent/oracle/executable vector convert -q t.json shpm/A1.shp && /home/agent/oracle/executable vector convert -q like_a.json shpm/B2.shp && /home/agent/oracle/executable vector reproject -q --dst-crs EPSG:32631 t.json t31.json && cp shpm/B2.dbf lone.dbf
+# ---- leaf: basics
+vector clip t.json out.json
+vector clip --bbox 0,0,5,5 t.json out.json
+vector clip --bbox 90,90,99,99 t.json out.json
+vector clip --bbox 0,0,5,5 --skip-errors t.json out.json
+vector clip --bbox 0,0,5,5 in1.json out.json
+vector clip --bbox 90,90,99,99 --skip-errors t.json out.json
+# ---- leaf: parse/validation failures
+vector clip --bbox 1,0,0,1 t.json out.json
+vector clip --bbox 0,0,5 t.json out.json
+vector clip --bbox 0,1,1,0 t.json out.json
+vector clip --bbox 0,0,5,5 --geometry "POINT(1 2)" t.json out.json
+vector clip --geometry bogus t.json out.json
+vector clip --geometry "POLYGON EMPTY" t.json out.json
+vector clip --bbox 0,0,1,1 --bbox-crs bogus t.json out.json
+vector clip --bbox 0,0,1,1 --bbox-crs EPSG:999999 t.json out.json
+vector clip --geometry "POINT(0 0)" --geometry-crs bogus t.json out.json
+vector clip --bbox 0,0,5,5 missinginput.json out.json
+vector clip --bbox 0,0,5,5 --active-layer nomatch t.json out.json
+vector clip --bbox 0,0,5,5 lone.dbf out.json
+# ---- leaf: geometry arg
+vector clip --geometry "POINT(1 2)" t.json out.json
+vector clip --geometry "POLYGON((0 0,5 0,5 5,0 5,0 0))" t.json out.json
+vector clip --geometry "POLYGON((0 0,5 0,5 5,0 5,0 0))" --geometry-crs EPSG:4326 t.json out.json
+# ---- leaf: bbox CRS transform
+vector clip --bbox 200000,4400000,800000,4500000 --bbox-crs EPSG:32631 pt.json out.json
+# ---- leaf: like modes
+vector clip --like poly1.json t.json out.json
+vector clip --like mix.json t.json out.json
+vector clip --like mp.json t.json out.json
+vector clip --like gc.json t.json out.json
+vector clip --like gcp.json t.json out.json
+vector clip --like ng.json t.json out.json
+vector clip --like m2b.json t.json out.json
+vector clip --like emptyfc.json t.json out.json
+vector clip --like like_a.json t.json out.json
+vector clip -q --like like_a.json t.json out.json
+vector clip --like lik t.json out.json
+vector clip --like lik --like-layer LA t.json out.json
+vector clip --like lik --like-layer LB t.json out.json
+vector clip --like lik --like-layer nope t.json out.json
+vector clip --like poly1.json --like-sql "SELECT * FROM poly1" t.json out.json
+vector clip --like poly1.json --like-sql "SELECT * FROM \"p1\"" t.json out.json
+vector clip --like poly1.json --like-where "bogus syntax !" t.json out.json
+vector clip --like poly1.json --like-where "zz = 1" t.json out.json
+vector clip --like mixa.json --like-where "a = 2" t.json out.json
+vector clip --like mixa.json --like-where "0 = 1" t.json out.json
+vector clip --like nogt.tif t.json out.json
+vector clip --like nocrs.tif t.json out.json
+vector clip --like missing.xyz t.json out.json
+# ---- leaf: output formats
+vector clip --of "ESRI Shapefile" --bbox 0,0,5,5 shpm outdir
+vector clip --of "ESRI Shapefile" --bbox 0,0,5,5 --skip-errors shpm outdir
+vector clip --of "ESRI Shapefile" --active-layer A1 --bbox 0,0,5,5 shpm outdir
+vector clip --of "ESRI Shapefile" --active-layer B2 --bbox 90,90,95,95 shpm outdir
+vector clip --of GeoJSONSeq --bbox 0,0,5,5 t.json out.geojsons
+vector clip --of MEM --bbox 0,0,5,5 t.json memx
+vector clip --of MEM --bbox 90,90,95,95 t.json memx
+vector clip --of stream --bbox 0,0,5,5 t.json sx
+vector clip --bbox 0,0,5,5 t.json /vsistdout/
+vector clip --of GeoJSON --bbox 0,0,5,5 t.json /vsistdout/
+vector clip --of GeoJSON --bbox 90,91,92,93 t.json /vsistdout/
+# ---- leaf: GDALG echoes
+vector clip --bbox 0.5,0,5,5.25 --bbox-crs EPSG:4326 t.json g.gdalg.json
+vector clip --like poly1.json --like-sql "SELECT 1" --like-layer p1 t.json g.gdalg.json
+vector clip --like poly1.json --like-layer p1 --like-where a=1 --active-layer t --skip-errors -l t --output-layer oo2 t.json g.gdalg.json
+vector clip -q --bbox 0,0,1,1 t.json g.gdalg.json
+vector clip --geometry "POINT (0 0)" --geometry-crs EPSG:32631 t.json g.gdalg.json
+vector clip --bbox -1e300,0,1e300,80 t.json g.gdalg.json
+# ---- leaf: update family
+vector clip --update --bbox 90,90,95,95 --output-layer t t.json ap.json
+vector clip --update --bbox 0,0,5,5 --output-layer t t.json ap.json
+vector clip --update --bbox 0,0,5,5 t.json missing.json
+vector clip --append --bbox 0,0,5,5 --output-layer t t.json ap.json
+vector clip --append --bbox 90,90,95,95 --output-layer t t.json ap.json
+vector clip --append --skip-errors --bbox 0,0,5,5 --output-layer t t.json ap.json
+vector clip --append --bbox 0,0,9,9 --output-layer nope t.json ap.json
+vector clip --upsert --bbox 0,0,5,5 --output-layer t t.json ap.json
+vector clip --upsert --bbox 90,90,95,95 --output-layer t t.json ap.json
+vector clip --upsert --skip-errors --bbox 0,0,5,5 --output-layer t t.json ap.json
+vector clip --overwrite --bbox 0,0,5,5 t.json ap.json
+vector clip --bbox 0,0,5,5 t.json ap.json
+vector clip --overwrite-layer --bbox 0,0,5,5 --output-layer t t.json ap.json
+# ---- pipeline step
+vector pipeline read t.json ! clip --bbox 0,0,5,5 ! write out.json
+vector pipeline read t.json ! clip --bbox 90,90,95,95 ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,5,5 ! write --skip-errors out.json
+vector pipeline read t.json ! clip ! write out.json
+vector pipeline read t.json ! clip --like poly1.json ! write out.json
+vector pipeline read t.json ! clip --bbox 1,0,0,1 ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,5 ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,1,1 --bbox-crs bogus ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,1,1 --geometry "POINT(0 0)" ! write out.json
+vector pipeline read t.json ! clip --window 0,0,1,1 ! write out.json
+vector pipeline read t.json ! clip -l t ! write out.json
+vector pipeline read t.json ! swap-xy ! clip --bbox 0,0,5,5 ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,5,5 ! swap-xy ! write out.json
+vector pipeline read t.json ! reproject --dst-crs EPSG:32631 ! clip --bbox 0,0,5,5 ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,5,5 ! reproject --dst-crs EPSG:32631 ! write out.json
+# ---- pipeline info/export-schema pulls
+vector pipeline read t.json ! clip --bbox 0,0,5,5 ! info
+vector pipeline read in1.json ! clip --bbox 0,0,5,5 ! info
+vector pipeline read in1.json ! clip --bbox 0,0,5,5 ! info --features
+vector pipeline read in1.json ! clip --bbox 0,0,5,5 ! info --summary
+vector pipeline read in1.json ! clip --bbox 0,0,5,5 ! info --limit 1
+vector pipeline read in1.json ! clip --bbox 0,0,5,5 ! info --fid 0
+vector pipeline read in1.json ! clip --bbox 0,0,5,5 ! export-schema
+vector pipeline read in1.json ! clip --like poly1.json ! info
+vector pipeline read in1.json ! clip --like poly1.json ! export-schema
+# ---- pipeline GDALG echoes
+vector pipeline read t.json ! clip --bbox 0.5,0,5,5.25 --bbox-crs EPSG:4326 ! write g.gdalg.json
+vector pipeline read t.json ! clip --like poly1.json --like-sql "SELECT * FROM poly1" --active-layer t ! write g.gdalg.json
+vector pipeline read t.json ! clip --geometry "POINT(1 2)" --geometry-crs EPSG:4326 ! write g.gdalg.json
+# ---- generic pipeline dual dispatch
+pipeline read t.json ! clip --bbox 0,0,5,5 ! write out.json
+pipeline read r.tif ! clip --window 0,0,1,1 ! write out.tif
+pipeline read t.json ! clip --window 0,0,1,1 ! write out.json
+pipeline read r.tif ! clip --geometry "POINT(0 0)" ! write out.tif
+pipeline read t.json ! clip --geometry "POLYGON((0 0,5 0,5 5,0 5,0 0))" ! write out.json
+pipeline read in1.json ! clip --bbox 0,0,5,5 ! info
+# ---- help
+vector clip --help
+vector clip
+# ---- GeoJSON in-place append splicing (convert family)
+vector convert --append --output-layer t t.json ap.json
+vector convert --upsert --output-layer t t.json ap.json
+vector filter --where 1=1 --append --output-layer t t.json ap.json
+vector filter --where 0=1 --append --output-layer t t.json ap.json
+vector convert --append --output-layer t empty_t.json ap.json
+vector convert --append --output-layer t src_id.json ap.json
+vector convert --append --output-layer t t31.json ap.json
+#setup: printf %s '{"type":"FeatureCollection","name":"t","features":[]}' > ea.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"Point","coordinates":[10,20]}}]}' > t.json && /home/agent/oracle/executable vector convert -q t.json pretty.json
+vector convert --append --output-layer t t.json ea.json
+vector convert --append --output-layer t t.json pretty.json
+# ---- append SetFrom coercions
+#setup: printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":7},"geometry":null}]}' > ti.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":"x"},"geometry":null}]}' > ts.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":7.5},"geometry":null}]}' > tr.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":true},"geometry":null}]}' > tb.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":12345678901234},"geometry":null}]}' > t64.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"N":9},"geometry":null}]}' > tN.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":"abc"},"geometry":null},{"type":"Feature","properties":{"n":"42"},"geometry":null}]}' > sstr.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":"42abc"},"geometry":null}]}' > spart.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":3.9},"geometry":null}]}' > sreal.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":1e300},"geometry":null}]}' > sbig.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":2147483648},"geometry":null}]}' > sovf.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":"12345678901"},"geometry":null}]}' > sovs.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":["a","b"]},"geometry":null}]}' > slst.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":[1.5,2]},"geometry":null}]}' > srl.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":"true"},"geometry":null},{"type":"Feature","properties":{"n":"0"},"geometry":null},{"type":"Feature","properties":{"n":"xyz"},"geometry":null}]}' > sboo.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":5},"geometry":null}]}' > sint.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":null},"geometry":null}]}' > snul.json
+vector convert --quiet --append --output-layer t sstr.json ti.json
+vector convert --quiet --append --output-layer t spart.json ti.json
+vector convert --quiet --append --output-layer t sreal.json ti.json
+vector convert --quiet --append --output-layer t sbig.json ti.json
+vector convert --quiet --append --output-layer t sovf.json ti.json
+vector convert --quiet --append --output-layer t sovs.json ti.json
+vector convert --quiet --append --output-layer t snul.json ti.json
+vector convert --quiet --append --output-layer t sreal.json t64.json
+vector convert --quiet --append --output-layer t sstr.json t64.json
+vector convert --quiet --append --output-layer t sbig.json t64.json
+vector convert --quiet --append --output-layer t sstr.json tr.json
+vector convert --quiet --append --output-layer t sint.json tr.json
+vector convert --quiet --append --output-layer t sreal.json ts.json
+vector convert --quiet --append --output-layer t sbig.json ts.json
+vector convert --quiet --append --output-layer t sint.json ts.json
+vector convert --quiet --append --output-layer t slst.json ts.json
+vector convert --quiet --append --output-layer t srl.json ts.json
+vector convert --quiet --append --output-layer t sboo.json tb.json
+vector convert --quiet --append --output-layer t sint.json tb.json
+vector convert --quiet --append --output-layer t sint.json tN.json
+vector convert --append --output-layer t sstr.json ti.json

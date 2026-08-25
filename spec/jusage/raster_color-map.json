@@ -1,0 +1,168 @@
+{
+  "name":"color-map",
+  "full_path":[
+    "gdal",
+    "raster",
+    "color-map"
+  ],
+  "description":"Generate a RGB or RGBA dataset from a single band, using a color map",
+  "short_url":"\/programs\/gdal_raster_color_map.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_color_map.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATECOPY"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Append as a subdataset to existing output",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"band",
+      "type":"integer",
+      "description":"Input band (1-based index)",
+      "default":1,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"color-map",
+      "type":"string",
+      "description":"Color map filename",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"add-alpha",
+      "type":"boolean",
+      "description":"Adds an alpha mask band to the destination.",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"color-selection",
+      "type":"string",
+      "description":"How to compute output colors from input values",
+      "choices":[
+        "interpolate",
+        "exact",
+        "nearest"
+      ],
+      "default":"interpolate",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ],
+  "supports_streamed_output":true
+}

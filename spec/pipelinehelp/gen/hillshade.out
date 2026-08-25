@@ -1,0 +1,21 @@
+Usage: hillshade [OPTIONS]
+
+Generate a shaded relief map
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  -b, --band <BAND>              Input band (1-based index) (default: 1)
+  -z, --zfactor <ZFACTOR>        Vertical exaggeration used to pre-multiply the elevations
+  --xscale <XSCALE>              Ratio of vertical units to horizontal X axis units
+  --yscale <YSCALE>              Ratio of vertical units to horizontal Y axis units
+  --azimuth <AZIMUTH>            Azimuth of the light, in degrees (default: 315)
+  --altitude <ALTITUDE>          Altitude of the light, in degrees (default: 45)
+  --gradient-alg <GRADIENT-ALG>  Algorithm used to compute terrain gradient. GRADIENT-ALG=Horn|ZevenbergenThorne (default: Horn)
+  --variant <VARIANT>            Variant of the hillshading algorithm. VARIANT=regular|combined|multidirectional|Igor (default: regular)
+  --no-edges                     Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_hillshade.html

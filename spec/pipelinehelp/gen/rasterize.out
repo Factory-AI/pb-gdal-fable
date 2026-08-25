@@ -1,0 +1,37 @@
+Usage: rasterize [OPTIONS]
+
+Burns vector geometries into a raster.
+
+Common Options:
+  -h, --help                                               Display help message and exit
+  --json-usage                                             Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                   Configuration option [may be repeated]
+  -q, --quiet                                              Quiet mode (no progress bar or warning message)
+
+Options:
+  -b, --band <BAND>                                        The band(s) to burn values into (1-based index) [may be repeated]
+  --invert                                                 Invert the rasterization
+  --all-touched                                            Enables the ALL_TOUCHED rasterization option
+  --burn <BURN>                                            Burn value [may be repeated]
+  -a, --attribute-name <ATTRIBUTE-NAME>                    Attribute name
+  --3d                                                     Indicates that a burn value should be extracted from the Z values of the feature
+  -l, --input-layer <INPUT-LAYER>                          Input layer name
+                                                           Mutually exclusive with --sql
+  --where <WHERE>                                          SQL where clause
+  --sql <SQL>                                              SQL select statement
+                                                           Mutually exclusive with --input-layer
+  --dialect <DIALECT>                                      SQL dialect
+  --nodata <NODATA>                                        Assign a specified nodata value to output bands
+  --init <INIT>                                            Pre-initialize output bands with specified value [may be repeated]
+  --crs <CRS>                                              Override the projection for the output file
+  --transformer-option <NAME>=<VALUE>                      Set a transformer option suitable to pass to GDALCreateGenImgProjTransformer2 [may be repeated]
+  --extent <xmin>,<ymin>,<xmax>,<ymax>                     Set the target georeferenced extent [4 values]
+  --resolution <xres>,<yres>                               Set the target resolution [2 values]
+                                                           Mutually exclusive with --size
+  --tap, --target-aligned-pixels                           (target aligned pixels) Align the coordinates of the extent of the output file to the values of the resolution
+  --size <xsize>,<ysize>                                   Set the target size in pixels and lines [2 values]
+                                                           Mutually exclusive with --resolution
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>  Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64
+  --optimization <OPTIMIZATION>                            Force the algorithm used (results are identical). OPTIMIZATION=AUTO|RASTER|VECTOR (default: AUTO)
+
+For more details, consult https://gdal.org/programs/gdal_vector_rasterize.html

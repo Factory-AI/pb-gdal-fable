@@ -1,0 +1,94 @@
+# JPEG codec in GTiff: convert/create encode (quality, tables mode, YCbCr,
+# tiled, band-interleave), decode/read-back, IMAGE_STRUCTURE reporting, and
+# overview inheritance of quality/tables mode.
+#setup: python3 /workspace/tests/mk_jpeg_fixtures.py .
+
+# encode: gray
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEG_QUALITY=90
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEG_QUALITY=10
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEG_QUALITY=100
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEG_QUALITY=101
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEG_QUALITY=0
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co TILED=YES --co BLOCKXSIZE=16 --co BLOCKYSIZE=16
+
+# encode: rgb variants
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG --co PHOTOMETRIC=YCBCR
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG --co PHOTOMETRIC=YCBCR --co JPEG_QUALITY=90
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG --co INTERLEAVE=BAND
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG --co PHOTOMETRIC=YCBCR --co TILED=YES --co BLOCKXSIZE=16 --co BLOCKYSIZE=16
+
+# encode: JPEGTABLESMODE bitmask
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=0
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=1
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=2
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=3
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=4
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=-1
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=QUANT
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=0 --co PHOTOMETRIC=YCBCR
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=2 --co PHOTOMETRIC=YCBCR
+raster convert src_rgb.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=3 --co INTERLEAVE=BAND
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=0 --co JPEG_QUALITY=10
+raster convert src_gray.tif out.tif --co COMPRESS=JPEG --co JPEGTABLESMODE=2 --co JPEG_QUALITY=90
+
+# create (header-only stub semantics)
+raster create --size 32,32 --band-count 1 --co COMPRESS=JPEG out.tif
+raster create --size 32,32 --band-count 3 --co COMPRESS=JPEG out.tif
+raster create --size 32,32 --band-count 1 --co COMPRESS=JPEG --co JPEGTABLESMODE=0 out.tif
+raster create --size 32,32 --band-count 1 --co COMPRESS=JPEG --co JPEGTABLESMODE=2 out.tif
+raster create --size 32,32 --band-count 1 --co COMPRESS=JPEG --co JPEGTABLESMODE=3 out.tif
+
+# read: metadata reporting
+raster info jm0.tif
+raster info jm1.tif
+raster info jm2.tif
+raster info jm3.tif
+raster info jq90.tif
+raster info jyc.tif
+raster info jrgb.tif
+raster info jpl.tif
+raster info jtl.tif
+
+# read: decode back to lossless
+raster convert jm0.tif out.tif --co COMPRESS=LZW
+raster convert jm1.tif out.tif --co COMPRESS=LZW
+raster convert jm2.tif out.tif --co COMPRESS=LZW
+raster convert jm3.tif out.tif --co COMPRESS=LZW
+raster convert jq90.tif out.tif --co COMPRESS=LZW
+raster convert jyc.tif out.tif --co COMPRESS=LZW
+raster convert jrgb.tif out.tif --co COMPRESS=LZW
+raster convert jpl.tif out.tif --co COMPRESS=LZW
+raster convert jtl.tif out.tif --co COMPRESS=LZW
+raster convert jyc.tif out.tif --co COMPRESS=JPEG --co PHOTOMETRIC=YCBCR
+
+# overviews: quality and tables mode inherit from the main dataset
+raster overview add jm0.tif --levels 2
+raster overview add jm1.tif --levels 2,4
+raster overview add jm2.tif --levels 2
+raster overview add jm3.tif --levels 2,4
+raster overview add jq90.tif --levels 2
+raster overview add jyc.tif --levels 2,4
+raster overview add jrgb.tif --levels 2
+raster overview add jpl.tif --levels 2
+raster overview add jm1.tif --levels 2 -r average
+raster overview add jyc.tif --levels 2 -r cubic
+raster overview add jm1.tif --levels 2 --external
+raster overview add jm1.tif --levels 2 --external --co COMPRESS=JPEG
+raster overview add jm3.tif --levels 2 --external --co COMPRESS=JPEG
+raster overview add jm1.tif --levels 2 --co JPEGTABLESMODE=3
+raster overview add jm1.tif --levels 2 --co JPEGTABLESMODE=QUANT
+raster overview add jm1.tif --levels 2 --co JPEG_QUALITY=10
+raster overview add src_gray.tif --levels 2,4 --co COMPRESS=JPEG
+raster overview add src_rgb.tif --levels 2 --co COMPRESS=JPEG
+
+# overviews on a dataset that already has one (reuse/method change/append)
+raster overview add jov.tif --levels 2
+raster overview add jov.tif --levels 2,4
+raster overview add jov.tif --levels 2 -r average
+raster overview add jov.tif --levels 2,4 -r average
+raster overview refresh jov.tif
+raster overview delete jov.tif
+raster info jov.tif

@@ -1,0 +1,42 @@
+{
+  "name":"delete",
+  "full_path":[
+    "gdal",
+    "dataset",
+    "delete"
+  ],
+  "description":"Delete dataset(s).",
+  "short_url":"\/programs\/gdal_dataset_delete.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_dataset_delete.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"filename",
+      "type":"string_list",
+      "description":"File or directory name",
+      "required":true,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"format",
+      "type":"string",
+      "description":"Dataset format",
+      "required":false,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_OPEN"
+        ]
+      }
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

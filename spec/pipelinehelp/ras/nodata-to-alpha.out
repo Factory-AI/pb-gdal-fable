@@ -1,0 +1,13 @@
+Usage: nodata-to-alpha [OPTIONS]
+
+Replace nodata value(s) with an alpha band.
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+
+Options:
+  --nodata <NODATA>       Override nodata value of input band(s) (numeric value, 'nan', 'inf', '-inf') [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_nodata_to_alpha.html

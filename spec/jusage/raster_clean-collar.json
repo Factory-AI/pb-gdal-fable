@@ -1,0 +1,186 @@
+{
+  "name":"clean-collar",
+  "full_path":[
+    "gdal",
+    "raster",
+    "clean-collar"
+  ],
+  "description":"Clean the collar of a raster dataset, removing noise.",
+  "short_url":"\/programs\/gdal_raster_clean_collar.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_clean_collar.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Input raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_CREATE",
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"update",
+      "type":"boolean",
+      "description":"Whether to open existing dataset in update mode",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"color",
+      "type":"string_list",
+      "description":"Transparent color(s): tuple of integer (like 'r,g,b'), 'black', 'white'",
+      "default":"black",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"color-threshold",
+      "type":"integer",
+      "description":"Select how far from specified transparent colors the pixel values are considered transparent.",
+      "default":15,
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"pixel-distance",
+      "type":"integer",
+      "description":"Number of consecutive transparent pixels that can be encountered before the giving up search inwards.",
+      "default":2,
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"add-alpha",
+      "type":"boolean",
+      "description":"Adds an alpha band to the output dataset.",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"addalpha-addmask"
+    },
+    {
+      "name":"add-mask",
+      "type":"boolean",
+      "description":"Adds a mask band to the output dataset.",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"addalpha-addmask"
+    },
+    {
+      "name":"algorithm",
+      "type":"string",
+      "description":"Algorithm to apply",
+      "choices":[
+        "floodfill",
+        "twopasses"
+      ],
+      "default":"floodfill",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":false,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,318 @@
+# OGRSQL engine: vector info --where / --sql / --dialect vs reference
+#setup: printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"pop":30,"name":"alpha","flt":1.5,"flag":true,"tag":null},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"pop":60,"name":"Beta","flt":2.5,"flag":false},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{"pop":80,"name":"gamma","flt":-0.5,"flag":true,"tag":"x"},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > p.geojson && printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","id":10,"properties":{"v":1,"s":"aa","d":"2021-03-04","big":3000000000},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[2,1],[2,2],[1,2],[1,1]]]}},{"type":"Feature","id":20,"properties":{"v":2,"s":"bb","d":"2021-05-06","big":4000000000},"geometry":{"type":"MultiPolygon","coordinates":[[[[10,10],[12,10],[12,12],[10,12],[10,10]]],[[[20,20],[21,20],[21,21],[20,21],[20,20]]]]}},{"type":"Feature","id":30,"properties":{"v":3,"s":"cc","d":null,"big":1},"geometry":{"type":"LineString","coordinates":[[0,0],[5,5]]}}]}' > g.geojson && printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"v":1},"geometry":{"type":"GeometryCollection","geometries":[{"type":"Polygon","coordinates":[[[0,0],[2,0],[2,2],[0,2],[0,0]]]},{"type":"Point","coordinates":[9,9]}]}},{"type":"Feature","properties":{"v":2},"geometry":null}]}' > gc.geojson && printf %s 'pop > 50' > w1.txt && printf %s 'SELECT name FROM p' > s1.sql && /home/agent/oracle/executable vector convert -q p.geojson pshp.shp
+# WHERE basics
+vector info --where "pop > 50" p.geojson
+vector info --where "pop >= 60" p.geojson
+vector info --where "pop = 30" p.geojson
+vector info --where "pop <> 30" p.geojson
+vector info --where "pop != 30" p.geojson
+vector info --where "pop < 60 OR name = 'GAMMA'" p.geojson
+vector info --where "pop > 30 AND flag" p.geojson
+vector info --where "NOT flag" p.geojson
+vector info --where "name = 'beta'" p.geojson
+vector info --where "name = 'Beta'" p.geojson
+vector info --where "name LIKE 'b%'" p.geojson
+vector info --where "name LIKE '_eta'" p.geojson
+vector info --where "name ILIKE 'B%'" p.geojson
+vector info --where "name NOT LIKE 'b%'" p.geojson
+vector info --where "name LIKE 'b\\%' ESCAPE '\\'" p.geojson
+vector info --where "tag IS NULL" p.geojson
+vector info --where "tag IS NOT NULL" p.geojson
+vector info --where "pop IN (30, 80)" p.geojson
+vector info --where "pop NOT IN (30, 80)" p.geojson
+vector info --where "name IN ('alpha', 'GAMMA')" p.geojson
+vector info --where "pop BETWEEN 30 AND 60" p.geojson
+vector info --where "pop NOT BETWEEN 30 AND 60" p.geojson
+vector info --where "pop + 20 > 75" p.geojson
+vector info --where "pop * 2 = 120" p.geojson
+vector info --where "pop / 2 = 30" p.geojson
+vector info --where "pop % 7 = 2" p.geojson
+vector info --where "-pop < -50" p.geojson
+vector info --where "flt > 0" p.geojson
+vector info --where "flt = 2.5" p.geojson
+vector info --where "pop = '60'" p.geojson
+vector info --where "pop = 'abc'" p.geojson
+vector info --where "name > 50" p.geojson
+vector info --where "zzz = 1" p.geojson
+vector info --where "p.pop > 50" p.geojson
+vector info --where "\"pop\" > 50" p.geojson
+vector info --where "FID = 1" p.geojson
+vector info --where "FID >= 1" p.geojson
+vector info --where "OGR_GEOMETRY = 'POINT'" p.geojson
+vector info --where "OGR_GEOMETRY = 'POLYGON'" p.geojson
+vector info --where "OGR_GEOM_WKT LIKE 'POINT%'" p.geojson
+vector info --where "OGR_STYLE IS NULL" p.geojson
+vector info --where "CAST(pop AS CHARACTER) = '60'" p.geojson
+vector info --where "CAST(name AS FLOAT) > 0" p.geojson
+vector info --where "SUBSTR(name, 1, 1) = 'a'" p.geojson
+vector info --where "CONCAT(name, 'x') = 'alphax'" p.geojson
+vector info --where "pop > 500" p.geojson
+vector info --where "1 = 1" p.geojson
+vector info --where "0" p.geojson
+vector info --where "pop" p.geojson
+vector info --where "NULL IS NULL" p.geojson
+vector info --where "tag = 'x'" p.geojson
+vector info --where "tag <> 'x'" p.geojson
+vector info --where "UPPER(name) = 'BETA'" p.geojson
+vector info --where "pop = 1 AND" p.geojson
+vector info --where "pop >" p.geojson
+vector info --where "pop 5" p.geojson
+vector info --where "pop 1.5" p.geojson
+vector info --where "pop = 1 'x'" p.geojson
+vector info --where "(pop = 1" p.geojson
+vector info --where "pop = 'a" p.geojson
+vector info --where "pop = @" p.geojson
+vector info --where "pop = 1 AND pop = 2 AND pop = 3 AND pop = 44 AND %" p.geojson
+vector info --where "pop IN (1,2" p.geojson
+vector info --where "pop IN 5" p.geojson
+vector info --where "pop BETWEEN 1 OR 2" p.geojson
+vector info --where "pop IS 5" p.geojson
+vector info --where "pop IS NOT 5" p.geojson
+vector info --where "NOT" p.geojson
+vector info --where "CAST(pop AS 5)" p.geojson
+vector info --where "" p.geojson
+# where + modes
+vector info --of json --where "pop > 50" p.geojson
+vector info --of json --where "name > 50" p.geojson
+vector info --of json --features --where "name > 50" p.geojson
+vector info --features --where "pop > 50" p.geojson
+vector info --summary --where "pop > 50" p.geojson
+vector info --summary --where "name > 50" p.geojson
+vector info --of json --summary --where "name > 50" p.geojson
+vector info -l p --where "pop > 50" p.geojson
+vector info -l zzz --where "pop > 50" p.geojson
+vector info --fid 1 --where "pop > 50" p.geojson
+vector info --limit 1 --features --where "pop > 30" p.geojson
+vector info --where "pop > 50" --dialect OGRSQL p.geojson
+vector info --where "pop > 50" --dialect FOO p.geojson
+vector info --summary --where "pop > 50" --dialect OGRSQL p.geojson
+vector info --where "" --dialect FOO p.geojson
+vector info --where "pop > 50" --dialect "" p.geojson
+vector info --where "@/tmp/s3/w1.txt" p.geojson
+vector info --where "@/tmp/s3/nsf.txt" p.geojson
+# SELECT basics
+vector info --sql "SELECT * FROM p" p.geojson
+vector info --features --sql "SELECT * FROM p" p.geojson
+vector info --sql "SELECT name, pop FROM p" p.geojson
+vector info --features --sql "SELECT name, pop FROM p" p.geojson
+vector info --features --sql "SELECT pop AS population FROM p" p.geojson
+vector info --features --sql "SELECT pop population FROM p" p.geojson
+vector info --sql "SELECT * FROM p WHERE pop > 40" p.geojson
+vector info --features --sql "SELECT name FROM p WHERE flag" p.geojson
+vector info --features --sql "SELECT FID, name FROM p" p.geojson
+vector info --features --sql "SELECT OGR_GEOMETRY, OGR_GEOM_WKT, OGR_GEOM_AREA, OGR_STYLE FROM p" p.geojson
+vector info --features --sql "SELECT pop * 2 FROM p" p.geojson
+vector info --features --sql "SELECT pop + flt FROM p" p.geojson
+vector info --features --sql "SELECT CAST(pop AS FLOAT) FROM p" p.geojson
+vector info --features --sql "SELECT CAST(pop AS CHARACTER) FROM p" p.geojson
+vector info --features --sql "SELECT CAST(pop AS CHARACTER(2)) FROM p" p.geojson
+vector info --features --sql "SELECT CAST(flt AS INTEGER) FROM p" p.geojson
+vector info --features --sql "SELECT CAST(pop AS BIGINT) FROM p" p.geojson
+vector info --features --sql "SELECT CONCAT(name, '-', tag) FROM p" p.geojson
+vector info --features --sql "SELECT SUBSTR(name, 2) FROM p" p.geojson
+vector info --features --sql "SELECT SUBSTR(name, 2, 2) FROM p" p.geojson
+vector info --features --sql "SELECT SUBSTR(name, -2) FROM p" p.geojson
+vector info --features --sql "SELECT 1 + 1 FROM p" p.geojson
+vector info --features --sql "SELECT 'lit' FROM p" p.geojson
+vector info --features --sql "SELECT 2.5 FROM p" p.geojson
+vector info --features --sql "SELECT NULL FROM p" p.geojson
+vector info --features --sql "SELECT name, name FROM p" p.geojson
+# aggregates
+vector info --features --sql "SELECT COUNT(*) FROM p" p.geojson
+vector info --features --sql "SELECT COUNT(pop) FROM p" p.geojson
+vector info --features --sql "SELECT COUNT(tag) FROM p" p.geojson
+vector info --features --sql "SELECT COUNT(DISTINCT tag) FROM p" p.geojson
+vector info --features --sql "SELECT MIN(pop), MAX(pop), SUM(pop), AVG(pop) FROM p" p.geojson
+vector info --features --sql "SELECT MIN(flt), MAX(flt), SUM(flt), AVG(flt) FROM p" p.geojson
+vector info --features --sql "SELECT MIN(name), MAX(name) FROM p" p.geojson
+vector info --features --sql "SELECT MIN(tag) FROM p" p.geojson
+vector info --features --sql "SELECT COUNT(*) FROM p WHERE pop > 40" p.geojson
+vector info --features --sql "SELECT SUM(name) FROM p" p.geojson
+vector info --features --sql "SELECT AVG(name) FROM p" p.geojson
+vector info --features --sql "SELECT MIN(pop * 2) FROM p" p.geojson
+vector info --features --sql "SELECT COUNT(*), name FROM p" p.geojson
+# distinct
+vector info --features --sql "SELECT DISTINCT tag FROM p" p.geojson
+vector info --features --sql "SELECT DISTINCT flag FROM p" p.geojson
+vector info --features --sql "SELECT DISTINCT name, pop FROM p" p.geojson
+vector info --features --sql "SELECT DISTINCT pop FROM p ORDER BY pop DESC" p.geojson
+# order/limit/offset
+vector info --features --sql "SELECT name FROM p ORDER BY pop DESC" p.geojson
+vector info --features --sql "SELECT name FROM p ORDER BY name" p.geojson
+vector info --features --sql "SELECT name FROM p ORDER BY tag" p.geojson
+vector info --features --sql "SELECT name FROM p ORDER BY tag DESC" p.geojson
+vector info --features --sql "SELECT name FROM p ORDER BY flag DESC, pop ASC" p.geojson
+vector info --features --sql "SELECT name FROM p ORDER BY FID DESC" p.geojson
+vector info --features --sql "SELECT name FROM p LIMIT 2" p.geojson
+vector info --features --sql "SELECT name FROM p LIMIT 2 OFFSET 2" p.geojson
+vector info --features --sql "SELECT name FROM p OFFSET 1" p.geojson
+vector info --features --sql "SELECT name FROM p ORDER BY pop DESC LIMIT 1" p.geojson
+vector info --sql "SELECT name FROM p LIMIT 1" p.geojson
+# table naming
+vector info --sql "SELECT name FROM P" p.geojson
+vector info --sql "SELECT name FROM p x" p.geojson
+vector info --features --sql "SELECT x.name FROM p x" p.geojson
+vector info --features --sql "SELECT p.name FROM p" p.geojson
+vector info --features --sql "SELECT \"name\" FROM \"p\"" p.geojson
+vector info --sql "SELECT name FROM 'p'" p.geojson
+# errors
+vector info --sql "SELECT * FROM zzz" p.geojson
+vector info --sql "SELECT nope FROM p" p.geojson
+vector info --sql "SELECT z.name FROM p" p.geojson
+vector info --sql "SELECT name FROM p WHERE nope = 1" p.geojson
+vector info --sql "SELECT name FROM p WHERE name > 50" p.geojson
+vector info --sql "SELECT name FROM p ORDER BY nope" p.geojson
+vector info --sql "SELECT UPPER(name) FROM p" p.geojson
+vector info --sql "SELECT name || 'x' FROM p" p.geojson
+vector info --sql "SELECT FROM p" p.geojson
+vector info --sql "UPDATE t SET a=1" p.geojson
+vector info --sql "SELECT * FROM" p.geojson
+vector info --sql "SELECT name, FROM p" p.geojson
+vector info --sql "SELECT name" p.geojson
+vector info --sql "SELECT name WHERE pop=1" p.geojson
+vector info --sql "SELECT name FROM p ORDER BY" p.geojson
+vector info --sql "SELECT name FROM p ORDER name" p.geojson
+vector info --sql "SELECT name FROM p LIMIT x" p.geojson
+vector info --sql "SELECT name FROM p GROUP BY name" p.geojson
+vector info --sql "SELECT name FROM p, q" p.geojson
+vector info --sql "SELECT DISTINCT FROM p" p.geojson
+vector info --sql "SELECT 'a FROM p" p.geojson
+vector info --sql "" p.geojson
+# modes
+vector info --of json --sql "SELECT * FROM p" p.geojson
+vector info --of json --features --sql "SELECT * FROM p LIMIT 1" p.geojson
+vector info --of json --sql "SELECT COUNT(*), MIN(pop) FROM p" p.geojson
+vector info --of json --sql "SELECT DISTINCT tag FROM p" p.geojson
+vector info --of json --sql "SELECT * FROM zzz" p.geojson
+vector info --of json --sql "SELECT FROM p" p.geojson
+vector info --summary --sql "SELECT name FROM p" p.geojson
+vector info --summary --sql "SELECT FROM p" p.geojson
+vector info --of json --summary --sql "SELECT name FROM p" p.geojson
+vector info --limit 1 --sql "SELECT name FROM p" p.geojson
+vector info --sql "SELECT name FROM p" --dialect OGRSQL p.geojson
+vector info --sql "SELECT name FROM p" --dialect ogrsql p.geojson
+vector info --sql "SELECT name FROM p" --dialect FOO p.geojson
+vector info --sql "SELECT name FROM p" --dialect SQLITE p.geojson
+vector info --of json --sql "SELECT name FROM p" --dialect SQLITE p.geojson
+vector info --summary --sql "SELECT name FROM p" --dialect SQLITE p.geojson
+vector info --summary --sql "SELECT name FROM p" --dialect FOO p.geojson
+vector info --sql "@/tmp/s3/s1.sql" p.geojson
+vector info --sql "@/tmp/s3/nsf.sql" p.geojson
+# validation combos
+vector info --where "a=1" --sql "SELECT 1" p.geojson
+vector info --where "a=1" --sql "SELECT 1" nofile.geojson
+vector info -l p --sql "SELECT 1 FROM p" p.geojson
+vector info --fid 1 --sql "SELECT name FROM p" p.geojson
+vector info --fid 1 -l p --where "a=1" --sql "SELECT 1" p.geojson
+vector info --fid 1 -l p p.geojson
+vector info --where "a=1" --sql "SELECT 1"
+vector info -l p --sql "SELECT 1"
+vector info --of json --crs-format WKT2 --where "a=1" --sql "SELECT 1" p.geojson
+vector info --of json --crs-format WKT2 --where "a=1" --sql "SELECT 1" nofile.geojson
+vector info --of json --crs-format WKT2 --sql "SELECT 1 FROM p" p.geojson
+vector info --sql "" --where "pop > 50" p.geojson
+vector info -l p --sql "" p.geojson
+vector info --fid 1 --sql "" p.geojson
+# dash-value legacy fallback
+vector info --where "-pop < -50" p.geojson
+vector info --sql "-x" p.geojson
+vector info --dialect "-y" p.geojson
+vector info --features --where "-x" p.geojson
+vector info --of json --where "-x" p.geojson
+vector info -l p --where "-x" p.geojson
+vector info --summary --where "-x" p.geojson
+vector info --sql "-a" --dialect "-b" p.geojson
+vector info --where "-x" --dialect "-y" p.geojson
+vector info --dialect "-y" --where "ok" p.geojson
+vector info --fid -1 p.geojson
+vector info --features --sql "SELECT OGR_STYLE FROM p" p.geojson
+vector info --features --sql "SELECT name, OGR_STYLE AS st FROM p" p.geojson
+vector info --of json --features --sql "SELECT OGR_STYLE FROM p" p.geojson
+vector info --features --sql "SELECT CAST(name AS CHARACTER(2)) FROM p" p.geojson
+vector info --sql "SELECT CAST(pop AS VARCHAR) FROM p" p.geojson
+vector info --sql "SELECT CAST(pop AS varchar) FROM p" p.geojson
+vector info --sql "SELECT CAST(pop AS INT) FROM p" p.geojson
+vector info --features --sql "SELECT CAST(flag AS BOOLEAN) b, CAST(pop AS SMALLINT) s, CAST(pop AS NUMERIC) n, CAST(pop AS FLOAT) f FROM p" p.geojson
+vector info --features --sql "SELECT CAST('2020-01-02' AS DATE) d, CAST('12:30:00' AS TIME) t, CAST('2020-01-02 12:30:00' AS TIMESTAMP) ts FROM p LIMIT 1" p.geojson
+vector info --features --sql "SELECT CAST(pop AS NUMERIC(10,3)) FROM p" p.geojson
+vector info --where "CAST(pop AS VARCHAR) = '1'" p.geojson
+vector info --sql "SELECT name FROM 'p'" p.geojson
+vector info --sql "SELECT name FROM 'zzz'.p" p.geojson
+vector info --sql "SELECT name FROM 'p.geojson'.p" p.geojson
+vector info --features --sql "SELECT name FROM 'p.geojson'.'p'" p.geojson
+vector info --sql "SELECT name FROM 'p.geojson'.zzz" p.geojson
+vector info --sql "SELECT name FROM p.q" p.geojson
+vector info --sql "SELECT name FROM p WHERE p.nope = 1" p.geojson
+vector info --fid -1 p.geojson
+vector info --fid -5 p.geojson
+vector info --fid -1 pshp.shp
+vector info --fid 9 pshp.shp
+vector info --fid 1 pshp.shp
+vector info --features --sql "SELECT OGR_GEOM_AREA FROM g" g.geojson
+vector info --where "OGR_GEOM_AREA > 10" g.geojson
+vector info --features --sql "SELECT * FROM g" g.geojson
+vector info --features --sql "SELECT FID, v FROM g ORDER BY v DESC" g.geojson
+vector info --features --sql "SELECT COUNT(*) FROM g WHERE v > 100" g.geojson
+vector info --features --sql "SELECT MIN(v), MAX(v), AVG(v), SUM(v) FROM g WHERE v > 100" g.geojson
+vector info --features --sql "SELECT SUM(big) FROM g" g.geojson
+vector info --features --sql "SELECT MIN(d), MAX(d) FROM g" g.geojson
+vector info --features --sql "SELECT DISTINCT d FROM g" g.geojson
+vector info --features --sql "SELECT big FROM g" g.geojson
+vector info --features --sql "SELECT big * 2 FROM g" g.geojson
+vector info --features --sql "SELECT v / 0 FROM g" g.geojson
+vector info --features --sql "SELECT v / 0.0 FROM g" g.geojson
+vector info --features --sql "SELECT v % 0 FROM g" g.geojson
+vector info --features --sql "SELECT 7 % 3, 7.5 % 2 FROM g LIMIT 1" g.geojson
+vector info --where "FID = 20" g.geojson
+vector info --features --fid 20 g.geojson
+vector info --where "OGR_GEOMETRY = 'POLYGON'" g.geojson
+vector info --where "OGR_GEOMETRY LIKE 'MULTI%'" g.geojson
+vector info --where "d IS NULL" g.geojson
+vector info --where "d >= '2021-04-01'" g.geojson
+vector info --features --sql "SELECT s, v FROM g WHERE s <> 'aa' ORDER BY s DESC LIMIT 1 OFFSET 1" g.geojson
+vector info --features --sql "SELECT CONCAT(s, CAST(v AS CHARACTER(5))) FROM g" g.geojson
+vector info --sql "SELECT CONCAT(s, v) FROM g" g.geojson
+vector info --sql "SELECT SUBSTR(v, 1) FROM g" g.geojson
+vector info --sql "SELECT s + s FROM g" g.geojson
+vector info --sql "SELECT -s FROM g" g.geojson
+vector info --where "v LIKE '1'" g.geojson
+vector info --where "s BETWEEN 'aa' AND 'bb'" g.geojson
+vector info --where "s IN ('AA', 'cc')" g.geojson
+vector info --of json --features --sql "SELECT * FROM g ORDER BY v DESC" g.geojson
+vector info --of json --features --sql "SELECT OGR_GEOM_AREA a FROM g" g.geojson
+vector info --features --sql "SELECT COUNT(DISTINCT s), COUNT(*) FROM g" g.geojson
+vector info --features --sql "SELECT MIN(OGR_GEOM_AREA) FROM g" g.geojson
+vector info --sql "SELECT MIN(FID) FROM g" g.geojson
+vector info --features --sql "SELECT v FROM g LIMIT 0" g.geojson
+vector info --features --sql "SELECT v FROM g OFFSET 5" g.geojson
+vector info --sql "SELECT * FROM g LIMIT 1 OFFSET 1" g.geojson
+vector info --features --limit 1 --sql "SELECT v FROM g" g.geojson
+vector info --where "v = 1 OR v = 3" g.geojson
+vector info --where "NOT (v = 1 OR v = 3)" g.geojson
+vector info --where "v > 1 AND tag IS NULL" g.geojson
+vector info --features --sql "SELECT s + s FROM g" g.geojson
+vector info --features --sql "SELECT s + '1' FROM g" g.geojson
+vector info --sql "SELECT s + 1 FROM g" g.geojson
+vector info --sql "SELECT 1 + s FROM g" g.geojson
+vector info --sql "SELECT v + '1' FROM g" g.geojson
+vector info --sql "SELECT s - s FROM g" g.geojson
+vector info --sql "SELECT s % s FROM g" g.geojson
+vector info --features --sql "SELECT -'12' FROM g LIMIT 1" g.geojson
+vector info --features --sql "SELECT -'x' FROM g LIMIT 1" g.geojson
+vector info --features --sql "SELECT big / 0 FROM g LIMIT 1" g.geojson
+vector info --features --sql "SELECT 7.5 % 0 FROM g LIMIT 1" g.geojson
+vector info --sql "SELECT SUBSTR(s) FROM g" g.geojson
+vector info --sql "SELECT SUBSTR(s, 1, 2, 3) FROM g" g.geojson
+vector info --sql "SELECT SUBSTR(s, 1.5) FROM g" g.geojson
+vector info --sql "SELECT SUBSTR(s, '1') FROM g" g.geojson
+vector info --sql "SELECT CONCAT() FROM g" g.geojson
+vector info --features --sql "SELECT CONCAT(s) FROM g" g.geojson
+vector info --features --sql "SELECT s + NULL FROM g LIMIT 1" g.geojson
+vector info --where "s + s = 'aaaa'" g.geojson
+vector info --features --sql "SELECT MIN(OGR_GEOM_AREA), MAX(OGR_GEOM_AREA), COUNT(OGR_GEOM_AREA), SUM(OGR_GEOM_AREA), AVG(OGR_GEOM_AREA) FROM g" g.geojson
+vector info --features --sql "SELECT MIN(OGR_GEOM_AREA), COUNT(OGR_GEOM_AREA) FROM p" p.geojson
+vector info --features --sql "SELECT MIN(OGR_GEOM_AREA), COUNT(OGR_GEOM_AREA) FROM gc" gc.geojson
+vector info --features --sql "SELECT OGR_GEOM_AREA FROM gc" gc.geojson
+vector info --features --sql "SELECT OGR_GEOMETRY, OGR_GEOM_WKT FROM gc" gc.geojson
+vector info --sql "SELECT COUNT() FROM g" g.geojson
+vector info --sql "SELECT MIN() FROM g" g.geojson

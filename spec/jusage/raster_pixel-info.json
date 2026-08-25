@@ -1,0 +1,232 @@
+{
+  "name":"pixel-info",
+  "full_path":[
+    "gdal",
+    "raster",
+    "pixel-info"
+  ],
+  "description":"Return information on a pixel of a raster dataset.",
+  "short_url":"\/programs\/gdal_raster_pixel_info.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_pixel_info.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (default is 'GeoJSON' if 'position-dataset' not specified)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"position-dataset",
+      "type":"dataset",
+      "description":"Vector dataset with coordinates",
+      "required":false,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "mutual_exclusion_group":"position-dataset-pos"
+    },
+    {
+      "name":"input-layer",
+      "type":"string_list",
+      "description":"Input layer name",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":1,
+      "category":"Base"
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"band",
+      "type":"integer_list",
+      "description":"Input band(s) (1-based index)",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overview",
+      "type":"integer",
+      "description":"Which overview level of source file must be used",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"position",
+      "type":"real_list",
+      "description":"Pixel position",
+      "metavar":"<column,line> or <X,Y>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "mutual_exclusion_group":"position-dataset-pos"
+    },
+    {
+      "name":"position-crs",
+      "type":"string",
+      "description":"CRS of position (default is 'pixel' if 'position-dataset' not specified)",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"resampling",
+      "type":"string",
+      "description":"Resampling algorithm for interpolation",
+      "choices":[
+        "nearest",
+        "bilinear",
+        "cubic",
+        "cubicspline"
+      ],
+      "default":"nearest",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"promote-pixel-value-to-z",
+      "type":"boolean",
+      "description":"Whether to set the pixel value as Z component of GeoJSON geometry",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"include-field",
+      "type":"string_list",
+      "description":"Fields from coordinate dataset to include in output (special values: ALL and NONE)",
+      "default":"ALL",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output vector dataset",
+      "required":false,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

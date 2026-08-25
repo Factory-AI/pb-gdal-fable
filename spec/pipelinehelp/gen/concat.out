@@ -1,0 +1,27 @@
+Usage: concat [OPTIONS] <INPUTS>...
+
+Concatenate vector datasets.
+
+Positional arguments:
+  -i, --input <INPUTS>                                       Input vector datasets [1.. values] [required]
+
+Common Options:
+  -h, --help                                                 Display help message and exit
+  --json-usage                                               Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                     Configuration option [may be repeated]
+
+Options:
+  -l, --layer, --input-layer <INPUT-LAYER>                   Input layer name(s) [may be repeated]
+  --mode <MODE>                                              Determine the strategy to create output layers from source layers . MODE=merge-per-layer-name|stack|single (default: merge-per-layer-name)
+  --output-layer <OUTPUT-LAYER>                              Name of the output vector layer (single mode), or template to name the output vector layers (stack mode)
+  --source-layer-field-name <SOURCE-LAYER-FIELD-NAME>        Name of the new field to add to contain identification of the source layer, with value determined from 'source-layer-field-content'
+  --source-layer-field-content <SOURCE-LAYER-FIELD-CONTENT>  A string, possibly using {AUTO_NAME}, {DS_NAME}, {DS_BASENAME}, {DS_INDEX}, {LAYER_NAME}, {LAYER_INDEX}
+  --field-strategy <FIELD-STRATEGY>                          How to determine target fields from source fields. FIELD-STRATEGY=union|intersection (default: union)
+  -s, --src-crs <SRC-CRS>                                    Source CRS
+  -d, --dst-crs <DST-CRS>                                    Destination CRS
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                        Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                          Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_concat.html

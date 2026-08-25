@@ -1,0 +1,248 @@
+# D8: GeoJSON edges. Reader: 4-element positions (truncate warning and
+# its open-vs-iterate gating, first-position dimension rule, extent from
+# the structural coordinate scan, Z promotion across multi members),
+# empty-geometry infinite extents, FID column detection, malformed-JSON
+# streaming parser diagnostics. Writer: RFC7946 (reprojection to CRS84,
+# lon normalization, antimeridian line splitting with its Z-takes-Y
+# interpolation quirk, GEOS-less polygon passthrough with ERROR 6,
+# bounds check with skip/abort semantics) and WRITE_BBOX (3D 6-element
+# boxes, RFC west>east antimeridian boxes, first-feature Z range in RFC
+# mode, blank header line and stdout trailer placement) plus
+# COORDINATE_PRECISION z resolution.
+#setup: python3 /workspace/tests/mk_d8_fixtures.py .
+
+# reader edge fixtures: info text/json and convert round-trip
+vector info --features p4.json
+vector info --of json --features p4.json
+vector convert p4.json out.json
+vector info --features p43.json
+vector info --of json --features p43.json
+vector convert p43.json out.json
+vector info --features p44.json
+vector convert p44.json out.json
+vector info --features p23.json
+vector convert p23.json out.json
+vector info --features p24.json
+vector convert p24.json out.json
+vector info --features p3.json
+vector convert p3.json out.json
+vector info --features p34.json
+vector convert p34.json out.json
+vector info --features b1.json
+vector info --of json --features b1.json
+vector convert b1.json out.json
+vector info --features c1.json
+vector convert c1.json out.json
+vector info --features d1.json
+vector convert d1.json out.json
+vector info --features e1.json
+vector convert e1.json out.json
+vector info --features f1.json
+vector convert f1.json out.json
+vector info --features g1f.json
+vector convert g1f.json out.json
+vector info --features h1.json
+vector convert h1.json out.json
+vector info --features q1.json
+vector info --features q2.json
+vector info --features q3.json
+vector info --features q4.json
+vector info --features r1.json
+vector info --features r2.json
+vector info --features r3.json
+vector info --features r4.json
+vector convert q1.json out.json
+vector convert r1.json out.json
+vector info --features gc4.json
+vector convert gc4.json out.json
+vector info --features gcm.json
+vector convert gcm.json out.json
+vector info --features mls.json
+vector convert mls.json out.json
+vector info --features mpoly.json
+vector convert mpoly.json out.json
+vector info --features mp4.json
+vector convert mp4.json out.json
+vector info --features mp2z.json
+vector convert mp2z.json out.json
+vector info --features l4.json
+vector convert l4.json out.json
+vector info --features l43.json
+vector convert l43.json out.json
+vector info --features empty.json
+vector convert empty.json out.json
+vector info --features emptyg.json
+vector info --of json --features emptyg.json
+vector convert emptyg.json out.json
+vector info --features nullg.json
+vector convert nullg.json out.json
+vector info --features fid.json
+vector info --of json --features fid.json
+vector convert fid.json out.json
+vector info --features bb.json
+vector convert bb.json out.json
+
+# malformed JSON: streaming parser diagnostics
+vector info bad.json
+vector info t_a.json
+vector info t_b.json
+vector info t_c.json
+vector info t_d.json
+vector info t_e.json
+vector info t_f.json
+vector info t_g.json
+vector info t_h.json
+vector info t_i.json
+vector info t_j.json
+vector info t_k.json
+vector info t_l.json
+vector info t_m.json
+vector info t_m2.json
+vector info t_n.json
+vector info t_o2.json
+vector info t_p2.json
+vector info t_q2.json
+vector info t_r2.json
+
+# RFC7946: wrap/normalize/split semantics
+vector convert --lco RFC7946=YES am4326.json out.json
+vector convert --lco RFC7946=YES ampt.json out.json
+vector convert --lco RFC7946=YES ampoly.json out.json
+vector convert --lco RFC7946=YES amlat.json out.json
+vector convert --lco RFC7946=YES amln2.json out.json
+vector convert --lco RFC7946=YES amln3.json out.json
+vector convert --lco RFC7946=YES mls1.json out.json
+vector convert --lco RFC7946=YES w_crosspoly2.json out.json
+vector convert --lco RFC7946=YES w_dedup2.json out.json
+vector convert --lco RFC7946=YES w_gcln.json out.json
+vector convert --lco RFC7946=YES w_ln180v.json out.json
+vector convert --lco RFC7946=YES w_ln361.json out.json
+vector convert --lco RFC7946=YES w_lnneg.json out.json
+vector convert --lco RFC7946=YES w_mirror.json out.json
+vector convert --lco RFC7946=YES w_mpt.json out.json
+vector convert --lco RFC7946=YES w_negmix.json out.json
+vector convert --lco RFC7946=YES w_poly185.json out.json
+vector convert --lco RFC7946=YES w_polymix.json out.json
+vector convert --lco RFC7946=YES w_pt180.json out.json
+vector convert --lco RFC7946=YES w_pt550.json out.json
+vector convert --lco RFC7946=YES w_ptm180.json out.json
+vector convert --lco RFC7946=YES w_ptneg550.json out.json
+vector convert --lco RFC7946=YES w_rev180.json out.json
+vector convert --lco RFC7946=YES w_spec.json out.json
+vector convert --lco RFC7946=YES w_specno.json out.json
+vector convert --lco RFC7946=YES w_v2.json out.json
+vector convert --lco RFC7946=YES w_v3.json out.json
+vector convert --lco RFC7946=YES w_v4.json out.json
+vector convert --lco RFC7946=YES w_v5.json out.json
+vector convert --lco RFC7946=YES w_v6.json out.json
+vector convert --lco RFC7946=YES w_wideline.json out.json
+vector convert --lco RFC7946=YES w_widepoly.json out.json
+vector convert --lco RFC7946=YES w_z3d.json out.json
+vector convert --lco RFC7946=YES x1.json out.json
+vector convert --lco RFC7946=YES x2.json out.json
+vector convert --lco RFC7946=YES x3.json out.json
+vector convert --lco RFC7946=YES x4.json out.json
+vector convert --lco RFC7946=YES x5.json out.json
+vector convert --lco RFC7946=YES x6.json out.json
+vector convert --lco RFC7946=YES x7.json out.json
+vector convert --lco RFC7946=YES x8.json out.json
+vector convert --lco RFC7946=YES x9.json out.json
+vector convert --lco RFC7946=YES x10.json out.json
+
+# RFC7946: reprojection of a projected source
+vector convert --lco RFC7946=YES am/a.shp out.json
+vector convert am/a.shp plain.json
+
+# RFC7946: bounds failures, abort vs skip-errors, layer failure state
+vector convert --lco RFC7946=YES two.json out.json
+vector convert --skip-errors --lco RFC7946=YES two.json out.json
+vector convert --lco RFC7946=YES two2.json out.json
+vector convert --skip-errors --lco RFC7946=YES two2.json out.json
+vector convert --lco RFC7946=YES pc.json out.json
+vector convert --skip-errors --lco RFC7946=YES pc.json out.json
+vector convert --lco RFC7946=YES cp2.json out.json
+vector convert --skip-errors --lco RFC7946=YES cp2.json out.json
+vector convert --skip-errors --lco RFC7946=YES ampoly.json out.json
+vector convert --skip-errors --lco RFC7946=YES w_v6.json out.json
+vector convert --skip-errors --lco RFC7946=YES w_polymix.json out.json
+
+# RFC7946 + WRITE_BBOX: antimeridian west>east heuristics
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_a1.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_a2.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_a3.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_m1.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_m2.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mix1.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mix2.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mp160.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mp181.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mp200.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mp3.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mpA.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mpB.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mpC.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mpD.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mpE.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mpF.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_s120.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_s135.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_s150.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_s160.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_s165.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_single.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_t1001.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_t101.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_t110.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_t119.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_t1195.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_t11999.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES gcb.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES f2.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES f3.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES amln3.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES w_gcln.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES w_v3.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES x9.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES x6.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES x4.json out.json
+
+# WRITE_BBOX without RFC: raw envelopes, 3D boxes, Z resolution
+vector convert --lco WRITE_BBOX=YES ampt.json out.json
+vector convert --lco WRITE_BBOX=YES amln2.json out.json
+vector convert --lco WRITE_BBOX=YES w_pt550.json out.json
+vector convert --lco WRITE_BBOX=YES w_gcln.json out.json
+vector convert --lco WRITE_BBOX=YES x1.json out.json
+vector convert --lco WRITE_BBOX=YES x3.json out.json
+vector convert --lco WRITE_BBOX=YES md.json out.json
+vector convert --lco WRITE_BBOX=YES d23.json out.json
+vector convert --lco WRITE_BBOX=YES z2.json out.json
+vector convert --lco WRITE_BBOX=YES z3.json out.json
+vector convert --lco WRITE_BBOX=YES z4.json out.json
+vector convert --lco WRITE_BBOX=YES p3d.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES md.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES d23.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES z3.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES z4.json out.json
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES p3d.json out.json
+vector convert --lco COORDINATE_PRECISION=2 z2.json out.json
+vector convert --lco COORDINATE_PRECISION=2 d23.json out.json
+vector convert --lco RFC7946=YES --lco COORDINATE_PRECISION=2 x9.json out.json
+vector convert --lco WRITE_BBOX=YES --lco COORDINATE_PRECISION=3 z2.json out.json
+
+# pipeline write: failure completes the progress bar
+vector pipeline read two2.json ! write --lco RFC7946=YES pp.json
+vector pipeline read two.json ! write --lco RFC7946=YES pp.json
+vector pipeline read ampoly.json ! write --lco RFC7946=YES pp.json
+vector pipeline read two2.json ! write --skip-errors --lco RFC7946=YES pp.json
+vector pipeline read x9.json ! write --lco RFC7946=YES --lco WRITE_BBOX=YES pp.json
+vector convert --quiet --lco RFC7946=YES two2.json out.json
+
+# stdout targets: bbox trailer, suppressed Z warning
+vector convert --lco RFC7946=YES am4326.json /vsistdout/ --of GeoJSON
+vector convert --lco RFC7946=YES w_z3d.json /vsistdout/ --of GeoJSON
+vector convert w_z3d.json /vsistdout/ --of GeoJSON
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES b_mpA.json /vsistdout/ --of GeoJSON
+vector convert --lco RFC7946=YES --lco WRITE_BBOX=YES x6.json /vsistdout/ --of GeoJSON
+vector convert --lco WRITE_BBOX=YES z2.json /vsistdout/ --of GeoJSON
+vector convert --lco WRITE_BBOX=YES md.json /vsistdout/ --of GeoJSON
+vector convert --lco RFC7946=YES two2.json /vsistdout/ --of GeoJSON

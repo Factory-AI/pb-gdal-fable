@@ -1,0 +1,16 @@
+Usage: make-valid [OPTIONS]
+
+Fix validity of geometries of a vector dataset.
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>        Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>  Geometry field name to which to restrict the processing (if not specified, all)
+  --method <METHOD>                    Algorithm to use when repairing invalid geometries.. METHOD=linework|structure (default: linework)
+  --keep-lower-dim                     Keep components of lower dimension after MakeValid()
+
+For more details, consult https://gdal.org/programs/gdal_vector_make_valid.html

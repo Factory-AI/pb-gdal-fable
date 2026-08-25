@@ -1,0 +1,16 @@
+Usage: explode-collections [OPTIONS]
+
+Explode geometries of type collection of a vector dataset.
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>        Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>  Geometry field name to which to restrict the processing (if not specified, all)
+  --geometry-type <GEOMETRY-TYPE>      Geometry type
+  --skip-on-type-mismatch              Skip feature when change of feature geometry type failed
+
+For more details, consult https://gdal.org/programs/gdal_vector_explode_collections.html

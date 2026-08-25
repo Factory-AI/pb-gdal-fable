@@ -1,0 +1,22 @@
+Usage: buffer [OPTIONS] <DISTANCE>
+
+Compute a buffer around geometries of a vector dataset.
+
+Positional arguments:
+  --distance <DISTANCE>                    Distance to which to extend the geometry. [required]
+
+Common Options:
+  -h, --help                               Display help message and exit
+  --json-usage                             Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                   Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>            Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>      Geometry field name to which to restrict the processing (if not specified, all)
+  --endcap-style <ENDCAP-STYLE>            Endcap style.. ENDCAP-STYLE=round|flat|square (default: round)
+  --join-style <JOIN-STYLE>                Join style.. JOIN-STYLE=round|mitre|bevel (default: round)
+  --mitre-limit <MITRE-LIMIT>              Mitre ratio limit (only affects mitered join style). (default: 5)
+  --quadrant-segments <QUADRANT-SEGMENTS>  Number of line segments used to approximate a quarter circle. (default: 8)
+  --side <SIDE>                            Sets whether the computed buffer should be single-sided or not.. SIDE=both|left|right (default: both)
+
+For more details, consult https://gdal.org/programs/gdal_vector_buffer.html

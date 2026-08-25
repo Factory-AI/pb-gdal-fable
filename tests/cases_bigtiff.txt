@@ -1,0 +1,52 @@
+#setup: python3 /workspace/tests/mk_bt_fixtures.py . && /home/agent/oracle/executable raster convert s1.tif bt.tif --co BIGTIFF=YES && /home/agent/oracle/executable raster convert s1.tif bto.tif --co BIGTIFF=YES && /home/agent/oracle/executable raster overview add -r average --levels 2 bto.tif -q
+# creation matrix
+raster convert s1.tif o.tif --co BIGTIFF=YES
+raster convert s1.tif o.tif --co BIGTIFF=YES --co COMPRESS=DEFLATE
+raster convert s1.tif o.tif --co BIGTIFF=YES --co COMPRESS=LZW
+raster convert s1.tif o.tif --co BIGTIFF=YES --co COMPRESS=ZSTD
+raster convert s1.tif o.tif --co BIGTIFF=YES --co COMPRESS=PACKBITS
+raster convert s2.tif o.tif --co BIGTIFF=YES
+raster convert s2.tif o.tif --co BIGTIFF=YES --co COMPRESS=DEFLATE
+raster convert s2.tif o.tif --co BIGTIFF=YES --co COMPRESS=LZW
+raster convert s2.tif o.tif --co BIGTIFF=YES --co COMPRESS=ZSTD
+raster convert s2.tif o.tif --co BIGTIFF=YES --co COMPRESS=PACKBITS
+raster convert s3.tif o.tif --co BIGTIFF=YES
+raster convert s3.tif o.tif --co BIGTIFF=YES --co COMPRESS=DEFLATE
+raster convert s3.tif o.tif --co BIGTIFF=YES --co COMPRESS=LZW
+raster convert s3.tif o.tif --co BIGTIFF=YES --co COMPRESS=ZSTD
+raster convert s3.tif o.tif --co BIGTIFF=YES --co COMPRESS=PACKBITS
+raster convert s3.tif o.tif --co BIGTIFF=YES --co TILED=YES
+raster convert s3.tif o.tif --co BIGTIFF=YES --co TILED=YES --co BLOCKXSIZE=16 --co BLOCKYSIZE=16
+raster convert s2.tif o.tif --co BIGTIFF=YES --co ENDIANNESS=BIG
+raster convert s2.tif o.tif --co BIGTIFF=YES --co NBITS=4
+raster convert s2.tif o.tif --co BIGTIFF=YES --co COMPRESS=DEFLATE --co PREDICTOR=2
+raster convert s1.tif o.tif --co BIGTIFF=MAYBE
+raster convert s1.tif o.tif --co BIGTIFF=yes
+raster convert s1.tif o.tif --co BIGTIFF=NO
+raster convert s1.tif o.tif --co BIGTIFF=IF_NEEDED
+raster convert s1.tif o.tif --co BIGTIFF=IF_SAFER
+raster convert s1.tif o.tif --co BIGTIFF=1
+raster create --size 100,300 --co BIGTIFF=YES --co SPARSE_OK=YES o.tif
+raster create --size 40,40 --band-count 3 --co BIGTIFF=YES o.tif
+raster create --size 40,40 --band-count 3 --co BIGTIFF=YES --co INTERLEAVE=BAND o.tif
+raster create --size 40,40 --co BIGTIFF=YES --crs EPSG:32611 --bbox 0,0,40,40 --nodata 7 o.tif
+# edits into an existing BigTIFF container
+raster edit bt.tif --crs EPSG:32611 --nodata 7
+raster edit bt.tif --stats
+raster edit bt.tif --mo FOO=BAR
+raster edit bt.tif --gcp 1,2,3,4
+raster edit bt.tif --crs EPSG:4326 --bbox 1,2,3,4
+raster edit bt.tif --metadata A=B --unset-metadata X
+# overviews on a BigTIFF container
+raster overview add -r nearest --levels 2 bt.tif
+raster overview add -r average --levels 2,4 bt.tif
+raster overview add -r rms --levels 2 bt.tif
+raster overview add -r nearest --levels 2 bt.tif --external
+raster overview delete bto.tif
+raster overview refresh bto.tif -r rms
+raster info bto.tif --output-format json
+raster convert bto.tif c.tif
+# hidden aliases
+raster edit bt.tif --mo NOEQ
+raster reproject s1.tif o.tif --s_srs EPSG:4326 --t_srs EPSG:3857
+raster edit bt.tif --mp

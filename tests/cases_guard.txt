@@ -1,0 +1,29 @@
+#setup: /home/agent/oracle/executable raster create -q --size 3,2 --burn 7 in.tif && cp in.tif in2.tif && printf '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > v.json && /home/agent/oracle/executable vector convert -q v.json d.shp && /home/agent/oracle/executable raster convert -q in.tif w.vrt
+raster convert --overwrite in.tif in.tif
+raster convert --append in.tif in.tif
+raster convert --of MEM --overwrite in.tif in.tif
+raster convert --overwrite w.vrt w.vrt
+raster convert --overwrite --co FOO=1 w.vrt w.vrt
+raster pipeline read in.tif ! write --overwrite in.tif
+raster pipeline -q read in.tif ! write --overwrite in.tif
+raster select --band 1 --overwrite in.tif in.tif
+raster select --band 9 --overwrite in.tif in2.tif
+convert --overwrite in.tif in.tif
+vector convert --overwrite v.json v.json
+vector convert -q --overwrite v.json v.json
+vector convert --append v.json v.json
+vector convert --upsert v.json v.json
+vector convert --overwrite-layer v.json v.json
+vector convert --update v.json v.json
+vector convert --append --output-layer other v.json v.json
+vector convert --append --output-layer v v.json v.json
+vector convert --update --output-layer other v.json v.json
+vector convert --overwrite -l nope v.json v.json
+vector convert --append -l nope v.json v.json
+vector convert --overwrite d.shp d.shp
+vector convert --append d.shp d.shp
+vector convert --append --output-layer other d.shp d.shp
+vector pipeline read v.json ! write --overwrite v.json
+vector pipeline -q read v.json ! write --overwrite v.json
+vector pipeline read v.json ! write --append v.json
+raster convert --overwrite in.tif ./in.tif

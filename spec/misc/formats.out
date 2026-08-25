@@ -1,0 +1,12 @@
+Supported Formats: (ro:read-only, rw:read-write, +:write from scratch, u:update, v:virtual-I/O s:subdatasets)
+  GTiff -raster- (rw+uvs): GeoTIFF (*.tif, *.tiff)
+  COG -raster- (w+v): Cloud optimized GeoTIFF generator (*.tif, *.tiff)
+  VRT -raster,multidimensional raster- (rw+uv): Virtual Raster (*.vrt)
+  MEM -raster,multidimensional raster,vector- (rw+): In Memory raster, vector and multidimensional raster
+  GNMFile -geography network- (rw+): Geographic Network generic file based model
+  GNMDatabase -geography network- (rw+): Geographic Network generic DB based model
+  ESRI Shapefile -vector- (rw+uv): ESRI Shapefile (*.shp, *.dbf, *.shz, *.shp.zip)
+  GeoJSON -vector- (rw+uv): GeoJSON (*.json, *.geojson)
+  GeoJSONSeq -vector- (rw+v): GeoJSON Sequence (*.geojsonl, *.geojsons)
+  ESRIJSON -vector- (rov): ESRIJSON (*.json)
+  TopoJSON -vector- (rov): TopoJSON (*.json, *.topojson)

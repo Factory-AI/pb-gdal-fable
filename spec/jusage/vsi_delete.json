@@ -1,0 +1,33 @@
+{
+  "name":"delete",
+  "full_path":[
+    "gdal",
+    "vsi",
+    "delete"
+  ],
+  "description":"Delete files located on GDAL Virtual System Interface (VSI).",
+  "short_url":"\/programs\/gdal_vsi_delete.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vsi_delete.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"filename",
+      "type":"string",
+      "description":"File or directory name to delete",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"recursive",
+      "type":"boolean",
+      "description":"Delete directories recursively",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

@@ -1,0 +1,106 @@
+# vector partition: hive/flat token sanitization (%-encode control, space,
+# %-/-:=->-backslash and >=0x80), printf-expanded pattern before token
+# substitution, feature-limit/max-file-size rotation with append resume,
+# forced GeoJSON/Seq ids on fresh runs only (append drops them), part
+# create-failure aborts the whole run before any flush with per-driver
+# message flavors, shapefile geometry pre-checks with skip-errors, field
+# type gate String/Int/Int64, co/lco warnings once per new part.
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"cat":"a","n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"cat":"b","n":2},"geometry":{"type":"Point","coordinates":[3,4]}},{"type":"Feature","properties":{"cat":"a","n":3},"geometry":{"type":"Point","coordinates":[5,6]}},{"type":"Feature","properties":{"cat":null,"n":4},"geometry":{"type":"Point","coordinates":[7,8]}},{"type":"Feature","properties":{"cat":"","n":5},"geometry":{"type":"Point","coordinates":[9,10]}}]}' > p.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"cat":"x/y","n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"cat":"A B","n":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > s.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"r":1.5},"geometry":null}]}' > real.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","id":7,"properties":{"cat":"a","id":99},"geometry":null}]}' > idp.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4]]}}]}' > mix.json && printf %s '{"type":"FeatureCollection","name":"m","features":[]}' > emp.json && mkdir -p ex
+vector partition p.json out --field cat
+vector partition p.json out --field cat -q
+vector partition p.json out --field CAT -q
+vector partition p.json out --field nosuch
+vector partition p.json out --field r
+vector partition real.json out --field r
+vector partition p.json out
+vector partition p.json out --feature-limit 2 -q
+vector partition p.json out --field cat --feature-limit 1 -q
+vector partition p.json out --field cat --scheme flat -q
+vector partition p.json out --feature-limit 2 --scheme flat -q
+vector partition s.json out --field cat -q
+vector partition s.json out --field cat --scheme flat -q
+vector partition p.json ex --field cat
+vector partition p.json ex --field cat --overwrite -q
+vector partition p.json out --field cat --omit-partitioned-field -q
+vector partition p.json out --field cat --pattern "part%05d" -q
+vector partition p.json out --field cat --pattern nopct
+vector partition p.json out --field cat --feature-limit 0
+vector partition p.json out --field cat --feature-limit abc
+vector partition p.json out --field cat --max-file-size 10KB
+vector partition p.json out --field cat --max-file-size bogus
+vector partition nosuch.json out --field cat
+vector partition nosuch.json out
+vector partition p.json out --field cat --of "ESRI Shapefile" -q
+vector partition mix.json out --field a --of "ESRI Shapefile" -q
+vector partition mix.json out --field a --of "ESRI Shapefile" --skip-errors -q
+vector partition p.json out --field cat --of MEM
+vector partition p.json out.gdalg.json --field cat
+vector partition p.json out --field cat --of stream
+vector partition p.json out --field cat --if GTiff
+vector partition emp.json out --field cat -q
+vector partition idp.json out --field cat -q
+vector partition p.json out --field cat --lco WRITE_NAME=NO -q
+vector partition p.json out --field cat --co BOGUS=YES
+vector partition p.json out --field cat --overwrite --append
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"cat":"a","n":1,"big":30000000000},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"cat":"b","n":2,"big":30000000001},"geometry":{"type":"Point","coordinates":[3,4]}},{"type":"Feature","properties":{"cat":"a","n":1,"big":30000000000},"geometry":{"type":"Point","coordinates":[5,6]}}]}' > p.json && printf %s '{"type":"FeatureCollection","name":"L one","features":[{"type":"Feature","properties":{"cat":"a"},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > lsp.json && python3 -c "import json; fs=[{'type':'Feature','properties':{'cat':'c%d'%(i%3),'v':i},'geometry':{'type':'Point','coordinates':[i,i]}} for i in range(200)]; json.dump({'type':'FeatureCollection','name':'m','features':fs},open('big.json','w'))" && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > g1.json
+vector partition p.json out --field cat --field n -q
+vector partition p.json out --field n -q
+vector partition p.json out --field big -q
+vector partition p.json out --field geometry
+vector partition p.json out --field cat --field cat -q
+vector partition p.json out --field cat --field nosuch
+vector partition lsp.json out --field cat -q
+vector partition big.json out --field cat --feature-limit 10 -q
+vector partition big.json out --feature-limit 33 -q
+vector partition big.json out --max-file-size 1MB -q
+vector partition big.json out --feature-limit 33 --scheme flat -q
+vector partition big.json out --field cat --feature-limit 10 --scheme flat -q
+vector partition big.json out --field cat
+vector partition p.json out --field cat --feature-limit 1 --pattern "p_%d" -q
+vector partition p.json out --field cat --pattern "{LAYER_NAME}/%03d" -q
+vector partition g1.json out --field a --scheme flat
+vector partition p.json out --field cat --scheme bogus
+vector partition p.json out --field cat --max-file-size 1MB --feature-limit 2 -q
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"cat":"a","n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"cat":"b","n":2},"geometry":{"type":"Point","coordinates":[3,4]}},{"type":"Feature","properties":{"cat":"a","n":3},"geometry":{"type":"Point","coordinates":[5,6]}}]}' > p.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"cat":"a","n":10},"geometry":{"type":"Point","coordinates":[11,12]}},{"type":"Feature","properties":{"cat":"c","n":11},"geometry":{"type":"Point","coordinates":[13,14]}}]}' > q.json && /home/agent/oracle/executable vector partition p.json pre --field cat -q && /home/agent/oracle/executable vector partition p.json prelim --field cat --feature-limit 2 -q && /home/agent/oracle/executable vector partition p.json preflat --feature-limit 2 --scheme flat -q
+vector partition q.json pre --field cat --append -q
+vector partition q.json pre --field cat --append
+vector partition p.json pre --field cat --append --feature-limit 2 -q
+vector partition q.json prelim --field cat --append --feature-limit 2 -q
+vector partition p.json preflat --feature-limit 2 --scheme flat --append -q
+vector partition q.json pre --field cat --append --lco WRITE_NAME=NO -q
+vector partition p.json out --field cat --of GeoJSONSeq -q
+vector partition p.json out --field cat --of GeoJSONSeq
+vector partition p.json out --feature-limit 1 --of GeoJSONSeq -q
+vector partition q.json pre --append -q
+vector partition q.json pre --field cat --overwrite -q
+vector partition p.json pre --field n --append -q
+
+# max-file-size estimator: 20/feature + WKB geometry + per-type field
+# costs, 65536 part preload, resume accounting by on-disk size, null or
+# unset String values reproduce the reference estimator SIGSEGV with
+# 4096-block stream-prefix leftovers; empty-array String(JSON) typing
+#setup: python3 -c 'import json;fs=[{"type":"Feature","properties":{"s":"x"*80,"k":i},"geometry":{"type":"Point","coordinates":[float(i%10),float(i%7)]}} for i in range(9000)];json.dump({"type":"FeatureCollection","name":"m","features":fs},open("big.json","w"));fs2=[{"type":"Feature","properties":{"s":("x"*(i%50) if i%9 else None),"k":i},"geometry":None} for i in range(30)];json.dump({"type":"FeatureCollection","name":"m","features":fs2},open("nul.json","w"));fs3=[{"type":"Feature","properties":{"s":"x"*40,"k":i},"geometry":None} for i in range(12000)]+[{"type":"Feature","properties":{"s":None,"k":-1},"geometry":None}];json.dump({"type":"FeatureCollection","name":"m","features":fs3},open("mid.json","w"));fs4=[{"type":"Feature","properties":{"il":[1,2,3],"rl":([] if i%4==0 else [1.5]*(i%3)),"sl":["ab","x"*(i%5)],"bl":[i%2==0],"d":"2021-03-04","t":"05:06:07","dt":"2021-03-04T05:06:07","q":616.92490952,"w":0.1},"geometry":{"type":"Point","coordinates":[1.0,2.0]}} for i in range(7000)];json.dump({"type":"FeatureCollection","name":"m","features":fs4},open("lists.json","w"))' && mkdir -p pre/m fullpre/m && python3 -c 'import json;fs=[{"type":"Feature","properties":{"s":"y"*80,"k":-i},"geometry":None} for i in range(4000)];json.dump({"type":"FeatureCollection","name":"m","features":fs},open("pre/m/part_0000000001.json","w"));fs=[{"type":"Feature","properties":{"s":"y"*80,"k":-i},"geometry":None} for i in range(9500)];json.dump({"type":"FeatureCollection","name":"m","features":fs},open("fullpre/m/part_0000000001.json","w"))'
+vector partition big.json out --max-file-size 1MB -q
+vector partition big.json out --max-file-size 1MB
+vector partition big.json out --max-file-size 1MB --scheme flat -q
+vector partition big.json out --max-file-size 1MB --of GeoJSONSeq -q
+vector partition big.json out --max-file-size 1MB --feature-limit 3000 -q
+vector partition big.json out --max-file-size 2MB -q
+vector partition big.json pre --max-file-size 1MB --append -q
+vector partition big.json fullpre --max-file-size 1MB --append -q
+vector partition nul.json out --max-file-size 1MB
+vector partition nul.json out --max-file-size 1MB -q
+vector partition nul.json out --max-file-size 1MB --of GeoJSONSeq -q
+vector partition nul.json out --max-file-size 1MB --of "ESRI Shapefile" -q
+vector partition nul.json out --feature-limit 5 -q
+vector partition mid.json out --max-file-size 1MB
+vector partition mid.json out --max-file-size 1MB --of GeoJSONSeq -q
+vector partition lists.json out --max-file-size 1MB -q
+vector partition lists.json out --feature-limit 2500 -q
+vector partition lists.json out --max-file-size 1MB --of "ESRI Shapefile" -q
+vector convert lists.json o.json -q
+vector info --features --limit 5 lists.json
+vector info lists.json

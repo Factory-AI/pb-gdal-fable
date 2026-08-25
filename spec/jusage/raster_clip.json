@@ -1,0 +1,243 @@
+{
+  "name":"clip",
+  "full_path":[
+    "gdal",
+    "raster",
+    "clip"
+  ],
+  "description":"Clip a raster dataset.",
+  "short_url":"\/programs\/gdal_raster_clip.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_clip.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATECOPY"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Append as a subdataset to existing output",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"bbox",
+      "type":"real_list",
+      "description":"Clipping bounding box as xmin,ymin,xmax,ymax",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":4,
+      "max_count":4,
+      "category":"Base",
+      "mutual_exclusion_group":"bbox-window-geometry-like"
+    },
+    {
+      "name":"bbox-crs",
+      "type":"string",
+      "description":"CRS of clipping bounding box",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"window",
+      "type":"integer_list",
+      "description":"Raster window as col,line,width,height in pixels",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":4,
+      "max_count":4,
+      "category":"Base",
+      "mutual_exclusion_group":"bbox-window-geometry-like"
+    },
+    {
+      "name":"geometry",
+      "type":"string",
+      "description":"Clipping geometry (WKT or GeoJSON)",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"bbox-window-geometry-like"
+    },
+    {
+      "name":"geometry-crs",
+      "type":"string",
+      "description":"CRS of clipping geometry",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"like",
+      "type":"dataset",
+      "description":"Dataset to use as a template for bounds",
+      "metavar":"DATASET",
+      "required":false,
+      "category":"Base",
+      "dataset_type":[
+        "raster",
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "mutual_exclusion_group":"bbox-window-geometry-like"
+    },
+    {
+      "name":"like-sql",
+      "type":"string",
+      "description":"SELECT statement to run on the 'like' dataset",
+      "metavar":"SELECT-STATEMENT",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"sql-where"
+    },
+    {
+      "name":"like-layer",
+      "type":"string",
+      "description":"Name of the layer of the 'like' dataset",
+      "metavar":"LAYER-NAME",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"like-where",
+      "type":"string",
+      "description":"WHERE SQL clause to run on the 'like' dataset",
+      "metavar":"WHERE-EXPRESSION",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"sql-where"
+    },
+    {
+      "name":"only-bbox",
+      "type":"boolean",
+      "description":"For 'geometry' and 'like', only consider their bounding box",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"allow-bbox-outside-source",
+      "type":"boolean",
+      "description":"Allow clipping box to include pixels outside input dataset",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"add-alpha",
+      "type":"boolean",
+      "description":"Adds an alpha mask band to the destination when the source raster have none.",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ],
+  "supports_streamed_output":true
+}

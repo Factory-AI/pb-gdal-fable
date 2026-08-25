@@ -1,0 +1,79 @@
+#setup: sh -c 'mk(){ printf "%s" "$2" > "$1"; }; mk m1.json "{\"type\":\"FeatureCollection\","; mk m2.json "{\"type\":\"FeatureCollection\" \"features\":[]}"; mk m3.json "{\"type\":\"FeatureCollection\",\"features\":[]}trail"; mk m4.json "{\"type\":\"FeatureCollection\",\"features\":[]"; mk m6.json "{\"type\":\"FeatureCollection\",\"features\":[{]}"; mk m7.json "{\"type\":\"Point\",\"coordinates\":[1 2]}"; mk m8.json "{\"type\":\"FeatureCollection\",\"features\":[],}"; mk n1.json "{\"type\":\"FeatureCollection\",\"features\":"; mk n2.json "{\"type\":\"FeatureCollection\",\"features\":["; mk n3.json "{\"features\":[],\"type\":\"FeatureCollection\""; mk n4.json "{\"type\":\"Feature\",\"properties\":{},\"geometry\":{\"type\":\"Point\",\"coordinates\":[1,2]}"; mk n5.json "{\"type\":\"FeatureCollection\",\"features\" :["; mk n6.json "{\"type\":\"FeatureCollection\",\"features\":[{\"type\":\"Feature\"}"; mk n7.json "{\"type\":\"Point\",\"coordinates\":[1,2]"; mk p1.json "{\"type\":\"FeatureCollection\",\"features\":[],\"x\":12"; mk p2.json "{\"type\":\"FeatureCollection\",\"features\":[\"abc"; mk p3.json "{\"type\":\"FeatureCollection\",\"features\":[]}{"; mk p5.json "{\"type\":\"FeatureCollection\",\"features\":[1:2]}"; mk p6.json "{\"type\":\"FeatureCollection\",\"features\":[],\"a\" 5}"; mk p7.json "{\"type\":\"FeatureCollection\",\"features\":[tru]}"; printf "{\n\"type\":\"FeatureCollection\",\n\"features\":[\n" > p8.json; mk p9.json "{\"type\":\"FeatureCollection\",\"features\":[},]}"; mk p10.json "{\"type\":\"FeatureCollection\",\"features\":[00]}"; mk p11.json "{\"type\":\"FeatureCollection\",\"features\":[],123"; mk p12.json "{\"type\":\"FeatureCollection\",\"features\":[]\"x\":1}"; mk p13.json "{\"type\":\"FeatureCollection\",\"features\":[] []}"; mk p14.json "{\"type\":\"FeatureCollection\",\"features\":[1,2,]}"; mk p15.json "{\"type\":\"FeatureCollection\",\"features\":[],\"x\":1e+}"; mk p16.json "{\"type\":\"FeatureCollection\",\"features\":[\"a\\qb\"]}"; mk q1.json "{\"type\":\"FeatureCollection\",\"features\":[1,]}"; mk q2.json "{\"type\":\"FeatureCollection\",\"features\":[,]}"; mk q3.json "{\"type\":\"FeatureCollection\",\"features\":[1, ]}"; mk q4.json "{\"type\":\"FeatureCollection\",\"features\":[],t}"; mk q5.json "{\"type\":\"FeatureCollection\",\"features\":[trx]}"; mk q6.json "{\"type\":\"FeatureCollection\",\"features\":[\"a\\u12g\"]}"; mk q7.json "{\"type\":\"FeatureCollection\",\"features\":[12,34,]}"; mk q8.json "{\"type\":\"FeatureCollection\",\"features\":[true,]}"; mk q9.json "{\"type\":\"FeatureCollection\",\"features\":[[],]}"; mk q10.json "{\"type\":\"FeatureCollection\",\"features\":[nul}"'
+vector info m1.json
+vector convert m1.json out_m1.json
+vector info m2.json
+vector convert m2.json out_m2.json
+vector info m3.json
+vector convert m3.json out_m3.json
+vector info m4.json
+vector convert m4.json out_m4.json
+vector info m6.json
+vector convert m6.json out_m6.json
+vector info m7.json
+vector convert m7.json out_m7.json
+vector info m8.json
+vector convert m8.json out_m8.json
+vector info n1.json
+vector convert n1.json out_n1.json
+vector info n2.json
+vector convert n2.json out_n2.json
+vector info n3.json
+vector convert n3.json out_n3.json
+vector info n4.json
+vector convert n4.json out_n4.json
+vector info n5.json
+vector convert n5.json out_n5.json
+vector info n6.json
+vector convert n6.json out_n6.json
+vector info n7.json
+vector convert n7.json out_n7.json
+vector info p1.json
+vector convert p1.json out_p1.json
+vector info p2.json
+vector convert p2.json out_p2.json
+vector info p3.json
+vector convert p3.json out_p3.json
+vector info p5.json
+vector convert p5.json out_p5.json
+vector info p6.json
+vector convert p6.json out_p6.json
+vector info p7.json
+vector convert p7.json out_p7.json
+vector info p8.json
+vector convert p8.json out_p8.json
+vector info p9.json
+vector convert p9.json out_p9.json
+vector info p10.json
+vector convert p10.json out_p10.json
+vector info p11.json
+vector convert p11.json out_p11.json
+vector info p12.json
+vector convert p12.json out_p12.json
+vector info p13.json
+vector convert p13.json out_p13.json
+vector info p14.json
+vector convert p14.json out_p14.json
+vector info p15.json
+vector convert p15.json out_p15.json
+vector info p16.json
+vector convert p16.json out_p16.json
+vector info q1.json
+vector convert q1.json out_q1.json
+vector info q2.json
+vector convert q2.json out_q2.json
+vector info q3.json
+vector convert q3.json out_q3.json
+vector info q4.json
+vector convert q4.json out_q4.json
+vector info q5.json
+vector convert q5.json out_q5.json
+vector info q6.json
+vector convert q6.json out_q6.json
+vector info q7.json
+vector convert q7.json out_q7.json
+vector info q8.json
+vector convert q8.json out_q8.json
+vector info q9.json
+vector convert q9.json out_q9.json
+vector info q10.json
+vector convert q10.json out_q10.json

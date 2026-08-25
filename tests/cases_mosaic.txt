@@ -1,0 +1,231 @@
+# raster mosaic / stack: VRT composition, materialization, GDALG, options
+#setup: python3 /workspace/tests/mk_mosaic_fixtures.py . && printf 'a.tif\nb.tif\n' > l.txt && echo junk > t.txt && : > empty.txt && cp a.tif ex.tif && echo junk > ex.vrt && echo junk > ex.gdalg.json && mkdir ro && chmod 555 ro
+
+# ---- basics: vrt + tif, overlap, disjoint, band shapes ----
+raster mosaic a.tif o.vrt
+raster mosaic a.tif b.tif o.vrt
+raster mosaic a.tif b.tif o.tif
+raster mosaic a.tif b.tif -q o.tif
+raster mosaic b.tif a.tif o.tif
+raster mosaic a.tif b.tif c.tif o.vrt
+raster mosaic a.tif b.tif c.tif o.tif
+raster mosaic c.tif a.tif o.tif
+raster mosaic k.tif b.tif o.vrt
+raster mosaic k.tif b.tif o.tif
+raster mosaic e.tif o.vrt
+raster mosaic e.tif o.tif
+raster mosaic f.tif o.vrt
+raster mosaic f.tif o.tif
+raster mosaic j.tif o.vrt
+raster stack a.tif b.tif o.vrt
+raster stack a.tif b.tif o.tif
+raster stack e.tif a.tif o.vrt
+raster stack e.tif a.tif o.tif
+raster stack i.tif i.tif o.vrt
+raster stack i.tif i.tif o.tif
+raster stack g.tif g.tif o.vrt
+raster stack a.tif b.tif c.tif o.tif
+
+# ---- band selection, nodata, alpha ----
+raster mosaic e.tif --band 2 o.vrt
+raster mosaic e.tif --band 2,1 o.vrt
+raster mosaic e.tif --band 2 --band 1 o.tif
+raster mosaic a.tif b.tif --dst-nodata 7 o.vrt
+raster mosaic a.tif b.tif --dst-nodata 7 o.tif
+raster mosaic k.tif b.tif --src-nodata 5 o.vrt
+raster mosaic k.tif b.tif --src-nodata 5 o.tif
+raster mosaic a.tif b.tif --src-nodata 3 --dst-nodata 9 o.tif
+raster mosaic e.tif --dst-nodata 1,2 o.vrt
+raster mosaic e.tif --dst-nodata 300 o.vrt
+raster mosaic e.tif --dst-nodata 0.1 o.tif
+raster mosaic f.tif --dst-nodata nan o.vrt
+raster mosaic a.tif b.tif --src-nodata nan o.tif
+raster mosaic a.tif --src-nodata nan --dst-nodata 5 o.vrt
+raster mosaic a.tif --src-nodata nan --dst-nodata 300 o.vrt
+raster mosaic a.tif b.tif c.tif --src-nodata 300 o.tif
+raster mosaic a.tif --dst-nodata 7 --hide-nodata o.vrt
+raster mosaic a.tif --dst-nodata 7 --hide-nodata o.tif
+raster mosaic a.tif b.tif --add-alpha o.vrt
+raster mosaic a.tif b.tif --add-alpha o.tif
+raster mosaic j.tif --add-alpha o.vrt
+raster mosaic k.tif --src-nodata 5 --add-alpha --dst-nodata 9 --hide-nodata o.vrt
+raster mosaic c.tif a.tif --dst-nodata 7 o.tif
+raster stack e.tif b.tif --src-nodata 1,2 o.vrt
+raster stack e.tif b.tif --src-nodata 1,2 o.tif
+raster stack k.tif f.tif o.vrt
+raster stack k.tif f.tif o.tif
+raster stack a.tif b.tif --src-nodata 300 o.tif
+raster stack e.tif a.tif --dst-nodata nan o.vrt
+raster stack a.tif --hide-nodata --dst-nodata 3 o.tif
+raster stack e.tif --band 2 --src-nodata 12 o.vrt
+
+# ---- resolution strategies, bbox, target-aligned-pixels ----
+raster mosaic a.tif d.tif --resolution average o.vrt
+raster mosaic a.tif d.tif --resolution average o.tif
+raster mosaic a.tif d.tif --resolution highest o.vrt
+raster mosaic a.tif d.tif --resolution lowest o.vrt
+raster mosaic a.tif d.tif --resolution common o.tif
+raster mosaic w1.tif w2.tif --resolution average o.vrt
+raster mosaic w1.tif w2.tif --resolution average o.tif
+raster mosaic w1.tif w2.tif --resolution common o.vrt
+raster mosaic w1.tif w2.tif --resolution highest o.vrt
+raster mosaic w1.tif w2.tif --resolution lowest o.vrt
+raster mosaic a.tif b.tif --resolution 0.75,0.75 o.vrt
+raster mosaic a.tif b.tif --resolution 0.75,0.75 o.tif
+raster mosaic a.tif b.tif --bbox 0.5,8.2,4.5,9.7 --resolution 0.75,0.75 o.vrt
+raster mosaic a.tif b.tif --bbox 0.5,8.2,4.5,9.7 --resolution 0.75,0.75 o.tif
+raster mosaic a.tif b.tif --bbox 0.5,8.2,4.5,9.7 --resolution 0.75,0.75 --target-aligned-pixels o.vrt
+raster mosaic a.tif b.tif --bbox 0.5,8.2,4.5,9.7 --resolution 0.75,0.75 --target-aligned-pixels o.tif
+raster mosaic a.tif --bbox 3,4,3.5,9 o.vrt
+raster mosaic a.tif b.tif --bbox 1,9,2,10 o.vrt
+raster mosaic w1.tif --bbox 0.4,9.8,1.1,10.05 o.vrt
+raster mosaic w1.tif --bbox 0.4,9.8,1.1,10.05 o.tif
+raster mosaic a.tif b.tif --bbox -5,-5,-1,-1 o.vrt
+raster mosaic a.tif b.tif --bbox -5,-5,-1,-1 o.tif
+raster mosaic a.tif b.tif --bbox 0.9999999,8,5.0000001,10 o.vrt
+raster mosaic a.tif b.tif --bbox 0,8,5,10 o.vrt
+raster mosaic w1.tif w2.tif --bbox 0.4,9.7,1.3,10.1 --resolution common o.tif
+raster stack a.tif d.tif --resolution common o.vrt
+raster stack w1.tif w2.tif --resolution average o.tif
+raster stack w1.tif w2.tif --resolution 0.25,0.25 o.tif
+raster stack a.tif b.tif --bbox 1,9,2.5,10 o.vrt
+raster stack a.tif b.tif --bbox 1,9,2,10 --band 1 o.tif
+raster stack a.tif --bbox 2.5,8,4,10 o.tif
+raster stack a.tif --bbox 2.4,8,4,10 o.tif
+raster stack a.tif --bbox 0,8.2,3,9.5 o.tif
+raster stack a.tif b.tif --bbox -5,-5,-1,-1 o.vrt
+raster stack a.tif b.tif --bbox -5,-5,-1,-1 -q o.vrt
+raster stack a.tif --bbox -5,-5,-1,-1 o.tif
+raster stack a.tif --bbox -5,-5,-1,-1 -f MEM z2
+raster stack a.tif --bbox -5,-5,-1,-1 -f stream z3
+raster stack a.tif --bbox -5,-5,-1,-1 z5.gdalg.json
+
+# ---- pixel functions ----
+raster mosaic a.tif b.tif --pixel-function mean o.vrt
+raster mosaic a.tif b.tif --pixel-function mean o.tif
+raster mosaic a.tif b.tif --pixel-function sum o.tif
+raster mosaic a.tif b.tif --pixel-function max o.tif
+raster mosaic a.tif b.tif --pixel-function min o.tif
+raster mosaic a.tif b.tif c.tif --pixel-function median o.tif
+raster mosaic f.tif --pixel-function sqrt o.tif
+raster mosaic j.tif b.tif --pixel-function mean o.vrt
+raster mosaic k.tif b.tif --pixel-function sum o.tif
+raster mosaic k.tif b.tif --pixel-function sum --dst-nodata 99 o.tif
+raster mosaic a.tif b.tif --pixel-function mean --pixel-function-arg propagateNoData=1 --src-nodata 3 o.tif
+raster mosaic a.tif b.tif --pixel-function quantile --pixel-function-arg q=0.25 o.tif
+raster mosaic a.tif b.tif --pixel-function quantile --pixel-function-arg q=0.25 o.vrt
+raster mosaic e.tif --pixel-function mean --band 2,1 o.vrt
+raster mosaic a.tif b.tif --pixel-function geometric_mean o.tif
+raster mosaic a.tif b.tif --pixel-function harmonic_mean o.tif
+raster mosaic a.tif b.tif --pixel-function mode o.tif
+raster mosaic f.tif f.tif --pixel-function mean o.tif
+raster mosaic j.tif j.tif --pixel-function median o.tif
+raster mosaic k.tif b.tif --add-alpha --pixel-function mean o.vrt
+raster mosaic k.tif b.tif --add-alpha --pixel-function mean o.tif
+
+# ---- inputs: globs, @filelist, named --input ----
+raster mosaic @l.txt o.vrt
+raster mosaic a.tif @l.txt o.tif
+raster mosaic @empty.txt o.vrt
+raster mosaic @empty.txt a.tif o.vrt
+raster mosaic @zz.txt o.vrt
+raster mosaic --input a.tif --input b.tif o.vrt
+raster mosaic o.vrt --input a.tif
+raster mosaic 'w*.tif' --resolution average o.vrt
+raster mosaic 'w*.tif' --resolution average o.tif
+raster mosaic 'w*.tif' --resolution average -q o.vrt
+raster mosaic 'w*.tif' --resolution average -f MEM out
+raster mosaic 'z*.tif' o.vrt
+raster mosaic 'z*.tif' o.vrt -q
+raster mosaic '*.tif' o.vrt
+raster mosaic '?.tif' o2.vrt
+raster mosaic a.tif 'zz*.tif' o.vrt
+raster mosaic zz.tif 'w*.tif' o.vrt
+raster mosaic 'w*.tif' --input a.tif o.vrt --resolution average
+raster mosaic 'w*.tif' --resolution average -f stream sss
+raster mosaic 'w*.tif' --resolution average ex.tif
+raster mosaic 'w*.tif' --resolution average g1.gdalg.json
+raster mosaic 'z*.tif' g2.gdalg.json
+raster mosaic 'w*.tif' --pixel-function quantile --resolution average g4.tif
+raster mosaic 'w*.tif' --resolution average --co BOGUS=YES g5.vrt
+raster stack 'w*.tif' --resolution average o.tif
+raster stack 'w*.tif' --resolution average o.vrt
+raster stack @l.txt --band 1 o.tif
+
+# ---- validation errors ----
+raster mosaic
+raster mosaic a.tif
+raster mosaic zz.tif o.vrt
+raster mosaic a.tif zz.tif o.vrt
+raster mosaic t.txt o.vrt
+raster mosaic g.tif a.tif o.vrt
+raster mosaic a.tif g.tif o.tif
+raster mosaic g.tif o.vrt
+raster mosaic i.tif o.vrt
+raster mosaic a.tif i.tif o.vrt
+raster mosaic a.tif h.tif o.vrt
+raster mosaic a.tif d.tif o.vrt
+raster mosaic a.tif e.tif o.vrt
+raster mosaic e.tif f.tif o.vrt
+raster stack a.tif e.tif o.vrt
+raster stack a.tif g.tif o.vrt
+raster stack g.tif i.tif o.vrt
+raster stack i.tif a.tif o.tif
+raster mosaic a.tif b.tif --band 0 o.vrt
+raster mosaic e.tif --band 3 o.vrt
+raster mosaic a.tif b.tif --bbox 2,3,1,4 o.vrt
+raster mosaic a.tif b.tif --bbox 1,4,2,3 o.vrt
+raster mosaic a.tif b.tif --resolution bogus o.vrt
+raster mosaic a.tif b.tif --resolution -1,2 o.vrt
+raster mosaic a.tif b.tif --resolution 1 o.vrt
+raster mosaic a.tif b.tif --target-aligned-pixels o.vrt
+raster mosaic 'w*.tif' --target-aligned-pixels o.vrt
+raster mosaic a.tif b.tif --resolution common --target-aligned-pixels o.vrt
+raster mosaic a.tif b.tif --pixel-function bogus o.vrt
+raster mosaic a.tif b.tif --pixel-function quantile o.tif
+raster mosaic a.tif b.tif --pixel-function quantile --pixel-function-arg q=2 o.tif
+raster mosaic a.tif b.tif --pixel-function quantile --pixel-function-arg q=abc o.tif
+raster mosaic a.tif b.tif --pixel-function quantile --pixel-function-arg q=1 o.tif
+raster mosaic a.tif b.tif --pixel-function quantile --pixel-function-arg q=0 o.tif
+raster mosaic a.tif b.tif --src-nodata 1,2,3 o.vrt
+raster mosaic a.tif b.tif --dst-nodata abc o.vrt
+raster stack a.tif b.tif --add-alpha o.vrt
+raster stack a.tif b.tif --pixel-function mean o.vrt
+raster mosaic a.tif b.tif --output m3.vrt
+raster mosaic a.tif -f GTiff
+raster mosaic --overwrite
+
+# ---- outputs: formats, overwrite, append, existing, unwritable ----
+raster mosaic a.tif b.tif o.bogusext
+raster mosaic a.tif b.tif -f VRT o.xyz
+raster mosaic a.tif b.tif --of GTiff o.xyz
+raster mosaic a.tif b.tif -f BOGUS o.tif
+raster mosaic a.tif b.tif -f MEM o.tif
+raster mosaic a.tif b.tif -f stream o.tif
+raster mosaic a.tif o.vrt --co COMPRESS=LZW
+raster mosaic a.tif o.tif --co COMPRESS=LZW
+raster mosaic a.tif o.tif --co BOGUS=YES
+raster mosaic a.tif b.tif --co TILED=YES o.tif
+raster mosaic a.tif b.tif ex.tif
+raster mosaic a.tif b.tif ex.tif --overwrite
+raster mosaic a.tif b.tif ex.vrt
+raster mosaic a.tif b.tif ex.vrt --overwrite
+raster mosaic a.tif b.tif ex.gdalg.json
+raster mosaic a.tif b.tif ex.gdalg.json --overwrite
+raster mosaic b.tif --append ex.tif
+raster mosaic a.tif b.tif --append ex.tif
+raster stack a.tif --append ex.tif
+raster mosaic a.tif b.tif a.tif o.vrt
+raster mosaic 'w*.tif' --resolution average ro/o.tif
+raster mosaic a.tif ro/o2.tif
+raster mosaic 'w*.tif' ro/o3.vrt --resolution average
+raster mosaic a.tif ro/o4.vrt
+raster mosaic a.tif b.tif oo
+
+# ---- GDALG serialization ----
+raster mosaic a.tif b.tif o.gdalg.json
+raster mosaic e.tif --band 2 --band 1 --add-alpha --src-nodata 3 --dst-nodata 9 --hide-nodata o.gdalg.json
+raster stack e.tif --band 2 --src-nodata 3,4 --dst-nodata 9 --hide-nodata --resolution common --bbox 1,9,2,10 o.gdalg.json
+raster mosaic a.tif b.tif --pixel-function quantile --pixel-function-arg q=0.75 --pixel-function-arg something=x o.gdalg.json
+raster mosaic zz.tif o.gdalg.json
+raster mosaic a.tif b.tif --resolution 0.5,0.25 --target-aligned-pixels --absolute-path o.gdalg.json

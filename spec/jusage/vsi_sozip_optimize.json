@@ -1,0 +1,91 @@
+{
+  "name":"optimize",
+  "full_path":[
+    "gdal",
+    "vsi",
+    "sozip",
+    "optimize"
+  ],
+  "description":"Create a Seek-optimized ZIP (SOZIP) file from a regular ZIP file.",
+  "short_url":"\/programs\/gdal_vsi_sozip.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vsi_sozip.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"input",
+      "type":"string_list",
+      "description":"Input ZIP filename",
+      "required":true,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":1,
+      "category":"Base"
+    },
+    {
+      "name":"output",
+      "type":"string",
+      "description":"Output ZIP filename",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"enable-sozip",
+      "type":"string",
+      "description":"Whether to automatically\/systematically\/never apply the SOZIP optimization",
+      "choices":[
+        "auto",
+        "yes",
+        "no"
+      ],
+      "default":"auto",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"sozip-chunk-size",
+      "type":"string",
+      "description":"Chunk size for a seek-optimized file",
+      "metavar":"value in bytes or with K\/M suffix",
+      "default":"32768",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"sozip-min-file-size",
+      "type":"string",
+      "description":"Minimum file size to decide if a file should be seek-optimized",
+      "metavar":"value in bytes or with K\/M\/G suffix",
+      "default":"1 MB",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+  ]
+}

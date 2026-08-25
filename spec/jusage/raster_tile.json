@@ -1,0 +1,427 @@
+{
+  "name":"tile",
+  "full_path":[
+    "gdal",
+    "raster",
+    "tile"
+  ],
+  "description":"Generate tiles in separate files from a raster dataset.",
+  "short_url":"\/programs\/gdal_raster_tile.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_tile.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "default":"PNG",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATECOPY",
+          "DMD_EXTENSIONS"
+        ],
+        "vrt_compatible":[
+          "false"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"output",
+      "type":"string",
+      "description":"Output directory",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"tiling-scheme",
+      "type":"string",
+      "description":"Tiling scheme",
+      "choices":[
+        "raster",
+        "WebMercatorQuad",
+        "WorldCRS84Quad",
+        "WorldMercatorWGS84Quad",
+        "GoogleCRS84Quad",
+        "PseudoTMS_GlobalMercator",
+        "GlobalGeodeticOriginLat270"
+      ],
+      "default":"WebMercatorQuad",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-zoom",
+      "type":"integer",
+      "description":"Minimum zoom level",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-zoom",
+      "type":"integer",
+      "description":"Maximum zoom level",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-x",
+      "type":"integer",
+      "description":"Minimum tile X coordinate",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-x",
+      "type":"integer",
+      "description":"Maximum tile X coordinate",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-y",
+      "type":"integer",
+      "description":"Minimum tile Y coordinate",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-y",
+      "type":"integer",
+      "description":"Maximum tile Y coordinate",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"no-intersection-ok",
+      "type":"boolean",
+      "description":"Whether dataset extent not intersecting tile matrix is only a warning",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"resampling",
+      "type":"string",
+      "description":"Resampling method for max zoom",
+      "choices":[
+        "nearest",
+        "bilinear",
+        "cubic",
+        "cubicspline",
+        "lanczos",
+        "average",
+        "rms",
+        "mode",
+        "min",
+        "max",
+        "med",
+        "q1",
+        "q3",
+        "sum"
+      ],
+      "default":"cubic",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"overview-resampling",
+      "type":"string",
+      "description":"Resampling method for overviews",
+      "choices":[
+        "nearest",
+        "bilinear",
+        "cubic",
+        "cubicspline",
+        "lanczos",
+        "average",
+        "rms",
+        "mode",
+        "min",
+        "max",
+        "med",
+        "q1",
+        "q3",
+        "sum"
+      ],
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"convention",
+      "type":"string",
+      "description":"Tile numbering convention: xyz (from top) or tms (from bottom)",
+      "choices":[
+        "xyz",
+        "tms"
+      ],
+      "default":"xyz",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"tile-size",
+      "type":"integer",
+      "description":"Override default tile size",
+      "min_value":64,
+      "min_value_is_included":true,
+      "max_value":32768,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"add-alpha",
+      "type":"boolean",
+      "description":"Whether to force adding an alpha channel",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"alpha"
+    },
+    {
+      "name":"no-alpha",
+      "type":"boolean",
+      "description":"Whether to disable adding an alpha channel",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"alpha"
+    },
+    {
+      "name":"dst-nodata",
+      "type":"real",
+      "description":"Destination nodata value",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"skip-blank",
+      "type":"boolean",
+      "description":"Do not generate blank tiles",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"metadata",
+      "type":"string_list",
+      "description":"Add metadata item to output tiles",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"copy-src-metadata",
+      "type":"boolean",
+      "description":"Whether to copy metadata from source dataset",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"aux-xml",
+      "type":"boolean",
+      "description":"Generate .aux.xml sidecar files when needed",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"kml",
+      "type":"boolean",
+      "description":"Generate KML files",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"resume",
+      "type":"boolean",
+      "description":"Generate only missing files",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"num-threads",
+      "type":"string",
+      "description":"Number of jobs (or ALL_CPUS)",
+      "default":"ALL_CPUS",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"parallel-method",
+      "type":"string",
+      "description":"Parallelization method (thread, spawn, fork)",
+      "choices":[
+        "thread",
+        "spawn",
+        "fork"
+      ],
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"excluded-values",
+      "type":"string",
+      "description":"Tuples of values (e.g. <R>,<G>,<B> or (<R1>,<G1>,<B1>),(<R2>,<G2>,<B2>)) that must beignored as contributing source pixels during (average) resampling",
+      "required":false,
+      "category":"Advanced Resampling"
+    },
+    {
+      "name":"excluded-values-pct-threshold",
+      "type":"real",
+      "description":"Minimum percentage of source pixels that must be set at one of the --excluded-values to cause the excluded value to be used as the target pixel value",
+      "default":50.0,
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":100.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Advanced Resampling"
+    },
+    {
+      "name":"nodata-values-pct-threshold",
+      "type":"real",
+      "description":"Minimum percentage of source pixels that must be set at one of nodata (or alpha=0 or any other way to express transparent pixelto cause the target pixel value to be transparent",
+      "default":100.0,
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":100.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Advanced Resampling"
+    },
+    {
+      "name":"webviewer",
+      "type":"string_list",
+      "description":"Web viewer to generate",
+      "choices":[
+        "none",
+        "all",
+        "leaflet",
+        "openlayers",
+        "mapml",
+        "stac"
+      ],
+      "default":"all",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Publication"
+    },
+    {
+      "name":"url",
+      "type":"string",
+      "description":"URL address where the generated tiles are going to be published",
+      "required":false,
+      "category":"Publication"
+    },
+    {
+      "name":"title",
+      "type":"string",
+      "description":"Title of the map",
+      "required":false,
+      "category":"Publication"
+    },
+    {
+      "name":"copyright",
+      "type":"string",
+      "description":"Copyright for the map",
+      "required":false,
+      "category":"Publication"
+    },
+    {
+      "name":"mapml-template",
+      "type":"string",
+      "description":"Filename of a template mapml file where variables will be substituted",
+      "required":false,
+      "category":"Publication"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ],
+  "supports_streamed_output":true
+}

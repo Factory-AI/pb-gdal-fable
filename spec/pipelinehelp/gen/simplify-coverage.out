@@ -1,0 +1,17 @@
+Usage: simplify-coverage [OPTIONS] <TOLERANCE>
+
+Simplify shared boundaries of a polygonal vector dataset.
+
+Positional arguments:
+  --tolerance <TOLERANCE>        Distance tolerance for simplification. [required]
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>  Set active layer (if not specified, all)
+  --preserve-boundary            Whether the exterior boundary should be preserved.
+
+For more details, consult https://gdal.org/programs/gdal_vector_simplify_coverage.html

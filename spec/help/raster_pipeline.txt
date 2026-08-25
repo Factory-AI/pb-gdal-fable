@@ -1,0 +1,712 @@
+Usage: gdal raster pipeline [OPTIONS] <PIPELINE>
+
+Process a raster dataset applying several steps.
+
+Positional arguments:
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+  -q, --quiet             Quiet mode (no progress bar or warning message)
+
+<PIPELINE> is of the form: read|mosaic|stack [READ-OPTIONS] ( ! <STEP-NAME> [STEP-OPTIONS] )* ! info|compare|tile|write [WRITE-OPTIONS]
+
+Example: 'gdal raster pipeline --progress ! read in.tif ! \
+               reproject --dst-crs=EPSG:32632 ! write out.tif --overwrite'
+
+Potential steps are:
+
+* read [OPTIONS] <INPUT>
+------------------------
+
+Read a raster dataset.
+
+Positional arguments:
+  -i, --input <INPUT>                                              Input raster datasets [required]
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                              Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                                Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_pipeline.html
+
+* calc [OPTIONS] <INPUTS>...
+----------------------------
+
+Perform raster algebra
+
+Positional arguments:
+  -i, --input <INPUTS>                                             Input raster datasets [1.. values] [required]
+
+Options:
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64
+  --no-check-crs                                                   Do not check consistency of input coordinate reference systems
+  --no-check-extent                                                Do not check consistency of input extents
+  --propagate-nodata                                               Whether to set pixels to the output NoData value if any of the input pixels is NoData
+  --calc <CALC>                                                    Expression(s) to evaluate [1.. values] [required]
+  --dialect <DIALECT>                                              Expression dialect. DIALECT=muparser|builtin (default: muparser)
+  --flatten                                                        Generate a single band output raster per expression, even if input datasets are multiband
+  --nodata <NODATA>                                                Assign a specified nodata value to output bands ('none', numeric value, 'nan', 'inf', '-inf')
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                              Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                                Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_calc.html
+
+* mosaic [OPTIONS] <INPUTS>...
+------------------------------
+
+Build a mosaic, either virtual (VRT) or materialized.
+
+Positional arguments:
+  -i, --input <INPUTS>                                             Input raster datasets (or specify a @<filename> to point to a file containing filenames) [1.. values] [required]
+
+Options:
+  -b, --band <BAND>                                                Input band(s) (1-based index) [may be repeated]
+  --absolute-path                                                  Whether the path to the input datasets should be stored as an absolute path
+  --resolution <xres>,<yres>|same|average|common|highest|lowest>   Target resolution (in destination CRS units) (default: same)
+  --bbox <BBOX>                                                    Target bounding box as xmin,ymin,xmax,ymax (in destination CRS units)
+  --target-aligned-pixels                                          Round target extent to target resolution
+  --src-nodata <SRC-NODATA>                                        Set nodata values for input bands. [1.. values]
+  --dst-nodata <DST-NODATA>                                        Set nodata values at the destination band level. [1.. values]
+  --hide-nodata                                                    Makes the destination band not report the NoData.
+  --add-alpha                                                      Adds an alpha mask band to the destination when the source raster have none.
+  --pixel-function <PIXEL-FUNCTION>                                Specify a pixel function to calculate output value from overlapping inputs. PIXEL-FUNCTION=area|argmax|argmin|cmul|complex|conj|dB|dB2amp|dB2pow|diff|div|exp|expression|geometric_mean|harmonic_mean|imag|intensity|interpolate_exp|interpolate_linear|inv|log10|max|mean|median|min|mod|mode|mul|norm_diff|phase|polar|pow|quantile|real|reclassify|replace_nodata|round|scale|sqrt|sum
+  --pixel-function-arg <NAME>=<VALUE>                              Specify argument(s) to pass to the pixel function [may be repeated]
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                              Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                                Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_mosaic.html
+
+* stack [OPTIONS] <INPUTS>...
+-----------------------------
+
+Combine together input bands into a multi-band output, either virtual (VRT) or materialized.
+
+Positional arguments:
+  -i, --input <INPUTS>                                             Input raster datasets (or specify a @<filename> to point to a file containing filenames) [1.. values] [required]
+
+Options:
+  -b, --band <BAND>                                                Input band(s) (1-based index) [may be repeated]
+  --absolute-path                                                  Whether the path to the input datasets should be stored as an absolute path
+  --resolution <xres>,<yres>|same|average|common|highest|lowest>   Target resolution (in destination CRS units) (default: same)
+  --bbox <BBOX>                                                    Target bounding box as xmin,ymin,xmax,ymax (in destination CRS units)
+  --target-aligned-pixels                                          Round target extent to target resolution
+  --src-nodata <SRC-NODATA>                                        Set nodata values for input bands. [1.. values]
+  --dst-nodata <DST-NODATA>                                        Set nodata values at the destination band level. [1.. values]
+  --hide-nodata                                                    Makes the destination band not report the NoData.
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                              Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                                Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_stack.html
+
+* aspect [OPTIONS]
+------------------
+
+Generate an aspect map
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  --convention <CONVENTION>                                        Convention for output angles. CONVENTION=azimuth|trigonometric-angle (default: azimuth)
+  --gradient-alg <GRADIENT-ALG>                                    Algorithm used to compute terrain gradient. GRADIENT-ALG=Horn|ZevenbergenThorne (default: Horn)
+  --zero-for-flat                                                  Whether to output zero for flat areas
+  --no-edges                                                       Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_aspect.html
+
+* blend [OPTIONS] <OVERLAY>
+---------------------------
+
+Blend/compose two raster datasets
+
+Positional arguments:
+  --overlay <OVERLAY>                                              Overlay dataset [required]
+
+Options:
+  --operator <OPERATOR>                                            Composition operator. OPERATOR=src-over|hsv-value|multiply|screen|overlay|hard-light|darken|lighten|color-dodge|color-burn (default: src-over)
+  --opacity <OPACITY>                                              Opacity percentage to apply to the overlay dataset (0=fully transparent, 100=full use of overlay opacity) (default: 100)
+
+For more details, consult https://gdal.org/programs/gdal_raster_blend.html
+
+* clip [OPTIONS]
+----------------
+
+Clip a raster dataset.
+
+Options:
+  --bbox <BBOX>                                                    Clipping bounding box as xmin,ymin,xmax,ymax
+                                                                   Mutually exclusive with --window, --geometry, --like
+  --bbox-crs <BBOX-CRS>                                            CRS of clipping bounding box
+  --window <WINDOW>                                                Raster window as col,line,width,height in pixels
+                                                                   Mutually exclusive with --bbox, --geometry, --like
+  --geometry <GEOMETRY>                                            Clipping geometry (WKT or GeoJSON)
+                                                                   Mutually exclusive with --bbox, --window, --like
+  --geometry-crs <GEOMETRY-CRS>                                    CRS of clipping geometry
+  --like <DATASET>                                                 Dataset to use as a template for bounds
+                                                                   Mutually exclusive with --bbox, --window, --geometry
+  --like-sql <SELECT-STATEMENT>                                    SELECT statement to run on the 'like' dataset
+                                                                   Mutually exclusive with --like-where
+  --like-layer <LAYER-NAME>                                        Name of the layer of the 'like' dataset
+  --like-where <WHERE-EXPRESSION>                                  WHERE SQL clause to run on the 'like' dataset
+                                                                   Mutually exclusive with --like-sql
+  --only-bbox                                                      For 'geometry' and 'like', only consider their bounding box
+  --allow-bbox-outside-source                                      Allow clipping box to include pixels outside input dataset
+  --add-alpha                                                      Adds an alpha mask band to the destination when the source raster have none.
+
+For more details, consult https://gdal.org/programs/gdal_raster_clip.html
+
+* color-map [OPTIONS]
+---------------------
+
+Generate a RGB or RGBA dataset from a single band, using a color map
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  --color-map <COLOR-MAP>                                          Color map filename
+  --add-alpha                                                      Adds an alpha mask band to the destination.
+  --color-selection <COLOR-SELECTION>                              How to compute output colors from input values. COLOR-SELECTION=interpolate|exact|nearest (default: interpolate)
+
+For more details, consult https://gdal.org/programs/gdal_raster_color_map.html
+
+* create [OPTIONS]
+------------------
+
+Create a new raster dataset.
+
+Options:
+  -i, --like, --input <INPUT>                                      Input raster datasets
+  --size <width>,<height>                                          Output size in pixels
+  --band-count <BAND-COUNT>                                        Number of bands (default: 1)
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64 (default: Byte)
+  --nodata <NODATA>                                                Assign a specified nodata value to output bands ('none', numeric value, 'nan', 'inf', '-inf')
+  --burn <BURN>                                                    Burn value [may be repeated]
+  --crs <CRS>                                                      Set CRS
+  --bbox <BBOX>                                                    Bounding box as xmin,ymin,xmax,ymax
+  --metadata <KEY>=<VALUE>                                         Add metadata item [may be repeated]
+  --copy-metadata                                                  Copy metadata from input dataset
+  --copy-overviews                                                 Create same overview levels as input dataset
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                              Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                                Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_create.html
+
+* edit [OPTIONS]
+----------------
+
+Edit a raster dataset.
+
+Options:
+  --crs <CRS>                                                      Override CRS (without reprojection)
+  --bbox <BBOX>                                                    Bounding box as xmin,ymin,xmax,ymax
+  --nodata <NODATA>                                                Assign a specified nodata value to output bands ('none', numeric value, 'nan', 'inf', '-inf')
+  --color-interpretation <[all|<BAND>=]<COLOR-INTEPRETATION>       Set band color interpretation [may be repeated]
+  --scale <[<BAND>=]<SCALE>                                        Override band scale factor [may be repeated]
+  --offset <[<BAND>=]<OFFSET>                                      Override band offset constant [may be repeated]
+  --metadata <KEY>=<VALUE>                                         Add/update dataset metadata item [may be repeated]
+  --unset-metadata <KEY>                                           Remove dataset metadata item(s) [may be repeated]
+  --unset-metadata-domain <DOMAIN>                                 Remove dataset metadata domain(s) [may be repeated]
+  --gcp <GCP>                                                      Add ground control point, formatted as pixel,line,easting,northing[,elevation], or @filename [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_edit.html
+
+* external [OPTIONS] <COMMAND>
+------------------------------
+
+Execute an external program as a step of a pipeline
+
+Positional arguments:
+  --command <COMMAND>                                              External command, optionally with <INPUT> and/or <OUTPUT> or <INPUT-OUTPUT> placeholders [required]
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>              Output format
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                              Input formats
+
+For more details, consult https://gdal.org/programs/gdal_external.html
+
+* fill-nodata [OPTIONS]
+-----------------------
+
+Fill nodata raster regions by interpolation from edges.
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  -d, --max-distance <MAX_DISTANCE>                                The maximum distance (in pixels) that the algorithm will search out for values to interpolate. (default: 100)
+  -s, --smoothing-iterations <SMOOTHING_ITERATIONS>                The number of 3x3 average filter smoothing iterations to run after the interpolation to dampen artifacts. The default is zero smoothing iterations. (default: 0)
+  --mask <MASK>                                                    Use the first band of the specified file as a validity mask (zero is invalid, non-zero is valid).
+  --strategy <STRATEGY>                                            By default, pixels are interpolated using an inverse distance weighting (invdist). It is also possible to choose a nearest neighbour (nearest) strategy.. STRATEGY=invdist|nearest (default: invdist)
+
+For more details, consult https://gdal.org/programs/gdal_raster_fill_nodata.html
+
+* hillshade [OPTIONS]
+---------------------
+
+Generate a shaded relief map
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  -z, --zfactor <ZFACTOR>                                          Vertical exaggeration used to pre-multiply the elevations
+  --xscale <XSCALE>                                                Ratio of vertical units to horizontal X axis units
+  --yscale <YSCALE>                                                Ratio of vertical units to horizontal Y axis units
+  --azimuth <AZIMUTH>                                              Azimuth of the light, in degrees (default: 315)
+  --altitude <ALTITUDE>                                            Altitude of the light, in degrees (default: 45)
+  --gradient-alg <GRADIENT-ALG>                                    Algorithm used to compute terrain gradient. GRADIENT-ALG=Horn|ZevenbergenThorne (default: Horn)
+  --variant <VARIANT>                                              Variant of the hillshading algorithm. VARIANT=regular|combined|multidirectional|Igor (default: regular)
+  --no-edges                                                       Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_hillshade.html
+
+* materialize [OPTIONS]
+-----------------------
+
+Materialize a piped dataset on disk to increase the efficiency of the following steps.
+
+Options:
+  -o, --output <OUTPUT>                                            Materialized dataset name (created by algorithm)
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>              Output format
+  --co, --creation-option <KEY>=<VALUE>                            Creation option [may be repeated]
+  --overwrite                                                      Whether overwriting existing output dataset is allowed
+
+For more details, consult https://gdal.org/programs/gdal_raster_materialize.html
+
+* neighbors [OPTIONS]
+---------------------
+
+Compute the value of each pixel from its neighbors (focal statistics)
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index)
+  --method <METHOD>                                                Method to combine weighed source pixels. METHOD=mean|sum|min|max|stddev|median|mode [may be repeated]
+  --size <SIZE>                                                    Neighborhood size
+  --kernel <KERNEL>                                                Convolution kernel(s) to apply [1.. values] [required]
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64 (default: Float64)
+  --nodata <NODATA>                                                Assign a specified nodata value to output bands ('none', numeric value, 'nan', 'inf', '-inf')
+
+For more details, consult https://gdal.org/programs/gdal_raster_neighbors.html
+
+* nodata-to-alpha [OPTIONS]
+---------------------------
+
+Replace nodata value(s) with an alpha band.
+
+Options:
+  --nodata <NODATA>                                                Override nodata value of input band(s) (numeric value, 'nan', 'inf', '-inf') [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_nodata_to_alpha.html
+
+* overview <COMMAND> [OPTIONS]
+------------------------------
+
+where <COMMAND> is one of:
+  - add: Adding overviews.
+
+For more details, consult https://gdal.org/programs/gdal_raster_overview.html
+
+* pansharpen [OPTIONS] <SPECTRAL>...
+------------------------------------
+
+Perform a pansharpen operation.
+
+Positional arguments:
+  --spectral <SPECTRAL>                                            Input spectral band dataset [1.. values] [required]
+
+Options:
+  -r, --resampling <RESAMPLING>                                    Resampling algorithm. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average (default: cubic)
+  --weights <WEIGHTS>                                              Weight for each input spectral band [may be repeated]
+  --nodata <NODATA>                                                Override nodata value of input bands
+  --bit-depth <BIT-DEPTH>                                          Override bit depth of input bands
+  --spatial-extent-adjustment <SPATIAL-EXTENT-ADJUSTMENT>          Select behavior when bands have not the same extent. SPATIAL-EXTENT-ADJUSTMENT=union|intersection|none|none-without-warning (default: union)
+  -j, --num-threads <NUM-THREADS>                                  Number of jobs (or ALL_CPUS) (default: ALL_CPUS)
+
+For more details, consult https://gdal.org/programs/gdal_raster_pansharpen.html
+
+* proximity [OPTIONS]
+---------------------
+
+Produces a raster proximity map.
+
+Options:
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64|Byte|UInt16|Int16|UInt32|Int32|Float32|Float64 (default: Float32)
+  -b, --band <BAND>                                                Input band (1-based index)
+  --target-values <TARGET-VALUES>                                  Target pixel values [may be repeated]
+  --distance-units <DISTANCE-UNITS>                                Distance units. DISTANCE-UNITS=pixel|geo (default: pixel)
+  --max-distance <MAX-DISTANCE>                                    Maximum distance. The nodata value will be used for pixels beyond this distance (default: 0)
+  --fixed-value <FIXED-VALUE>                                      Fixed value for the pixels that are beyond the maximum distance (instead of the actual distance) (default: 0)
+  --nodata <NODATA>                                                Specify a nodata value to use for pixels that are beyond the maximum distance
+
+For more details, consult https://gdal.org/programs/gdal_raster_proximity.html
+
+* reclassify [OPTIONS]
+----------------------
+
+Reclassify values in a raster dataset
+
+Options:
+  -m, --mapping <MAPPING>                                          Reclassification mappings (or specify a @<filename> to point to a file containing mappings [required]
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64
+
+For more details, consult https://gdal.org/programs/gdal_raster_reclassify.html
+
+* reproject [OPTIONS]
+---------------------
+
+Reproject a raster dataset.
+
+Options:
+  -s, --src-crs <SRC-CRS>                                          Source CRS
+  --like <DATASET>                                                 Dataset to use as a template for target bounds, CRS, size and nodata
+  -d, --dst-crs <DST-CRS>                                          Destination CRS
+  -r, --resampling <RESAMPLING>                                    Resampling method. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode|min|max|med|q1|q3|sum (default: nearest)
+  --resolution <xres>,<yres>                                       Target resolution (in destination CRS units)
+                                                                   Mutually exclusive with --size
+  --size <width>,<height>                                          Target size in pixels
+                                                                   Mutually exclusive with --resolution
+  --bbox <BBOX>                                                    Target bounding box (in destination CRS units)
+  --bbox-crs <BBOX-CRS>                                            CRS of target bounding box
+  -j, --num-threads <NUM-THREADS>                                  Number of jobs (or ALL_CPUS) (default: ALL_CPUS)
+
+Advanced Options:
+  --target-aligned-pixels                                          Round target extent to target resolution
+  --src-nodata <SRC-NODATA>                                        Set nodata values for input bands ('None' to unset). [1.. values]
+  --dst-nodata <DST-NODATA>                                        Set nodata values for output bands ('None' to unset). [1.. values]
+  --add-alpha                                                      Adds an alpha mask band to the destination when the source raster have none.
+  --wo, --warp-option <NAME>=<VALUE>                               Warping option(s) [may be repeated]
+  --to, --transform-option <NAME>=<VALUE>                          Transform option(s) [may be repeated]
+  --et, --error-threshold <ERROR-THRESHOLD>                        Error threshold
+
+For more details, consult https://gdal.org/programs/gdal_raster_reproject.html
+
+* resize [OPTIONS]
+------------------
+
+Resize a raster dataset without changing the georeferenced extents.
+
+Options:
+  --resolution <xres>,<yres>                                       Target resolution (in destination CRS units)
+                                                                   Mutually exclusive with --size
+  --size <width[%]>,<height[%]>                                    Target size in pixels (or percentage if using '%' suffix) [required]
+                                                                   Mutually exclusive with --resolution
+  -r, --resampling <RESAMPLING>                                    Resampling method. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|mode (default: nearest)
+
+For more details, consult https://gdal.org/programs/gdal_raster_resize.html
+
+* rgb-to-palette [OPTIONS]
+--------------------------
+
+Convert a RGB image into a pseudo-color / paletted image.
+
+Options:
+  --color-count <COLOR-COUNT>                                      Select the number of colors in the generated color table (default: 256)
+  --color-map <COLOR-MAP>                                          Color map filename
+  --dst-nodata <DST-NODATA>                                        Destination nodata value
+  --no-dither                                                      Disable Floyd-Steinberg dithering
+  --bit-depth <BIT-DEPTH>                                          Bit depth of color palette component (8 bit causes longer computation time). BIT-DEPTH=5|8 (default: 5)
+
+For more details, consult https://gdal.org/programs/gdal_raster_rgb_to_palette.html
+
+* roughness [OPTIONS]
+---------------------
+
+Generate a roughness map
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  --no-edges                                                       Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_roughness.html
+
+* scale [OPTIONS]
+-----------------
+
+Scale the values of the bands of a raster dataset.
+
+Options:
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64
+  -b, --band <BAND>                                                Select band to restrict the scaling (1-based index)
+  --src-min <SRC-MIN>                                              Minimum value of the source range
+  --src-max <SRC-MAX>                                              Maximum value of the source range
+  --dst-min <DST-MIN>                                              Minimum value of the destination range
+  --dst-max <DST-MAX>                                              Maximum value of the destination range
+  --exponent <EXPONENT>                                            Exponent to apply non-linear scaling with a power function
+  --no-clip                                                        Do not clip input values to [srcmin, srcmax]
+
+For more details, consult https://gdal.org/programs/gdal_raster_scale.html
+
+* select [OPTIONS] <BAND>
+-------------------------
+
+Select a subset of bands from a raster dataset.
+
+Positional arguments:
+  -b, --band <BAND>                                                Band(s) (1-based index, 'mask', 'mask:<band>' or color interpretation such as 'red') [1.. values] [required]
+
+Options:
+  --exclude                                                        Exclude specified bands
+  --mask <MASK>                                                    Mask band (1-based index, 'mask', 'mask:<band>' or 'none')
+
+For more details, consult https://gdal.org/programs/gdal_raster_select.html
+
+* set-type [OPTIONS]
+--------------------
+
+Modify the data type of bands of a raster dataset.
+
+Options:
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64 [required]
+
+For more details, consult https://gdal.org/programs/gdal_raster_set_type.html
+
+* sieve [OPTIONS]
+-----------------
+
+Remove small polygons from a raster dataset.
+
+Options:
+  --mask <MASK>                                                    Use the first band of the specified file as a validity mask (all pixels with a value other than zero will be considered suitable for inclusion in polygons)
+  -b, --band <BAND>                                                Input band (1-based index)
+  -s, --size-threshold <SIZE-THRESHOLD>                            Minimum size of polygons to keep (default: 2)
+  -c, --connect-diagonal-pixels                                    Consider diagonal pixels as connected
+
+For more details, consult https://gdal.org/programs/gdal_raster_sieve.html
+
+* slope [OPTIONS]
+-----------------
+
+Generate a slope map
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  --unit <UNIT>                                                    Unit in which to express slopes. UNIT=degree|percent (default: degree)
+  --xscale <XSCALE>                                                Ratio of vertical units to horizontal X axis units
+  --yscale <YSCALE>                                                Ratio of vertical units to horizontal Y axis units
+  --gradient-alg <GRADIENT-ALG>                                    Algorithm used to compute terrain gradient. GRADIENT-ALG=Horn|ZevenbergenThorne (default: Horn)
+  --no-edges                                                       Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_slope.html
+
+* tee [OPTIONS] [<PIPELINE>...]
+-------------------------------
+
+Pipes the input into the output stream and side nested pipelines.
+
+Positional arguments:
+  --tee-pipeline <PIPELINE>                                        Nested pipeline [1.. values]
+
+For more details, consult https://gdal.org/programs/gdal_pipeline.html
+
+* tpi [OPTIONS]
+---------------
+
+Generate a Topographic Position Index (TPI) map
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  --no-edges                                                       Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_tpi.html
+
+* tri [OPTIONS]
+---------------
+
+Generate a Terrain Ruggedness Index (TRI) map
+
+Options:
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  --algorithm <ALGORITHM>                                          Algorithm to compute TRI. ALGORITHM=Riley|Wilson (default: Riley)
+  --no-edges                                                       Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_tri.html
+
+* unscale [OPTIONS]
+-------------------
+
+Convert scaled values of a raster dataset into unscaled values.
+
+Options:
+  --ot, --datatype, --output-data-type <OUTPUT-DATA-TYPE>          Output data type. OUTPUT-DATA-TYPE=UInt8|Int8|UInt16|Int16|UInt32|Int32|UInt64|Int64|CInt16|CInt32|Float16|Float32|Float64|CFloat32|CFloat64
+
+For more details, consult https://gdal.org/programs/gdal_raster_unscale.html
+
+* update [OPTIONS] <OUTPUT>
+---------------------------
+
+Update the destination raster with the content of the input one.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                            Output raster dataset [required]
+
+Options:
+  --geometry <GEOMETRY>                                            Clipping geometry (WKT or GeoJSON)
+  --geometry-crs <GEOMETRY-CRS>                                    CRS of clipping geometry
+  -r, --resampling <RESAMPLING>                                    Resampling method. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode|min|max|med|q1|q3|sum (default: nearest)
+  --no-update-overviews                                            Do not update existing overviews
+
+Advanced Options:
+  --wo, --warp-option <NAME>=<VALUE>                               Warping option(s) [may be repeated]
+  --to, --transform-option <NAME>=<VALUE>                          Transform option(s) [may be repeated]
+  --et, --error-threshold <ERROR-THRESHOLD>                        Error threshold
+
+For more details, consult https://gdal.org/programs/gdal_raster_update.html
+
+* viewshed [OPTIONS]
+--------------------
+
+Compute the viewshed of a raster dataset.
+
+Options:
+  -p, --pos, --position <X,Y> or <X,Y,H>                           Observer position [2..3 values]
+  -z, --height <HEIGHT>                                            Observer height
+  --sd-filename <SD-FILENAME>                                      Filename of standard-deviation raster
+  --target-height <TARGET-HEIGHT>                                  Height of the target above the DEM surface in the height unit of the DEM. (default: 0)
+  --mode <MODE>                                                    Sets what information the output contains.. MODE=normal|DEM|ground|cumulative (default: normal)
+  --max-distance <MAX-DISTANCE>                                    Maximum distance from observer to compute visibility. It is also used to clamp the extent of the output raster.
+  --min-distance <MIN-DISTANCE>                                    Mask all cells less than this distance from the observer. Must be less than 'max-distance'.
+  --start-angle <START-ANGLE>                                      Mask all cells outside of the arc ('start-angle', 'end-angle'). Clockwise degrees from north. Also used to clamp the extent of the output raster.
+  --end-angle <END-ANGLE>                                          Mask all cells outside of the arc ('start-angle', 'end-angle'). Clockwise degrees from north. Also used to clamp the extent of the output raster.
+  --high-pitch <HIGH-PITCH>                                        Mark all cells out-of-range where the observable height would be higher than the 'high-pitch' angle from the observer. Degrees from horizontal - positive is up. Must be greater than 'low-pitch'.
+  --low-pitch <LOW-PITCH>                                          Bound observable height to be no lower than the 'low-pitch' angle from the observer. Degrees from horizontal - positive is up. Must be less than 'high-pitch'.
+  --curvature-coefficient <CURVATURE-COEFFICIENT>                  Coefficient to consider the effect of the curvature and refraction.
+  -b, --band <BAND>                                                Input band (1-based index) (default: 1)
+  --visible-value <VISIBLE-VALUE>                                  Pixel value to set for visible areas (default: 255)
+  --invisible-value <INVISIBLE-VALUE>                              Pixel value to set for invisible areas (default: 0)
+  --maybe-visible-value <MAYBE-VISIBLE-VALUE>                      Pixel value to set for potentially visible areas (default: 2)
+  --out-of-range-value <OUT-OF-RANGE-VALUE>                        Pixel value to set for the cells that fall outside of the range specified by the observer location and the maximum distance (default: 0)
+  --dst-nodata <DST-NODATA>                                        The value to be set for the cells in the output raster that have no data.
+  --observer-spacing <OBSERVER-SPACING>                            Cell Spacing between observers (default: 10)
+  -j, --num-threads <NUM-THREADS>                                  Number of jobs (or ALL_CPUS) (default: 3)
+
+For more details, consult https://gdal.org/programs/gdal_raster_viewshed.html
+
+* compare [OPTIONS] <REFERENCE>
+-------------------------------
+
+Compare two raster datasets.
+
+Positional arguments:
+  --reference <REFERENCE>                                          Reference dataset [required]
+
+Options:
+  --skip-all-optional                                              Skip all optional comparisons
+  --skip-binary                                                    Skip binary file comparison
+  --skip-crs                                                       Skip CRS comparison
+  --skip-geotransform                                              Skip geotransform comparison
+  --skip-overview                                                  Skip overview comparison
+  --skip-metadata                                                  Skip metadata comparison
+  --skip-rpc                                                       Skip RPC metadata comparison
+  --skip-geolocation                                               Skip Geolocation metadata comparison
+  --skip-subdataset                                                Skip subdataset comparison
+
+For more details, consult https://gdal.org/programs/gdal_raster_compare.html
+
+* info [OPTIONS]
+----------------
+
+Return information on a raster dataset.
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>              Output format. OUTPUT-FORMAT=json|text
+  --mm, --min-max                                                  Compute minimum and maximum value
+  --stats                                                          Retrieve or compute statistics, using all pixels
+                                                                   Mutually exclusive with --approx-stats
+  --approx-stats                                                   Retrieve or compute statistics, using a subset of pixels
+                                                                   Mutually exclusive with --stats
+  --hist                                                           Retrieve or compute histogram
+
+Advanced Options:
+  --no-gcp                                                         Suppress ground control points list printing
+  --no-md                                                          Suppress metadata printing
+  --no-ct                                                          Suppress color table printing
+  --no-fl                                                          Suppress file list printing
+  --checksum                                                       Compute pixel checksum
+  --list-metadata-domains, --list-mdd                              List all metadata domains available for the dataset
+  --mdd, --metadata-domain <METADATA-DOMAIN>                       Report metadata for the specified domain. 'all' can be used to report metadata in all domains
+
+Esoteric Options:
+  --no-nodata                                                      Suppress retrieving nodata value
+  --no-mask                                                        Suppress mask band information
+  --subdataset <SUBDATASET>                                        Use subdataset of specified index (starting at 1), instead of the source dataset itself
+  --crs-format <CRS-FORMAT>                                        Which format to use to report CRS. CRS-FORMAT=AUTO|WKT2|PROJJSON (default: AUTO)
+
+For more details, consult https://gdal.org/programs/gdal_raster_info.html
+
+* tile [OPTIONS] <OUTPUT>
+-------------------------
+
+Generate tiles in separate files from a raster dataset.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                            Output directory [required]
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>              Output format (default: PNG)
+  --co, --creation-option <KEY>=<VALUE>                            Creation option [may be repeated]
+  --tiling-scheme <TILING-SCHEME>                                  Tiling scheme. TILING-SCHEME=raster|WebMercatorQuad|WorldCRS84Quad|WorldMercatorWGS84Quad|GoogleCRS84Quad|PseudoTMS_GlobalMercator|GlobalGeodeticOriginLat270 (default: WebMercatorQuad)
+  --min-zoom <MIN-ZOOM>                                            Minimum zoom level
+  --max-zoom <MAX-ZOOM>                                            Maximum zoom level
+  --min-x <MIN-X>                                                  Minimum tile X coordinate
+  --max-x <MAX-X>                                                  Maximum tile X coordinate
+  --min-y <MIN-Y>                                                  Minimum tile Y coordinate
+  --max-y <MAX-Y>                                                  Maximum tile Y coordinate
+  --no-intersection-ok                                             Whether dataset extent not intersecting tile matrix is only a warning
+  -r, --resampling <RESAMPLING>                                    Resampling method for max zoom. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode|min|max|med|q1|q3|sum (default: cubic)
+  --overview-resampling <OVERVIEW-RESAMPLING>                      Resampling method for overviews. OVERVIEW-RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode|min|max|med|q1|q3|sum
+  --convention <CONVENTION>                                        Tile numbering convention: xyz (from top) or tms (from bottom). CONVENTION=xyz|tms (default: xyz)
+  --tile-size <TILE-SIZE>                                          Override default tile size
+  --add-alpha                                                      Whether to force adding an alpha channel
+                                                                   Mutually exclusive with --no-alpha
+  --no-alpha                                                       Whether to disable adding an alpha channel
+                                                                   Mutually exclusive with --add-alpha
+  --dst-nodata <DST-NODATA>                                        Destination nodata value
+  --skip-blank                                                     Do not generate blank tiles
+  --metadata <KEY>=<VALUE>                                         Add metadata item to output tiles [may be repeated]
+  --copy-src-metadata                                              Whether to copy metadata from source dataset
+  --aux-xml                                                        Generate .aux.xml sidecar files when needed
+  --kml                                                            Generate KML files
+  --resume                                                         Generate only missing files
+  -j, --num-threads <NUM-THREADS>                                  Number of jobs (or ALL_CPUS) (default: ALL_CPUS)
+  --parallel-method <PARALLEL-METHOD>                              Parallelization method (thread, spawn, fork). PARALLEL-METHOD=thread|spawn|fork
+
+Advanced Resampling Options:
+  --excluded-values <EXCLUDED-VALUES>                              Tuples of values (e.g. <R>,<G>,<B> or (<R1>,<G1>,<B1>),(<R2>,<G2>,<B2>)) that must beignored as contributing source pixels during (average) resampling
+  --excluded-values-pct-threshold <EXCLUDED-VALUES-PCT-THRESHOLD>  Minimum percentage of source pixels that must be set at one of the --excluded-values to cause the excluded value to be used as the target pixel value (default: 50)
+  --nodata-values-pct-threshold <NODATA-VALUES-PCT-THRESHOLD>      Minimum percentage of source pixels that must be set at one of nodata (or alpha=0 or any other way to express transparent pixelto cause the target pixel value to be transparent (default: 100)
+
+Publication Options:
+  --webviewer <WEBVIEWER>                                          Web viewer to generate. WEBVIEWER=none|all|leaflet|openlayers|mapml|stac (default: all) [may be repeated]
+  --url <URL>                                                      URL address where the generated tiles are going to be published
+  --title <TITLE>                                                  Title of the map
+  --copyright <COPYRIGHT>                                          Copyright for the map
+  --mapml-template <MAPML-TEMPLATE>                                Filename of a template mapml file where variables will be substituted
+
+For more details, consult https://gdal.org/programs/gdal_raster_tile.html
+
+* write [OPTIONS] <OUTPUT>
+--------------------------
+
+Write a raster dataset.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                            Output raster dataset [required]
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>              Output format ("GDALG" allowed)
+  --co, --creation-option <KEY>=<VALUE>                            Creation option [may be repeated]
+  --overwrite                                                      Whether overwriting existing output dataset is allowed
+                                                                   Mutually exclusive with --append
+  --append                                                         Append as a subdataset to existing output
+                                                                   Mutually exclusive with --overwrite
+
+For more details, consult https://gdal.org/programs/gdal_raster_pipeline.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

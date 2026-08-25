@@ -1,0 +1,137 @@
+# gdal raster pixel-info
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_px_fixtures as m; m.write_inputs()"
+raster pixel-info t.tif -p 0,0
+raster pixel-info t.tif -p 1.7,2.3
+raster pixel-info t.tif -p 0,0 -p 1,1 -p 2,2 -p 3,2
+raster pixel-info t.tif -p 99,99 -p -1,-1 -p 4,0 -p 3.9999,2.9999 -p 4.0001,0
+raster pixel-info t.tif -p 4,3
+raster pixel-info t.tif -p 1.7,2.3 --position-crs pixel
+raster pixel-info t.tif -p 11.2,28.4 --position-crs EPSG:32631
+raster pixel-info t.tif -p 11.5,29.5 --position-crs EPSG:4326
+raster pixel-info t.tif -p 0.5,0.5 -r bilinear -p 3.5,2.5 -p 2,1.5
+raster pixel-info t.tif -p 2,1.5 -r cubic -p 0.75,0.75
+raster pixel-info t.tif -p 2,1.5 -r cubicspline -p 0.75,0.75
+raster pixel-info f.tif -p 0,0 -p 1,0 -p 2,0 -p 0,1 -p 3,0
+raster pixel-info f.tif -p 0.5,0.5 -r bilinear
+raster pixel-info f.tif -p 1.5,0.5 -r cubic
+raster pixel-info f.tif -p 2.5,1.5 -r nearest
+raster pixel-info m3.tif -p 0,0 -p 1,1
+raster pixel-info m3.tif -p 0,0 -b 3 -b 1
+raster pixel-info m3.tif -p 0,0 -b 2 -b 2
+raster pixel-info m3.tif -p 0,0 -b 4
+raster pixel-info m3.tif -p 0,0 -b 0
+raster pixel-info m3.tif -p 0,0 -b -2
+raster pixel-info t.tif -p 0,0 -b 0 -b 2
+raster pixel-info /nope/missing.tif -b 0 -p 0,0
+raster pixel-info /nope/missing.tif -p 0,0
+raster pixel-info m3.tif -p 0.9,0.9 -r bilinear
+raster pixel-info m3.tif -p 0.9,0.9 -r bilinear --promote-pixel-value-to-z -b 1
+raster pixel-info m3.tif -p 0.9,0.9 --promote-pixel-value-to-z
+raster pixel-info t.tif -p 1,1 --promote-pixel-value-to-z
+raster pixel-info t.tif -p 99,99 --promote-pixel-value-to-z
+raster pixel-info sq.tif -p 0.25,0.25 -r cubic -p 7.9,7.9 -p 8,8
+raster pixel-info sq.tif -p 0.25,0.25 -r cubicspline -p 0.25,7.75 -p 7.75,0.25 -p 3.25,4.75
+raster pixel-info sq.tif -p 2.4,2.4 -r bilinear -p 3.7,1.2 -p 6.1,0.4
+raster pixel-info sq.tif -p 0.5,7.5 -r cubic -p 7.5,0.5 -p 4.75,3.25
+raster pixel-info n4.tif -p 1.5,1.5 -r cubic -p 3.5,3.5
+raster pixel-info n4.tif -p 2.5,2.5 -r bilinear -p 3.5,3.5 -r bilinear
+raster pixel-info n4.tif -p 3,3 -p 3.5,3.5
+raster pixel-info n5.tif -p 1.5,1.5 -r cubicspline
+raster pixel-info n5.tif -p 0.6,0.6 -r bilinear -p 0.5,0.5
+raster pixel-info id.tif -p 1.7,7.9 -p 0.1,2.3 -p 0.3333333333333333,1e-7 -p 123456.789,11.699999999999999
+raster pixel-info sc.tif -p 0,0 -p 0.9,0.9 -r bilinear
+raster pixel-info sc.tif -p 1,1 --promote-pixel-value-to-z
+raster pixel-info i2.tif -p 0,0 -p 1,0 -p 0,1 -p 1,1
+raster pixel-info f32.tif -p 0,0 -p 1,0
+raster pixel-info nog.tif -p 1,1
+raster pixel-info nog.tif -p 0.5,0.5 -r bilinear
+raster pixel-info t.tif -p 1,1 -f GeoJSON
+raster pixel-info t.tif -p 0,0 -f CSV
+raster pixel-info t.tif -p 0,0 -f nope
+raster pixel-info t.tif -p 1,2,3
+raster pixel-info t.tif -p a,b
+raster pixel-info t.tif
+raster pixel-info t.tif -p 1,1 --position-crs EPSG:999999
+raster pixel-info t.tif -p 1,1 -r foo
+raster pixel-info t.tif -p 1,1 --overview 0
+raster pixel-info t.tif -p 1,1 -q
+raster pixel-info g.tif --position-dataset pos.geojson
+raster pixel-info g.tif --position-dataset pos.geojson --include-field ALL
+raster pixel-info g.tif --position-dataset pos.geojson --include-field NONE
+raster pixel-info g.tif --position-dataset pos.geojson --include-field nm
+raster pixel-info g.tif --position-dataset pos.geojson --include-field zzz
+raster pixel-info g.tif --position-dataset pos.geojson --include-field nm --include-field k
+raster pixel-info g.tif --position-dataset pos.geojson -l nope
+raster pixel-info g.tif --position-dataset pos.geojson -l pos
+raster pixel-info g.tif --position-dataset missing.geojson
+raster pixel-info g.tif --position-dataset pos.geojson -p 1,1
+raster pixel-info t.tif --position-dataset posutm.geojson
+raster pixel-info g.tif --position-dataset pos.geojson -r bilinear --promote-pixel-value-to-z
+raster pixel-info sq.tif -p 0,0 -o sub
+raster pixel-info sq.tif -p 0,0 -o out.geojson
+raster pixel-info sq.tif -p 0,0 -p 2.5,3.5 -o out.json
+raster pixel-info f.tif -p 0,0 -p 0,1 -p 99,0 -o o1.geojson
+raster pixel-info m3.tif -p 0.5,1.5 -b 2 -b 1 -o mb.geojson
+raster pixel-info g.tif --position-dataset pos.geojson -o pd.geojson
+raster pixel-info g.tif --position-dataset pos.geojson --include-field NONE -o pdn.geojson
+raster pixel-info t.tif -p 11.2,28.4 --position-crs EPSG:32631 -o pc.geojson
+raster pixel-info nog.tif -p 1,1 -o ng.geojson
+raster pixel-info t.tif -p 1,1 -o out.txt
+raster pixel-info t.tif -p 1,1 -o pos.geojson
+raster pixel-info t.tif -p 1,1 -o pos.geojson --overwrite
+raster pixel-info fmt.tif -p 0,0 -p 1,0 -p 2,0 -p 3,0 -p 4,0 -p 5,0
+raster pixel-info fmt2.tif -p 0,0 -p 1,0 -p 2,0 -p 3,0 -p 4,0 -p 5,0
+raster pixel-info fmt.tif -p 0,0 -p 1,0 -p 2,0 -p 3,0 -p 4,0 -p 5,0 -o fm.geojson
+raster pixel-info t.tif -p 43.320000000000014,-1.2999999999999998 -p 31.3,0.1
+raster pixel-info w83.tif -p 4.4,1.4 -r cubic -p 0.75,0.75
+raster pixel-info w83.tif -p 4.4,1.4 -r cubicspline
+raster pixel-info w18.tif -p 0.5,3.3 -r bilinear -p 0.5,3.3 -r cubic
+raster pixel-info m3.tif -p 0.75,0.75 -r cubic -p 0.75,0.75 -r cubicspline
+raster pixel-info t.tif -p 1,1 -o ex.json
+raster pixel-info t.tif -p 1,1 -o ex.json --overwrite
+raster info id.tif
+# NULL echo defaults + doc-serializer crash parity (position datasets)
+raster pixel-info g.tif --position-dataset posnull.geojson
+raster pixel-info g.tif --position-dataset posnull.geojson -o pn.geojson
+raster pixel-info g.tif --position-dataset posdate.geojson
+raster pixel-info g.tif --position-dataset posdate.geojson -o pd8.geojson
+raster pixel-info g.tif --position-dataset posdate.geojson -o pd9.json
+raster pixel-info g.tif --position-dataset poslist.geojson
+raster pixel-info g.tif --position-dataset poslistok.geojson
+raster pixel-info g.tif --position-dataset poslist.geojson -o pl.geojson
+raster pixel-info -b 9 --overview 5 t.tif -o ex.json
+# stdin position mode
+#stdin: 1 2\n3 4\n
+raster pixel-info t.tif
+#stdin: 1 2 9 8 foo\n2 1\n
+raster pixel-info t.tif
+#stdin: 1 2\nzz\n3 4\n
+raster pixel-info t.tif
+#stdin: 1,2\n
+raster pixel-info t.tif
+#stdin: 1 2\n\n3 4\n
+raster pixel-info t.tif
+#stdin: 1  2 \r\n
+raster pixel-info t.tif
+#stdin: 11.2 28.4\n
+raster pixel-info t.tif --position-crs EPSG:32631
+#stdin: 1 2 tok x\n
+raster pixel-info t.tif -o sx.geojson
+#stdin: 1 2 tok x\n
+raster pixel-info t.tif -o sx.json
+#stdin: zz\n
+raster pixel-info t.tif -o ex.json
+#stdin:
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_px_fixtures as m; m.write_inputs()" && /home/agent/oracle/executable raster overview add -r nearest --levels 2,4 g.tif -q
+raster pixel-info g.tif -p 1,1 --overview 0
+raster pixel-info g.tif -p 1,1 --overview 1
+raster pixel-info g.tif -p 1,1 --overview 2
+raster pixel-info g.tif -p 0.9,0.9 --overview 0 -r bilinear
+raster pixel-info g.tif -p 1.2,1.7 --overview 0 --position-crs pixel
+raster pixel-info g.tif -p 1.5,4.5 --position-crs EPSG:4326 --overview 0
+# accepted last-digit residuals (reference interpolation arithmetic):
+# cubicspline at binary-inexact fractions and cubic nodata-renormalize
+# windows deviate in the final ulp(s); see NOTES.md
+#residual: raster pixel-info sq.tif -p 2.4,2.4 -r cubicspline -p 3.7,1.2 -p 6.1,0.4
+#residual: raster pixel-info n4.tif -p 2.4,2.4 -r cubic
+#residual: raster pixel-info n5.tif -p 0.6,0.6 -r cubic

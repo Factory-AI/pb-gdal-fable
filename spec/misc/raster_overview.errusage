@@ -1,0 +1,14 @@
+ERROR 1: overview: Unknown command: '__no_such_subcommand__'
+Usage: gdal raster overview <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - add:     Adding overviews.
+  - delete:  Deleting overviews.
+  - refresh: Refresh overviews.
+
+Try 'gdal raster overview --help' for help.
+
+For more details, consult https://gdal.org/programs/gdal_raster_overview.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

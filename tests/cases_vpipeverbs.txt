@@ -1,0 +1,123 @@
+# vector pipeline filter / select / sql steps (merged-stream compare to
+# pin error/progress interleaving)
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"pop":30,"name":"alpha","flt":1.5,"tag":null},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"pop":60,"name":"Beta","flt":2.5},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{"pop":80,"name":"gamma","flt":-0.5,"tag":"x"},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > p.geojson && cp p.geojson px.geojson && printf %s 'pop > 50' > w1.txt
+vector pipeline read p.geojson ! filter --where "pop > 50" ! write out.geojson
+vector pipeline read p.geojson ! filter --bbox 1.5,1.5,2.5,2.5 ! write out.geojson
+vector pipeline read p.geojson ! filter --where "pop > 40" --bbox 0,0,1.5,1.5 ! write out.geojson
+vector pipeline read p.geojson ! filter --where "pop > 50" --update-extent ! write out.geojson
+vector pipeline read p.geojson ! filter --active-layer p --where "pop > 50" ! write out.geojson
+vector pipeline read p.geojson ! filter --active-layer zzz --where "pop > 50" ! write out.geojson
+vector pipeline read p.geojson ! select --fields name ! write out.geojson
+vector pipeline read p.geojson ! select --fields name,pop ! write out.geojson
+vector pipeline read p.geojson ! select --fields name,pop --exclude ! write out.geojson
+vector pipeline read p.geojson ! select --fields zzz ! write out.geojson
+vector pipeline read p.geojson ! select --fields zzz --ignore-missing-fields ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name, pop FROM p ORDER BY pop DESC" ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" --output-layer q ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" --dialect OGRSQL ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" --dialect FOO ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" --dialect SQLITE ! write out.geojson
+vector pipeline read p.geojson ! filter --where "pop > 50" ! write out.shp
+vector pipeline read p.geojson ! select name,pop ! write out.geojson
+vector pipeline read p.geojson ! sql "SELECT name FROM p" ! write out.geojson
+vector pipeline read p.geojson ! filter "pop > 50" ! write out.geojson
+pipeline read p.geojson ! filter --where "pop > 50" ! write out.geojson
+pipeline read p.geojson ! select --fields name ! write out.geojson
+pipeline read p.geojson ! sql --sql "SELECT name FROM p" ! write out.geojson
+pipeline read p.geojson ! select --band 1 ! write out.geojson
+# parse/validation errors
+vector pipeline read p.geojson ! filter --bbox 3,3,1,1 ! write out.geojson
+vector pipeline read p.geojson ! filter --bbox 1,1,2 ! write out.geojson
+vector pipeline read p.geojson ! filter --nonexistent 1 ! write out.geojson
+vector pipeline read p.geojson ! select ! write out.geojson
+vector pipeline read p.geojson ! sql ! write out.geojson
+vector pipeline read p.geojson ! select --fields a --exclude --ignore-missing-fields ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" --output-layer a,b ! write out.geojson
+vector pipeline read p.geojson ! sql --sql @nofile.txt ! write out.geojson
+vector pipeline read p.geojson ! filter --where @w1.txt ! write out.geojson
+vector pipeline read p.geojson ! filter --input p.geojson --where "pop > 50" ! write out.geojson
+# runtime errors
+vector pipeline read p.geojson ! filter --where "nope > 1" ! write out.geojson
+vector pipeline read p.geojson ! filter --where "pop >" ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT nope FROM p" ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM zzz" ! write out.geojson
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" --sql "SELECT pop FROM p" ! write out.geojson
+# info terminal extent semantics
+vector pipeline read p.geojson ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! filter --bbox 0,0,2.5,2.5 ! info
+vector pipeline read p.geojson ! filter --where "pop > 50" --bbox 0,0,9,9 ! info
+vector pipeline read p.geojson ! filter --where "name = 'zzz'" ! info
+vector pipeline read p.geojson ! filter --where "pop > 50" ! filter --where "name = 'alpha'" ! info
+vector pipeline read p.geojson ! filter --where "pop > 50" ! filter --where "pop > 20" ! info
+vector pipeline read p.geojson ! select --fields name ! info
+vector pipeline read p.geojson ! select --fields pop ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! select --fields name ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! select --fields tag --exclude ! info
+vector pipeline read p.geojson ! sql --sql "SELECT name, pop FROM p" ! info
+vector pipeline read p.geojson ! sql --sql "SELECT name, pop FROM p WHERE pop > 50" ! info
+vector pipeline read p.geojson ! sql --sql "SELECT name, pop FROM p" ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! sql --sql "SELECT COUNT(*) FROM p" ! info
+vector pipeline read p.geojson ! sql --sql "SELECT DISTINCT name FROM p" ! info
+vector pipeline read p.geojson ! filter --where "pop > 50" ! info --features
+vector pipeline read p.geojson ! filter --where "pop > 50" ! info --output-format json
+# reproject interleaves
+vector pipeline read p.geojson ! reproject --dst-crs EPSG:32631 ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! filter --where "pop > 50" ! reproject --dst-crs EPSG:32631 ! info
+vector pipeline read p.geojson ! reproject --dst-crs EPSG:32631 ! filter --where "pop > 50" ! info --features
+vector pipeline read p.geojson ! filter --where "pop > 20" ! reproject --dst-crs EPSG:32631 ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! filter --where "pop > 50" ! reproject --dst-crs EPSG:32631 ! filter --where "pop > 20" ! info
+vector pipeline read p.geojson ! reproject --dst-crs EPSG:32631 ! filter --where "pop > 50" --update-extent ! info
+vector pipeline read p.geojson ! filter --where "pop > 20" --update-extent ! reproject --dst-crs EPSG:32631 ! info
+vector pipeline read p.geojson ! reproject --dst-crs EPSG:32631 ! select --fields tag --exclude ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! reproject --dst-crs EPSG:32631 ! filter --where "pop > 50" ! write out.geojson
+vector pipeline read p.geojson ! filter --where "pop > 50" ! reproject --dst-crs EPSG:32631 ! write out.geojson
+vector pipeline read p.geojson ! select --fields name ! reproject --dst-crs EPSG:32631 ! write out.geojson
+# gdalg echo
+vector pipeline read p.geojson ! filter --update-extent --where "pop > 50" --bbox 0,1,4,5 --active-layer p ! write out.gdalg.json
+vector pipeline read p.geojson ! select --ignore-missing-fields --exclude --fields tag ! write out.gdalg.json
+vector pipeline read p.geojson ! sql --dialect OGRSQL --output-layer L1 --sql "SELECT name FROM p" ! write out.gdalg.json
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" --sql "SELECT pop FROM p" --output-layer a,b ! write out.gdalg.json
+vector pipeline read p.geojson ! filter --where "pop > 50" ! reproject --dst-crs EPSG:32631 ! select --fields pop ! write out.gdalg.json
+vector pipeline read p.geojson ! filter --where "pop > 50" --update-extent ! write out.gdalg.json
+# stdout terminals
+vector pipeline read p.geojson ! filter --where "pop > 50" ! write /vsistdout/
+vector pipeline read p.geojson ! select --fields name ! write /vsistdout/
+vector pipeline read p.geojson ! sql --sql "SELECT name FROM p" ! write /vsistdout/
+vector pipeline read p.geojson ! filter --where "nope > 1" ! write /vsistdout/
+# write-step interactions
+vector pipeline read px.geojson ! filter --where "pop > 50" ! write px.geojson
+vector pipeline read p.geojson ! write --append px.geojson
+vector pipeline read p.geojson ! filter --where "pop > 50" ! write out.zzz
+# middle writes: exhausted stream, shells, shared progress line
+vector pipeline read p.geojson ! write mid.geojson ! filter --where "pop > 50" ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! select --fields name ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! sql --sql "SELECT name FROM p" ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! filter --where "nope > 1" ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! sql --sql "SELECT nope FROM mid" ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! write mid2.geojson ! filter --where "nope > 1" ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! filter --where "nope > 1" ! write mid2.geojson ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! write mid2.geojson ! write out.zzz
+vector pipeline read p.geojson ! write mid.geojson ! write out.zzz
+vector pipeline read p.geojson ! write mid.geojson ! select --fields zzz --ignore-missing-fields ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! sql --sql "SELECT name FROM p" --dialect FOO ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! reproject --dst-crs EPSG:32631 ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! reproject --src-crs EPSG:4326 --dst-crs EPSG:32631 ! write final.geojson
+vector pipeline read p.geojson ! filter --where "nope > 1" ! write mid.geojson ! write final.geojson
+vector pipeline read p.geojson ! filter --where "pop > 50" ! write mid.geojson ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! filter --where "nope > 1" ! info
+vector pipeline read p.geojson ! write mid.geojson ! write mid2.geojson ! filter --where "nope > 1" ! info
+vector pipeline read p.geojson ! write mid.geojson ! filter --where "pop > 50" ! info
+vector pipeline read p.geojson ! write mid.geojson ! reproject --src-crs EPSG:4326 --dst-crs EPSG:32631 ! info
+vector pipeline read p.geojson ! write mid.geojson ! sql --sql "SELECT name FROM p" ! info
+vector pipeline read p.geojson ! write mid.geojson ! sql --sql "SELECT name FROM p WHERE pop > 50" ! info
+vector pipeline read p.geojson ! write mid.geojson ! info
+vector pipeline read p.geojson ! write mid.geojson ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! filter --where "nope > 1" ! write /vsistdout/
+vector pipeline read p.geojson ! filter --where "nope > 1" ! write mid.geojson ! write /vsistdout/
+vector pipeline read p.geojson ! write mid.geojson ! filter --where "nope > 1" ! write final.geojson --quiet
+vector pipeline read p.geojson ! write mid.geojson --quiet ! filter --where "nope > 1" ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojson ! sql --sql "SELECT name FROM p" --output-layer q ! write mid2.geojson ! sql --sql "SELECT name FROM q" --output-layer z ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojsonl ! filter --where "pop > 50" ! write final.geojson
+vector pipeline read p.geojson ! write mid.geojsonl ! sql --sql "SELECT name FROM p WHERE pop > 50" ! info

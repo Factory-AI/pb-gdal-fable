@@ -1,0 +1,25 @@
+Usage: compare [OPTIONS] <REFERENCE>
+
+Compare two raster datasets.
+
+Positional arguments:
+  --reference <REFERENCE>  Reference dataset [required]
+
+Common Options:
+  -h, --help               Display help message and exit
+  --json-usage             Display usage as JSON document and exit
+  --config <KEY>=<VALUE>   Configuration option [may be repeated]
+  -q, --quiet              Quiet mode (no progress bar or warning message)
+
+Options:
+  --skip-all-optional      Skip all optional comparisons
+  --skip-binary            Skip binary file comparison
+  --skip-crs               Skip CRS comparison
+  --skip-geotransform      Skip geotransform comparison
+  --skip-overview          Skip overview comparison
+  --skip-metadata          Skip metadata comparison
+  --skip-rpc               Skip RPC metadata comparison
+  --skip-geolocation       Skip Geolocation metadata comparison
+  --skip-subdataset        Skip subdataset comparison
+
+For more details, consult https://gdal.org/programs/gdal_raster_compare.html

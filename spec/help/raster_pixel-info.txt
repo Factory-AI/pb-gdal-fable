@@ -1,0 +1,39 @@
+Usage: gdal raster pixel-info [OPTIONS] <INPUT> [<column,line> or <X,Y>]
+
+Return information on a pixel of a raster dataset.
+
+Positional arguments:
+  -i, --dataset, --input <INPUT>                       Input raster datasets [required]
+  -p, --pos, --position <column,line> or <X,Y>         Pixel position [may be repeated]
+                                                       Mutually exclusive with --position-dataset
+
+Common Options:
+  -h, --help                                           Display help message and exit
+  --json-usage                                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                               Configuration option [may be repeated]
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>  Output format (default is 'GeoJSON' if 'position-dataset' not specified)
+  --position-dataset <POSITION-DATASET>                Vector dataset with coordinates
+                                                       Mutually exclusive with --position
+  -l, --layer, --input-layer <INPUT-LAYER>             Input layer name
+  -o, --output <OUTPUT>                                Output vector dataset (created by algorithm)
+  --co, --creation-option <KEY>=<VALUE>                Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>         Layer creation option [may be repeated]
+  --overwrite                                          Whether overwriting existing output dataset is allowed
+  -b, --band <BAND>                                    Input band(s) (1-based index) [may be repeated]
+  --overview <OVERVIEW>                                Which overview level of source file must be used
+  --position-crs <POSITION-CRS>                        CRS of position (default is 'pixel' if 'position-dataset' not specified)
+  -r, --resampling <RESAMPLING>                        Resampling algorithm for interpolation. RESAMPLING=nearest|bilinear|cubic|cubicspline (default: nearest)
+  --promote-pixel-value-to-z                           Whether to set the pixel value as Z component of GeoJSON geometry
+  --include-field <INCLUDE-FIELD>                      Fields from coordinate dataset to include in output (special values: ALL and NONE) (default: ALL) [may be repeated]
+
+Advanced Options:
+  --oo, --open-option <KEY>=<VALUE>                    Open options [may be repeated]
+  --if, --input-format <INPUT-FORMAT>                  Input formats [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_pixel_info.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

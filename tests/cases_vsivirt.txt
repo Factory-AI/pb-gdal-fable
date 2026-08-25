@@ -1,0 +1,157 @@
+# Virtual filesystem layer (/vsizip //vsitar //vsigzip //vsimem //vsisubfile //vsistdin //vsistdout //vsicurl)
+#setup: printf '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > f.json && /home/agent/oracle/executable raster create -q --size 2,2 --burn 5 r.tif && /home/agent/oracle/executable vector convert -q f.json d.shp && python3 -c "import zipfile,tarfile,gzip,os;  os.utime('f.json',(1709618828,1709618828));  os.utime('r.tif',(1709618828,1709618828));  z=zipfile.ZipFile('z.zip','w');  z.writestr(zipfile.ZipInfo('f.json',(2024,3,5,6,7,8)),open('f.json','rb').read());  z.close();  z2=zipfile.ZipFile('z2.zip','w');  z2.writestr(zipfile.ZipInfo('f.json',(2024,3,5,6,7,8)),open('f.json','rb').read());  z2.writestr(zipfile.ZipInfo('r.tif',(2024,3,5,6,7,10)),open('r.tif','rb').read());  z2.close();  zs=zipfile.ZipFile('zsub.zip','w');  zs.writestr(zipfile.ZipInfo('sub/',(2024,3,5,6,7,8)),'');  zs.writestr(zipfile.ZipInfo('sub/inner.json',(2024,3,5,6,7,10)),open('f.json','rb').read());  zs.writestr(zipfile.ZipInfo('top.txt',(2024,3,5,6,7,12)),'hello');  zs.close();  sz=zipfile.ZipFile('shp.zip','w');  [sz.writestr(zipfile.ZipInfo(n,(2024,3,5,6,7,8)),open(n,'rb').read()) for n in ('d.shp','d.shx','d.dbf','d.prj')];  sz.close();  oz=zipfile.ZipFile('one.zip','w');  oz.writestr(zipfile.ZipInfo('r.tif',(2024,3,5,6,7,8)),open('r.tif','rb').read());  oz.close();  t=tarfile.open('t1.tar','w',format=tarfile.GNU_FORMAT);  t.add('f.json');  t.close();  t2=tarfile.open('t2.tar','w',format=tarfile.GNU_FORMAT);  t2.add('f.json');  t2.add('r.tif');  t2.close();  g=gzip.GzipFile('f.json.gz','wb',mtime=0);  g.write(open('f.json','rb').read());  g.close();  g2=gzip.GzipFile('r.tif.gz','wb',mtime=0);  g2.write(open('r.tif','rb').read());  g2.close()" && python3 -c "import tarfile,gzip,shutil; f=open('t1.tar','rb'); g=gzip.GzipFile('t1.tgz','wb',mtime=0); shutil.copyfileobj(f,g); g.close()"
+vector info /vsizip/z.zip
+vector info /vsizip/z.zip/f.json
+vector info /vsizip/z2.zip
+vector info /vsizip/z2.zip/f.json
+vector info /vsizip/{z2.zip}/f.json
+raster info /vsizip/z2.zip/r.tif
+raster info /vsizip/one.zip
+vector info /vsizip/shp.zip
+vector info /vsizip/shp.zip/d.shp
+vector info /vsizip/miss.zip/f.json
+vector info /vsizip/z2.zip/miss.json
+raster info /vsizip/z2.zip/miss.tif
+vector info /vsigzip/f.json.gz
+raster info /vsigzip/r.tif.gz
+vector info /vsitar/t1.tar
+vector info /vsitar/t1.tar/f.json
+vector info /vsitar/t2.tar
+vector info /vsitar/t2.tar/f.json
+raster info /vsitar/t2.tar/r.tif
+vector info /vsitar/{t1.tgz}/f.json
+vector info /vsimem/x.json
+raster info /vsimem/x.tif
+vector info /vsisubfile/0_129,f.json
+vector info /vsisubfile/0_60,f.json
+raster info /vsisubfile/f.json
+raster info /vsisubfile/xx,f.json
+raster info /vsisubfile/40,miss.bin
+vector info -
+vector info /vsistdin/
+vector convert f.json /vsimem/o.json
+vector convert f.json /vsimem/sub/dir/o.json
+raster convert r.tif /vsimem/o.tif
+vector convert f.json -
+vector convert --of GeoJSON f.json -
+vector convert --of GeoJSON f.json /vsistdout/
+vector convert f.json /vsistdout/
+vector convert -q --of GeoJSON f.json /vsigzip/og.json.gz
+vector convert f.json /vsigzip/og2.json.gz
+raster convert r.tif /vsizip/rz.zip/r.tif
+raster create -q --size 2,2 /vsizip/rc.zip/x.tif
+vector convert -q f.json /vsizip/sz.zip/d.shp
+vector info /vsicurl/http://example.com/f.json
+raster info /vsicurl/https://foo.example.org/x.tif
+vector convert /vsicurl/http://example.com:8080/a.json out.json
+vsi list /vsizip/z2.zip
+vsi list -l /vsizip/z2.zip
+vsi list /vsizip/z2.zip/f.json
+vsi list -l /vsizip/z2.zip/f.json
+vsi list -l /vsizip/zsub.zip
+vsi list -R /vsizip/zsub.zip
+vsi list -lR /vsizip/zsub.zip
+vsi list --of json -l /vsizip/zsub.zip
+vsi list --of json --tree -lR /vsizip/zsub.zip
+vsi list /vsizip/zsub.zip/sub
+vsi list -l /vsizip/zsub.zip/sub
+vsi list /vsizip/zsub.zip/sub/
+vsi list /vsitar/t1.tar
+vsi list -l /vsitar/t1.tar
+vsi list -l /vsitar/t1.tar/f.json
+vsi list -l /vsigzip/f.json.gz
+vsi list /vsimem/
+vsi list /vsimem
+vsi list -l /vsimem/
+vsi list /vsistdin/
+vsi list /vsizip/miss.zip
+vsi list /vsicurl/http://example.com/f.json
+vsi copy /vsizip/z2.zip/f.json cp1.json
+vsi copy f.json /vsimem/c.json
+vsi copy /vsimem/miss.json o.json
+vsi copy /vsicurl/http://example.com/f.json out6.json
+vsi delete /vsizip/z2.zip/f.json
+vsi delete /vsizip/z2.zip
+vsi delete /vsimem/x
+vsi delete /vsicurl/http://example.com/f.json
+vsi move /vsizip/z2.zip/f.json mvout.json
+vsi move f.json /vsimem/m.json
+vsi move miss.json /vsimem/m.json
+vsi move /vsicurl/http://example.com/f.json x.json
+vsi sync f.json /vsimem/s.json
+vsi sync /vsizip/z2.zip/f.json syncout.json
+vsi sync /vsicurl/http://example.com/f.json x.json
+# c10: seek-requiring VSI wrappers (/vsizip /vsitar) over /vsistdin/ refuse
+# instantly without reading stdin (name has no recognized archive
+# extension); brace forms DO read stdin and must keep working
+#setup: /home/agent/oracle/executable raster create -q --size 2,2 --burn 5 a.tif && printf '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > f2.json && touch -d "2024-03-05 06:07:08" a.tif f2.json && python3 -c "import zipfile,tarfile;  z=zipfile.ZipFile('fed.zip','w');  z.writestr(zipfile.ZipInfo('a.tif',(2024,3,5,6,7,8)),open('a.tif','rb').read());  z.close();  t=tarfile.open('fed.tar','w',format=tarfile.GNU_FORMAT);  t.add('a.tif');  t.close()"
+raster info /vsizip//vsistdin/
+vector info /vsizip//vsistdin/
+raster info /vsitar//vsistdin/
+vector info /vsitar//vsistdin/
+raster info /vsizip//vsistdin
+raster info /vsizip//vsistdin/inner.tif
+raster info /vsitar//vsistdin/x.tif
+raster info --config CPL_ALLOW_VSISTDIN=NO /vsizip//vsistdin/
+vsi list /vsizip//vsistdin/
+vsi list /vsitar//vsistdin/
+dataset identify /vsizip//vsistdin/
+#stdinfile: fed.zip
+raster info /vsizip//vsistdin/
+raster info /vsizip//vsistdin/a.tif
+vector info /vsizip//vsistdin/
+raster info /vsizip/{/vsistdin/}
+raster info /vsizip/{/vsistdin/}/a.tif
+#stdinfile: fed.tar
+raster info /vsitar//vsistdin/
+raster info /vsitar/{/vsistdin/}
+#stdinfile:
+# c10 write side: zip write-opens fail silently on unsplittable names
+# (no EOCD touch, no "Random access"/"Cannot create" chorus), tar
+# write-opens always refuse with "Only read-only mode is supported for
+# /vsitar", brace-form stdin archives refuse with the /vsistdin ERROR 6
+raster create --size 2,2 /vsizip//vsistdin/x.tif
+raster create --size 2,2 /vsizip/noext1/x.tif
+raster create --size 2,2 /vsizip/{/vsistdin/}/x.tif
+raster create --size 2,2 /vsitar/t9.tar/x.tif
+raster create --size 2,2 /vsitar//vsistdin/x.tif
+raster convert a.tif /vsitar/t9.tar/o.tif
+raster convert a.tif /vsizip//vsistdin/o.tif
+vsi copy a.tif /vsizip//vsistdin/o.tif
+vsi copy a.tif /vsitar/t9.tar/o.tif
+vsi copy a.tif /vsitar//vsistdin/o.tif
+vsi copy a.tif /vsizip/{/vsistdin/}/o.tif
+vsi copy a.tif /vsitar/{fed.tar}/o.tif
+vsi move a.tif /vsizip//vsistdin/o.tif
+vsi move a.tif /vsitar//vsistdin/o.tif
+vsi sync a.tif /vsitar/t9.tar/o.tif
+vsi sync a.tif /vsizip//vsistdin/o.tif
+vector convert f2.json /vsizip//vsistdin/d.shp
+vector convert f2.json /vsizip/{/vsistdin/}/d.shp
+vector convert f2.json /vsitar/t9.tar/d.shp
+vector convert f2.json /vsitar/fed.tar/d.shp
+vector convert f2.json /vsitar//vsistdin/d.shp
+vector convert f2.json /vsizip//vsistdin/o.json
+vector convert f2.json /vsizip/noext3/o.json
+vector convert f2.json /vsizip/{/vsistdin/}/o.json
+vector convert f2.json /vsitar/t9.tar/o.json
+vector convert f2.json /vsitar//vsistdin/o.json
+# c10 generic `gdal convert` dispatch: missing /vsi names use the
+# "does not exist ... supported dataset name" wording (/vsimem/ silent),
+# non-vsi driver-style colon names probe quietly and fail with bare usage
+convert /vsizip//vsistdin/ gd1.tif
+convert /vsitar//vsistdin/ gd2.tif
+convert /vsimem/miss.tif gd3.tif
+convert /vsizip/miss.zip/x.tif gd4.tif
+convert /vsizip/fed.zip/miss.tif gd5.tif
+convert /vsizip/fed.zip/a.tif gd6.tif
+convert /vsistdin/ gd7.tif
+convert GTIFF_DIR:1:miss.tif gd8.tif
+convert GTIFF_DIR:1:a.tif gd9.tif
+convert GTIFF_DIR:2:a.tif gd10.tif
+convert GTIFF_DIR:0:a.tif gd11.tif
+convert PDS4:miss.xml gd12.tif
+convert MEM:: gd13.tif
+info /vsizip//vsistdin/
+info /vsitar//vsistdin/
+pipeline read /vsizip//vsistdin/ ! info

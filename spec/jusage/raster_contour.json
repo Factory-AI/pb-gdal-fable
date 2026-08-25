@@ -1,0 +1,249 @@
+{
+  "name":"contour",
+  "full_path":[
+    "gdal",
+    "raster",
+    "contour"
+  ],
+  "description":"Creates a vector contour from a raster elevation model (DEM).",
+  "short_url":"\/programs\/gdal_raster_contour.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_contour.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"output-open-option",
+      "type":"string_list",
+      "description":"Output open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"output-layer",
+      "type":"string",
+      "description":"Output layer name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"band",
+      "type":"integer",
+      "description":"Input band (1-based index)",
+      "default":1,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"elevation-name",
+      "type":"string",
+      "description":"Name of the elevation field",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-name",
+      "type":"string",
+      "description":"Name of the minimum elevation field",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-name",
+      "type":"string",
+      "description":"Name of the maximum elevation field",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"3d",
+      "type":"boolean",
+      "description":"Force production of 3D vectors instead of 2D",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"src-nodata",
+      "type":"real",
+      "description":"Input pixel value to treat as 'nodata'",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"interval",
+      "type":"real",
+      "description":"Elevation interval between contours",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"levels"
+    },
+    {
+      "name":"levels",
+      "type":"string_list",
+      "description":"List of contour levels",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "mutual_exclusion_group":"levels"
+    },
+    {
+      "name":"exp-base",
+      "type":"integer",
+      "description":"Base for exponential contour level generation",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"levels"
+    },
+    {
+      "name":"offset",
+      "type":"real",
+      "description":"Offset to apply to contour levels",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"polygonize",
+      "type":"boolean",
+      "description":"Create polygons instead of lines",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"group-transactions",
+      "type":"integer",
+      "description":"Group n features per transaction (default 100 000)",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output vector dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

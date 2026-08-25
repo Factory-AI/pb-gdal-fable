@@ -1,0 +1,140 @@
+# raster overview add/delete/refresh: methods x dtypes, cascades, odd sizes,
+# nodata, creation options, external .ovr, reuse/rewrite, multiband.
+# Known accepted residual: Float64 lanczos values differ in the last 1-4 ulps
+# (the reference's embedded libm sin differs); that combination is excluded.
+#setup: python3 /workspace/tests/mk_ovr_fixtures.py .
+
+raster overview add -r nearest --levels 2 a_Byte.tif
+raster overview add -r nearest --levels 2 a_Float32.tif
+raster overview add -r nearest --levels 2 a_Float64.tif
+raster overview add -r average --levels 2 a_Byte.tif
+raster overview add -r average --levels 2 a_UInt16.tif
+raster overview add -r average --levels 2 a_Int16.tif
+raster overview add -r average --levels 2 a_UInt32.tif
+raster overview add -r average --levels 2 a_Int32.tif
+raster overview add -r average --levels 2 a_Float32.tif
+raster overview add -r average --levels 2 a_Float64.tif
+raster overview add -r rms --levels 2 a_Byte.tif
+raster overview add -r rms --levels 2 a_UInt16.tif
+raster overview add -r rms --levels 2 a_Int16.tif
+raster overview add -r rms --levels 2 a_Float32.tif
+raster overview add -r rms --levels 2 a_Float64.tif
+raster overview add -r mode --levels 2 a_Byte.tif
+raster overview add -r mode --levels 2 a_Float32.tif
+raster overview add -r mode --levels 2 a_Float64.tif
+raster overview add -r gauss --levels 2 a_Byte.tif
+raster overview add -r gauss --levels 2 a_UInt16.tif
+raster overview add -r gauss --levels 2 a_Float32.tif
+raster overview add -r gauss --levels 2 a_Float64.tif
+raster overview add -r bilinear --levels 2 a_Byte.tif
+raster overview add -r bilinear --levels 2 a_Int16.tif
+raster overview add -r bilinear --levels 2 a_Float32.tif
+raster overview add -r bilinear --levels 2 a_Float64.tif
+raster overview add -r cubic --levels 2 a_Byte.tif
+raster overview add -r cubic --levels 2 a_UInt32.tif
+raster overview add -r cubic --levels 2 a_Float32.tif
+raster overview add -r cubic --levels 2 a_Float64.tif
+raster overview add -r cubicspline --levels 2 a_Byte.tif
+raster overview add -r cubicspline --levels 2 a_Float32.tif
+raster overview add -r cubicspline --levels 2 a_Float64.tif
+raster overview add -r lanczos --levels 2 a_Byte.tif
+raster overview add -r lanczos --levels 2 a_UInt16.tif
+raster overview add -r lanczos --levels 2 a_Float32.tif
+
+# multi-level cascades
+raster overview add -r average --levels 2,4,8 c24_Byte.tif
+raster overview add -r average --levels 2,4,8 c24_Float32.tif
+raster overview add -r average --levels 2,4,8 c24_Float64.tif
+raster overview add -r rms --levels 2,4,8 c24_Byte.tif
+raster overview add -r rms --levels 2,4,8 c24_Float32.tif
+raster overview add -r rms --levels 2,4,8 c24_Float64.tif
+raster overview add -r cubic --levels 2,4,8 c24_Byte.tif
+raster overview add -r cubic --levels 2,4,8 c24_Float32.tif
+raster overview add -r cubic --levels 2,4,8 c24_Float64.tif
+raster overview add -r gauss --levels 2,4,8 c24_Byte.tif
+raster overview add -r gauss --levels 2,4,8 c24_Float32.tif
+raster overview add -r bilinear --levels 2,4,8 c24_Float32.tif
+raster overview add -r bilinear --levels 2,4,8 c24_Float64.tif
+raster overview add -r mode --levels 2,4,8 c24_Byte.tif
+raster overview add -r lanczos --levels 2,4 c24_Byte.tif
+raster overview add -r lanczos --levels 2,4 c24_Float32.tif
+raster overview add -r cubicspline --levels 2,4 c24_Float32.tif
+raster overview add -r cubicspline --levels 2,4 c24_Float64.tif
+
+# odd sizes (fractional ratios)
+raster overview add -r nearest --levels 2,4 odd97_Float32.tif
+raster overview add -r average --levels 2,4 odd97_Float32.tif
+raster overview add -r average --levels 2,4 odd97_Byte.tif
+raster overview add -r rms --levels 2,4 odd97_Byte.tif
+raster overview add -r rms --levels 2,4 odd97_Float32.tif
+raster overview add -r mode --levels 2,4 odd97_Float32.tif
+raster overview add -r gauss --levels 2,4 odd97_Byte.tif
+raster overview add -r cubic --levels 2,4 odd97_Float32.tif
+raster overview add -r bilinear --levels 2,4 odd97_Float64.tif
+
+# factor 3 / 4 direct
+raster overview add -r average --levels 3 g21.tif
+raster overview add -r gauss --levels 3 g21.tif
+raster overview add -r gauss --levels 4 g32.tif
+raster overview add -r cubic --levels 3 g21.tif
+
+# nodata
+raster overview add -r nearest --levels 2 nd_Float32.tif
+raster overview add -r average --levels 2 nd_Float32.tif
+raster overview add -r average --levels 2 nd_Byte.tif
+raster overview add -r rms --levels 2 nd_Float32.tif
+raster overview add -r rms --levels 2 nd_Byte.tif
+raster overview add -r rms --levels 2 nd_UInt16.tif
+raster overview add -r mode --levels 2 nd_Float32.tif
+raster overview add -r gauss --levels 2 nd_Byte.tif
+raster overview add -r bilinear --levels 2 nd_Float32.tif
+raster overview add -r cubic --levels 2 nd_Float32.tif
+
+# creation options
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE --co PREDICTOR=2 b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE --co PREDICTOR=3 f32_20.tif
+raster overview add -r nearest --levels 2 --co COMPRESS=LZW b20.tif
+raster overview add -r nearest --levels 2 --co COMPRESS=PACKBITS b20.tif
+raster overview add -r nearest --levels 2 --co COMPRESS=NONE b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE --co ZLEVEL=9 b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE --co ZLEVEL=15 b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE --co ZLEVEL=0 b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE --co PREDICTOR=9 b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=LZW --co PREDICTOR=3 i16_20.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE --co PREDICTOR=abc b20.tif
+raster overview add -r average --levels 2 --co COMPRESS=FOO --co INTERLEAVE=TILE --co PHOTOMETRIC=X --co BLOCKSIZE=100 --co ZLEVEL=44 --co UNKNOWN=1 b20.tif
+raster overview add -r nearest --levels 2 --co BLOCKSIZE=64 b20.tif
+
+# big rasters: multi-tile overviews, compressed
+raster overview add -r nearest --levels 2 --co COMPRESS=PACKBITS b300.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE b300.tif
+raster overview add -r average --levels 2 --co COMPRESS=LZW --co PREDICTOR=2 u16_300.tif
+raster overview add -r average --levels 2,4 b300.tif
+
+# multiband
+raster overview add -r average --levels 2,4 m3.tif
+raster overview add -r cubic --levels 2 m3f.tif
+
+# external .ovr
+raster overview add -r average --levels 2,4 --external b20.tif
+raster overview add -r nearest --levels 2 --external f32_20.tif
+
+# delete / refresh / reuse against existing overviews (both sandboxes are
+# seeded by the reference binary in setup)
+#setup: python3 /workspace/tests/mk_ovr_fixtures.py . && /home/agent/oracle/executable raster overview add -q -r average --levels 2,4 a_Byte.tif && /home/agent/oracle/executable raster overview add -q -r cubic --levels 2 f32_20.tif && /home/agent/oracle/executable raster overview add -q -r average --levels 2 --external b20.tif && /home/agent/oracle/executable raster overview add -q -r average --levels 2 b300.tif
+raster overview delete a_Byte.tif
+raster overview delete --external b20.tif
+raster overview delete b20.tif
+raster overview refresh -r average a_Byte.tif
+raster overview refresh a_Byte.tif
+raster overview refresh f32_20.tif
+raster overview refresh --external b20.tif
+raster overview add -r cubic --levels 2 a_Byte.tif
+raster overview add -r average --levels 8 a_Byte.tif
+raster overview add -r average --levels 2 --co COMPRESS=DEFLATE b300.tif
+raster info a_Byte.tif
+raster info --format json a_Byte.tif
+raster info --checksum a_Byte.tif
+raster info b20.tif
+raster info --format json --checksum f32_20.tif

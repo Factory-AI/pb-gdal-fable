@@ -1,0 +1,55 @@
+# gdal raster color-map / nodata-to-alpha / rgb-to-palette: LUT and palette
+# semantics, median-cut palettes, Floyd-Steinberg-style dithering, nodata
+# masks, VRT serializations, error choreography
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_color_fixtures as f; f.make()"
+raster rgb-to-palette radial.tif out.tif
+raster rgb-to-palette radial.tif out.tif -q
+raster rgb-to-palette blobs.tif out.tif
+raster rgb-to-palette check.tif out.tif
+raster rgb-to-palette cgray.tif out.tif
+raster rgb-to-palette cflat.tif out.tif
+raster rgb-to-palette cfew.tif out.tif
+raster rgb-to-palette cmany.tif out.tif --no-dither
+raster rgb-to-palette cmany.tif out.tif --color-count 8 --no-dither
+raster rgb-to-palette cmany.tif out.tif --color-count 8 --bit-depth 8 --no-dither
+raster rgb-to-palette cfew.tif out.tif --bit-depth 8
+raster rgb-to-palette cfew.tif out.tif --color-count 2
+raster rgb-to-palette radial.tif out.tif --color-count 4
+raster rgb-to-palette radial.tif out.tif --color-count 4 --no-dither
+raster rgb-to-palette radial.tif out.tif --bit-depth 8 --no-dither
+raster rgb-to-palette radial.tif out.tif --color-map bwmap.txt
+raster rgb-to-palette blobs.tif out.tif --color-map rampmap.txt
+raster rgb-to-palette blobs.tif out.tif --color-map rampmap.txt --no-dither
+raster rgb-to-palette blobs.tif out.tif --color-map map4.txt --dst-nodata 2 --no-dither
+raster rgb-to-palette radial.tif out.vrt
+raster rgb-to-palette radial.tif out.tif --of GTiff --co TILED=YES
+raster rgb-to-palette crgb2.tif out.tif
+raster rgb-to-palette cf32.tif out.tif
+raster rgb-to-palette pal4.tif out.tif
+raster rgb-to-palette radial.tif out.tif --color-map nosuch.txt
+raster rgb-to-palette radial.tif out.tif --color-map badmap.txt
+raster rgb-to-palette radial.tif out.tif --color-count 300
+raster rgb-to-palette radial.tif out.tif --dst-nodata 3
+raster color-map pal4.tif out.tif
+raster color-map pal4.tif out.vrt
+raster color-map cgray.tif out.tif --color-map rampmap.txt
+raster color-map cgray.tif out.vrt --color-map rampmap.txt
+raster color-map cgray.tif out.tif --color-map bwmap.txt
+raster color-map cgray.tif out.tif --color-map rampmap.txt --color-selection exact
+raster color-map cgray.tif out.tif --color-map rampmap.txt --color-selection nearest
+raster color-map cgray.tif out.tif --color-map rampmap.txt --add-alpha
+raster color-map blobs.tif out.tif --color-map rampmap.txt -b 2
+raster color-map graynd.tif out.tif --color-map rampmap.txt
+raster color-map cgray.tif out.tif
+raster color-map cgray.tif out.tif --color-map nosuch.txt
+raster color-map cgray.tif out.tif --color-map badmap.txt
+raster nodata-to-alpha rgbnd.tif out.tif
+raster nodata-to-alpha rgbnd.tif out.tif -q
+raster nodata-to-alpha graynd.tif out.tif
+raster nodata-to-alpha rgbplain.tif out.tif
+raster nodata-to-alpha rgbnd.tif out.tif --nodata 20
+raster nodata-to-alpha rgbnd.tif out.tif --nodata 1,2,3
+raster nodata-to-alpha rgbnd.tif out.tif --nodata 1 --nodata 2 --nodata 3
+raster nodata-to-alpha rgbnd.tif out.tif --nodata 1,2
+raster nodata-to-alpha rgbnd.tif out.tif --nodata nan
+raster nodata-to-alpha graynd.tif out.tif --nodata 9

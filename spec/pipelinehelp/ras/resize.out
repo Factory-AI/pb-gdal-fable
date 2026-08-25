@@ -1,0 +1,17 @@
+Usage: resize [OPTIONS]
+
+Resize a raster dataset without changing the georeferenced extents.
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  --resolution <xres>,<yres>     Target resolution (in destination CRS units)
+                                 Mutually exclusive with --size
+  --size <width[%]>,<height[%]>  Target size in pixels (or percentage if using '%' suffix) [required]
+                                 Mutually exclusive with --resolution
+  -r, --resampling <RESAMPLING>  Resampling method. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|mode (default: nearest)
+
+For more details, consult https://gdal.org/programs/gdal_raster_resize.html

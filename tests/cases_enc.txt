@@ -1,0 +1,54 @@
+# D5 shapefile encoding layer: LDID / .cpg / SHAPE_ENCODING read model and
+# ENCODING lco write model
+#setup: python3 /workspace/tests/mk_enc_fixtures.py .
+
+# read: SHAPEFILE metadata domain + value/name recoding
+vector info --output-format json --features t_l87.shp
+vector info --output-format json --features t_l0.shp
+vector info --output-format json --features t_l38.shp
+vector info --output-format json --features t_l4.shp
+vector info --output-format json --features t_l45.shp
+vector info --output-format json --features t_cpgutf8.shp
+vector info --output-format json --features t_cpg1251.shp
+vector info --output-format json --features t_cpggarb.shp
+vector info --output-format json --features t_cpg88591.shp
+vector info --output-format json --features t_cpg1252.shp
+vector info --output-format json --features t_cpgnum.shp
+vector info --output-format json --features t_cpgempty.shp
+vector info --output-format json --features t_cpgldid.shp
+vector info --output-format json --features t_cpgup.shp
+vector info --features t_cpg1251.shp
+--config SHAPE_ENCODING=CP866 vector info --output-format json --features t_l87.shp
+--config SHAPE_ENCODING= vector info --output-format json --features t_l87.shp
+--config SHAPE_ENCODING=FOOBAR vector info --output-format json --features t_l87.shp
+vector info --oo ENCODING=CP866 --output-format json --features t_l87.shp
+--config SHAPE_ENCODING=CP1251 vector info --oo ENCODING=CP866 --output-format json --features t_l87.shp
+
+# write: ENCODING lco / SHAPE_ENCODING config
+vector convert fv.json w.shp
+vector convert --lco ENCODING=UTF-8 fv.json w.shp
+vector convert --lco ENCODING=ISO-8859-1 fv.json w.shp
+vector convert --lco ENCODING=CP1251 fv.json w.shp
+vector convert --lco ENCODING= fv.json w.shp
+vector convert --lco ENCODING=FOOBAR fv.json w.shp
+vector convert --lco ENCODING=FOOBAR fc.json w.shp
+vector convert --lco ENCODING=FOOBAR gonly.json w.shp
+vector convert --lco ENCODING=1252 fv.json w.shp
+vector convert --lco ENCODING=8859-1 fv.json w.shp
+vector convert --lco ENCODING=1250 fc.json w.shp
+vector convert fc.json w.shp
+--config SHAPE_ENCODING=CP1251 vector convert fv.json w.shp
+--config SHAPE_ENCODING=CP1251 vector convert --lco ENCODING=UTF-8 fv.json w.shp
+--config SHAPE_ENCODING= vector convert fv.json w.shp
+--config SHAPE_ENCODING=1250 vector convert fc.json w.shp
+
+# append picks up the target layer encoding
+vector convert --append ap.json t_cpg1251.shp
+vector convert --append ap.json t_l87.shp
+--config SHAPE_ENCODING=CP866 vector convert --append ap.json t_cpg1251.shp
+
+# roundtrips
+vector convert t_cpg1251.shp out.json
+vector convert t_l87.shp out.json
+vector convert t_cpg1251.shp c1.shp
+vector convert --lco ENCODING=UTF-8 t_cpg1251.shp c1.shp

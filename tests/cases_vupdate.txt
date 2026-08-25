@@ -1,0 +1,174 @@
+# vector update: leaf + pipeline mid-chain step. Key/FID matching, modes,
+# GeoJSON rewrite preserving native members (whole-doc replay through
+# reproject, per-feature merge through most steps, select/sql drop it),
+# NATIVE_DATA metadata domain on info json, seq/shapefile targets, hidden
+# --update flag, same-dataset refusal, runtime-vs-parse error timing, and
+# the no-GEOS wall steps (parse+GDALG fine, chain execution fails).
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":8,"h":"B2","x":1},"geometry":{"type":"Point","coordinates":[9,9]}},{"type":"Feature","properties":{"f":99,"h":"new","x":2},"geometry":{"type":"Point","coordinates":[7,7]}}]}' > upd.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > tgt.json && printf %s '{"type":"FeatureCollection","name":"m","xtop":3,"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","id":"a1","xfeat":9,"properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > h1.json && printf %s '{"type":"FeatureCollection","bbox":[1,2,3,4],"features":[{"type":"Feature","properties":{"h":"a","f":7},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","id":"b7","xf":5,"properties":{"h":"b","f":8},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > h2.json && printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"f":7,"d":3.5,"h":"a"},"geometry":{"type":"Point","coordinates":[1.25,2]}},{"type":"Feature","properties":{"f":8,"d":1e20,"h":"b"},"geometry":null}]}' > h3.json && printf %s '{"type":"FeatureCollection","xtop":3,"name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"},"zzz":1},"features":[{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > h4.json && printf %s '{"type":"FeatureCollection","bbox":[0,0,0,0],"features":[{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[-1.25,2.5]}},{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":null}]}' > b2.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":7,"h":"a","d":0.1000},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"h":"b","d":1e2,"f":8},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > p1.json && printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"xafter":1,"features":[{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > nm1.json && printf %s '{"type":"FeatureCollection","name":"m","bbox":[1,2,3,4],"xafter":1,"features":[{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > nb1.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"f":7,"h":"dup"},"geometry":{"type":"Point","coordinates":[5,6]}}]}' > dupk.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":null,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > nulk.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":7.5,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > realk.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > nof.json && printf %s '{"type":"FeatureCollection","name":"other","features":[{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > l2x.json && printf '%s\n%s\n' '{"type":"Feature","properties":{"f":7,"h":"a"},"geometry":{"type":"Point","coordinates":[1,2]}}' '{"type":"Feature","properties":{"f":8,"h":"b"},"geometry":{"type":"Point","coordinates":[3,4]}}' > tgt.geojsonl && printf %s 'garbage###' > gbg.bin && mkdir -p jdir && printf %s '{"type":"gdal_streamed_alg","command_line":"gdal vector read x"}' > ex.gdalg.json && printf %s '{"type":"FeatureCollection","name":"keep","features":[]}' > keep.json && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" tgt.json shpt && /home/agent/oracle/executable raster create --size 2,2 rr.tif --quiet
+# ---- leaf: FID and key matching, modes
+vector update upd.json tgt.json --key f
+vector update upd.json tgt.json --key f --mode merge
+vector update upd.json tgt.json --key f --mode update-only
+vector update upd.json tgt.json --key f --mode append-only
+vector update upd.json tgt.json
+vector update upd.json tgt.json --mode update-only
+vector update upd.json tgt.json --mode append-only
+vector update upd.json tgt.json --key f --key h
+vector update upd.json tgt.json --key f --quiet
+vector update upd.json dupk.json --key f
+vector update upd.json nulk.json --key f
+vector update upd.json tgt.json --key h
+# ---- leaf: errors
+vector update upd.json tgt.json --key f --mode badmode
+vector update upd.json tgt.json --key zz
+vector update upd.json realk.json --key f
+vector update upd.json nof.json --key f
+vector update upd.json l2x.json --key f
+vector update upd.json l2x.json --input-layer m --key f
+vector update upd.json l2x.json --output-layer m --key f
+vector update upd.json l2x.json --output-layer other --key f
+vector update tgt.json tgt.json --key f
+vector update tgt.json tgt.json --key zz
+vector update upd.json nosuch.json --key f
+vector update nosuch.json tgt.json --key f
+vector update upd.json gbg.bin --key f
+vector update upd.json jdir --key f
+vector update upd.json nn.gdalg.json --key f
+vector update upd.json ex.gdalg.json --key f
+vector update ex.gdalg.json tgt.json --key f
+# ---- leaf: hidden --update flag, bool value wording
+vector update upd.json tgt.json --update --key f
+vector update upd.json tgt.json --update=false --key f
+vector update upd.json tgt.json --update=x --key f
+vector update upd.json tgt.json --update=TRUE --key f
+vector convert upd.json znoexist.json --overwrite=x
+# ---- leaf: writers (native preservation, seq, shapefile)
+vector update upd.json h1.json --key f
+vector update upd.json h2.json --key f
+vector update upd.json h3.json --key f
+vector update upd.json h4.json --key f
+vector update upd.json b2.json --key f
+vector update upd.json p1.json --key f
+vector update upd.json tgt.geojsonl --key f
+vector update upd.json tgt.geojsonl --key f --mode append-only
+vector update upd.json shpt --key f
+# ---- pipeline step: placement and parse
+vector pipeline read upd.json ! update tgt.json --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f ! write out.json --overwrite
+vector pipeline read upd.json ! update --output tgt.json --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json
+vector pipeline read upd.json ! update tgt.json --mode update-only ! write out.json
+vector pipeline read upd.json ! update tgt.json --mode append-only --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f --key h ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f --quiet ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f
+vector pipeline read upd.json ! update
+vector pipeline read upd.json ! update tgt.json extra.json ! write out.json
+vector pipeline read upd.json ! update tgt.json --mode badmode ! write out.json
+vector pipeline read upd.json ! update tgt.json --key zz ! write out.json
+vector pipeline read upd.json ! update realk.json --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f --overwrite ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f --of GeoJSON ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f --input upd.json ! write out.json
+vector pipeline read upd.json ! update nosuch.json --key f ! write out.json
+vector pipeline read upd.json ! update gbg.bin --key f ! write out.json
+vector pipeline read upd.json ! update jdir --key f ! write out.json
+vector pipeline read upd.json ! update ex.gdalg.json --key f ! write out.json
+vector pipeline read upd.json ! update nn.gdalg.json --key f ! write out.json
+vector pipeline read nosuch.json ! update tgt.json --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f ! write keep.json
+vector pipeline read upd.json ! update tgt.json --update=x --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --update --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --update=false --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f ! update tgt.json --key f ! write out.json
+vector pipeline read upd.json ! update tgt.json --input-layer m --output-layer m --key f ! write out.json
+pipeline read upd.json ! update tgt.json --key f ! write out.json
+pipeline read upd.json ! update tgt.json --key f ! info
+# ---- pipeline step: native document flow through interposed steps
+vector pipeline read upd.json ! update h1.json --key f ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! filter --where f=7 ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! filter --bbox 0,0,20,20 ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! reproject --dst-crs EPSG:4326 ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! select f,h ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! set-field-type --field-name f --field-type Real ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! edit --metadata k=v ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! swap-xy ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! explode-collections ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! rename-layer --output-layer zz ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! segmentize 100 ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! combine ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! clip --bbox 0,0,20,20 ! write out.json
+vector pipeline read upd.json ! update h2.json --key f ! write out.json
+vector pipeline read upd.json ! update h3.json --key f ! write out.json
+vector pipeline read upd.json ! update h4.json --key f ! write out.json
+vector pipeline read upd.json ! update b2.json --key f ! write out.json
+vector pipeline read upd.json ! update p1.json --key f ! write out.json
+vector pipeline read upd.json ! update h1.json --key f ! write out.geojsonl
+vector pipeline read upd.json ! update h1.json --key f ! write /vsistdout/ --of GeoJSON
+vector pipeline read upd.json ! update h1.json --key f ! write out.json --output-layer zz
+vector pipeline read upd.json ! update nm1.json --key f ! write out.json --output-layer zz
+vector pipeline read upd.json ! update nb1.json --key f ! write out.json --output-layer zz
+vector pipeline read upd.json ! update tgt.json --key f ! write out.json --output-layer zz
+vector pipeline read upd.json ! update h2.json --key f ! write out.json --output-layer zz
+vector pipeline read upd.json ! update upd.json --key f ! write out.json
+# ---- pipeline step: NATIVE_DATA metadata domain downstream
+vector pipeline read upd.json ! update h1.json --key f ! info --of json
+vector pipeline read upd.json ! update h4.json --key f ! info --of json
+vector pipeline read upd.json ! update b2.json --key f ! info --of json
+vector pipeline read upd.json ! update tgt.json --key f ! info --of json
+vector pipeline read upd.json ! update h1.json --key f ! info
+vector pipeline read upd.json ! update h1.json --key f ! reproject --dst-crs EPSG:4326 ! info --of json
+vector pipeline read upd.json ! update h1.json --key f ! filter --where f=8 ! info --of json
+vector pipeline read upd.json ! update h1.json --key f ! export-schema
+# ---- pipeline step: GDALG echo
+vector pipeline read upd.json ! update tgt.json --key f ! write ec.gdalg.json
+vector pipeline read upd.json ! update tgt.json --input-layer m --output-layer m --output-open-option A=B --update --mode merge --key f --key h ! write ec.gdalg.json
+vector pipeline read upd.json ! update tgt.json ! write ec.gdalg.json
+# ---- no-GEOS wall steps: chain exec fails, parse and GDALG fine
+vector pipeline read upd.json ! buffer ! write out.json
+vector pipeline read upd.json ! buffer 2.5 ! write out.json
+vector pipeline read upd.json ! buffer 1 2 ! write out.json
+vector pipeline read upd.json ! buffer 1 --distance 2 ! write out.json
+vector pipeline read upd.json ! buffer xx ! write out.json
+vector pipeline read upd.json ! buffer 1 --of GeoJSON ! write out.json
+vector pipeline read upd.json ! buffer 1 --input h1.json ! write out.json
+vector pipeline read upd.json ! buffer 1 --input nosuch.json ! write out.json
+vector pipeline read upd.json ! simplify 0.25 ! write out.json
+vector pipeline read upd.json ! simplify ! write out.json
+vector pipeline read upd.json ! simplify-coverage 0.25 ! write out.json
+vector pipeline read upd.json ! convex-hull ! write out.json
+vector pipeline read upd.json ! concave-hull ! write out.json
+vector pipeline read upd.json ! concave-hull --ratio 0.5 ! write out.json
+vector pipeline read upd.json ! concave-hull --ratio zz ! write out.json
+vector pipeline read upd.json ! make-valid ! write out.json
+vector pipeline read upd.json ! make-valid --bogus ! write out.json
+vector pipeline read upd.json ! make-valid ! write out.json --quiet
+vector pipeline read upd.json ! dissolve ! write out.json
+vector pipeline read upd.json ! check-coverage ! write out.json
+vector pipeline read upd.json ! clean-coverage ! write out.json
+vector pipeline read upd.json ! check-geometry ! write out.json
+vector pipeline read upd.json ! check-geometry --no-create-empty-layers ! write out.json
+vector pipeline read upd.json ! update tgt.json --key f ! make-valid ! write out.json
+vector pipeline read upd.json ! filter --where f=8 ! make-valid ! write out.json
+vector pipeline read upd.json ! make-valid ! filter --where f=8 ! write out.json
+vector pipeline read upd.json ! make-valid ! info
+vector pipeline read upd.json ! make-valid ! info --of json
+vector pipeline read upd.json ! make-valid ! export-schema
+vector pipeline read nosuch.json ! make-valid ! write out.json
+pipeline read upd.json ! make-valid ! write out.json
+pipeline read rr.tif ! make-valid ! write out.json
+pipeline read upd.json ! buffer 1 ! write out.json
+vector pipeline read upd.json ! buffer --side left --distance 1.50 --quadrant-segments 4 ! write ec.gdalg.json
+vector pipeline read upd.json ! buffer 3 --endcap-style flat --join-style bevel --mitre-limit 2.5 ! write ec.gdalg.json
+vector pipeline read upd.json ! make-valid --method structure --keep-lower-dim ! write ec.gdalg.json
+vector pipeline read upd.json ! concave-hull --ratio 0.5 --tight --allow-holes --active-layer m ! write ec.gdalg.json
+vector pipeline read upd.json ! check-geometry --include-field a,b --include-valid ! write ec.gdalg.json
+vector pipeline read upd.json ! check-coverage --maximum-gap-width 0.5 ! write ec.gdalg.json
+vector pipeline read upd.json ! clean-coverage --snapping-distance 0.1 --merge-strategy longest-border ! write ec.gdalg.json
+vector pipeline read upd.json ! simplify-coverage 0.5 --preserve-boundary ! write ec.gdalg.json
+vector pipeline read upd.json ! dissolve --active-geometry g ! write ec.gdalg.json
+vector pipeline read upd.json ! convex-hull ! write ec.gdalg.json
+vector pipeline read upd.json ! simplify 00.5 ! write ec.gdalg.json
+pipeline read upd.json ! make-valid ! write ec.gdalg.json
+vector pipeline read upd.json ! filter --where f=8 ! buffer 1 ! write ec.gdalg.json

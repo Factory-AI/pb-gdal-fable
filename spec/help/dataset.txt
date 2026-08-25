@@ -1,0 +1,18 @@
+Usage: gdal dataset <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - check:    Check whether there are errors when reading the content of a dataset.
+  - copy:     Copy files of a dataset. (alias: cp)
+  - delete:   Delete dataset(s). (alias: rm, remove)
+  - identify: Identify driver opening dataset(s).
+  - rename:   Rename files of a dataset. (alias: ren, mv)
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_dataset.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

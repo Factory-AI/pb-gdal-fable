@@ -1,0 +1,37 @@
+Usage: gdal raster polygonize [OPTIONS] <INPUT> <OUTPUT>
+
+Create a polygon feature dataset from a raster band.
+
+Positional arguments:
+  -i, --input <INPUT>                                  Input raster datasets [required]
+  -o, --output <OUTPUT>                                Output vector dataset [required]
+
+Common Options:
+  -h, --help                                           Display help message and exit
+  --json-usage                                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                               Configuration option [may be repeated]
+  -q, --quiet                                          Quiet mode (no progress bar or warning message)
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>  Output format ("GDALG" allowed)
+  --co, --creation-option <KEY>=<VALUE>                Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>         Layer creation option [may be repeated]
+  --overwrite                                          Whether overwriting existing output dataset is allowed
+  --update                                             Whether to open existing dataset in update mode
+  --overwrite-layer                                    Whether overwriting existing output layer is allowed
+  --append                                             Whether appending to existing layer is allowed
+  --output-layer <OUTPUT-LAYER>                        Output layer name
+  -b, --band <BAND>                                    Input band (1-based index) (default: 1)
+  --attribute-name <ATTRIBUTE-NAME>                    Name of the field with the pixel value (default: DN)
+  -c, --connect-diagonal-pixels                        Consider diagonal pixels as connected
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                  Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                    Open options [may be repeated]
+  --output-oo, --output-open-option <KEY>=<VALUE>      Output open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_polygonize.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

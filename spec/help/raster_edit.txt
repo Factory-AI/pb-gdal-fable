@@ -1,0 +1,39 @@
+Usage: gdal raster edit [OPTIONS] <DATASET>
+
+Edit a raster dataset.
+
+Positional arguments:
+  --dataset <DATASET>                                         Dataset (to be updated in-place, unless --auxiliary) [required]
+
+Common Options:
+  -h, --help                                                  Display help message and exit
+  --json-usage                                                Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                      Configuration option [may be repeated]
+  -q, --quiet                                                 Quiet mode (no progress bar or warning message)
+
+Options:
+  --auxiliary                                                 Ask for an auxiliary .aux.xml file to be edited
+  --crs <CRS>                                                 Override CRS (without reprojection)
+  --bbox <BBOX>                                               Bounding box as xmin,ymin,xmax,ymax
+  --nodata <NODATA>                                           Assign a specified nodata value to output bands ('none', numeric value, 'nan', 'inf', '-inf')
+  --color-interpretation <[all|<BAND>=]<COLOR-INTEPRETATION>  Set band color interpretation [may be repeated]
+  --scale <[<BAND>=]<SCALE>                                   Override band scale factor [may be repeated]
+  --offset <[<BAND>=]<OFFSET>                                 Override band offset constant [may be repeated]
+  --metadata <KEY>=<VALUE>                                    Add/update dataset metadata item [may be repeated]
+  --unset-metadata <KEY>                                      Remove dataset metadata item(s) [may be repeated]
+  --unset-metadata-domain <DOMAIN>                            Remove dataset metadata domain(s) [may be repeated]
+  --gcp <GCP>                                                 Add ground control point, formatted as pixel,line,easting,northing[,elevation], or @filename [may be repeated]
+  --stats                                                     Compute statistics, using all pixels
+                                                              Mutually exclusive with --approx-stats
+  --approx-stats                                              Compute statistics, using a subset of pixels
+                                                              Mutually exclusive with --stats
+  --hist                                                      Compute histogram
+
+Advanced Options:
+  --oo, --open-option <KEY>=<VALUE>                           Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_edit.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

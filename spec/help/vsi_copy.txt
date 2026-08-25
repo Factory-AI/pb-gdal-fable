@@ -1,0 +1,23 @@
+Usage: gdal vsi copy [OPTIONS] <SOURCE> <DESTINATION>
+
+Copy files located on GDAL Virtual System Interface (VSI).
+
+Positional arguments:
+  --source <SOURCE>            Source file or directory name [required]
+  --destination <DESTINATION>  Destination file or directory name [required]
+
+Common Options:
+  -h, --help                   Display help message and exit
+  --json-usage                 Display usage as JSON document and exit
+  --config <KEY>=<VALUE>       Configuration option [may be repeated]
+  -q, --quiet                  Quiet mode (no progress bar or warning message)
+
+Options:
+  -r, --recursive              Copy subdirectories recursively
+  --skip-errors                Skip errors
+
+For more details, consult https://gdal.org/programs/gdal_vsi_copy.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

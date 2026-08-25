@@ -1,0 +1,28 @@
+Usage: gdal vsi sozip create [OPTIONS] <INPUT> <OUTPUT>
+
+Create a Seek-optimized ZIP (SOZIP) file.
+
+Positional arguments:
+  -i, --input <INPUT>                                          Input filenames [may be repeated] [required]
+  -o, --output <OUTPUT>                                        Output ZIP filename [required]
+
+Common Options:
+  -h, --help                                                   Display help message and exit
+  --json-usage                                                 Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                       Configuration option [may be repeated]
+  -q, --quiet                                                  Quiet mode (no progress bar or warning message)
+
+Options:
+  --overwrite                                                  Whether overwriting existing output dataset is allowed
+  -r, --recursive                                              Travels the directory structure of the specified directories recursively
+  -j, --junk-paths, --no-paths                                 Store just the name of a saved file, and do not store directory names
+  --enable-sozip <ENABLE-SOZIP>                                Whether to automatically/systematically/never apply the SOZIP optimization. ENABLE-SOZIP=auto|yes|no (default: auto)
+  --sozip-chunk-size <value in bytes or with K/M suffix>       Chunk size for a seek-optimized file (default: 32768)
+  --sozip-min-file-size <value in bytes or with K/M/G suffix>  Minimum file size to decide if a file should be seek-optimized (default: 1 MB)
+  --content-type <CONTENT-TYPE>                                Store the Content-Type of the file being added.
+
+For more details, consult https://gdal.org/programs/gdal_vsi_sozip.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

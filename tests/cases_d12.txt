@@ -1,0 +1,103 @@
+# D12: internal reduced-resolution IFDs -> band overviews (not GTIFF_DIR
+# subdatasets), page-classification rules, libtiff re-read warning
+# multiplicity, IMAGE_STRUCTURE PREDICTOR entry.
+#setup: python3 /workspace/tests/mk_d12_fixtures.py .
+raster info pure_ovr.tif
+raster info --format json pure_ovr.tif
+raster info --checksum pure_ovr.tif
+raster info --format json --checksum pure_ovr.tif
+raster info multipage.tif
+raster info mixed.tif
+raster info --format json mixed.tif
+raster info mixed2.tif
+raster info bandmismatch.tif
+raster info bigger_ovr.tif
+raster info subtype0.tif
+raster info first_reduced.tif
+raster info mask_ovr.tif
+raster info warn_full.tif
+raster info warn_main.tif
+raster info warn_ovr_ok.tif
+raster info --checksum warn_ovr_ok.tif
+raster info warn_mask.tif
+raster info warn_sub0.tif
+raster info warn_2full.tif
+raster info GTIFF_DIR:2:warn_ovr_ok.tif
+raster info GTIFF_DIR:1:warn_main.tif
+raster info GTIFF_DIR:1:warn_ovr_ok.tif
+raster info GTIFF_DIR:2:bandmismatch.tif
+raster info GTIFF_DIR:2:warn_full.tif
+raster info GTIFF_DIR:3:warn_2full.tif
+raster info GTIFF_DIR:2:mixed.tif
+raster info GTIFF_DIR:3:mixed.tif
+raster info wd.tif
+raster info wd2.tif
+raster info wr.tif
+raster info wm.tif
+raster info wf.tif
+raster info ws.tif
+raster info GTIFF_DIR:2:wd.tif
+raster info GTIFF_DIR:1:wd.tif
+raster info GTIFF_DIR:3:wd2.tif
+raster info GTIFF_DIR:9:wd.tif
+raster info GTIFF_DIR:9:sbc.tif
+raster info GTIFF_DIR:off:384:wd.tif
+raster info GTIFF_DIR:off:9999:wd.tif
+raster info GTIFF_DIR:off:9999:sbc.tif
+#norm: ptr
+raster info --checksum pure_ovr.tif --config CPL_DEBUG=ON
+raster info warn_ovr_ok.tif --config CPL_DEBUG=ON
+raster info --format json --crs-format WKT2 sbc.tif --config CPL_DEBUG=ON
+raster convert sbc.tif cv1.tif -q --config CPL_DEBUG=ON
+raster convert warn_ovr_ok.tif cv2.tif -q --config CPL_DEBUG=ON
+raster convert sbc.tif --of MEM cv3 -q --config CPL_DEBUG=ON
+raster convert warn_ovr_ok.tif --of MEM cv4 -q --config CPL_DEBUG=ON
+raster convert warn_main.tif --of MEM cv5 -q --config CPL_DEBUG=ON
+raster convert sbc.tif cv6.vrt -q --config CPL_DEBUG=ON
+raster convert warn_ovr_ok.tif cv7.vrt -q --config CPL_DEBUG=ON
+raster convert sbc.tif cv8.gdalg.json -q --config CPL_DEBUG=ON
+raster edit --metadata A=b pure_ovr.tif --config CPL_DEBUG=ON
+raster edit --stats pure_ovr.tif --config CPL_DEBUG=ON
+raster edit --stats sbc.tif --config CPL_DEBUG=ON
+dataset check pure_ovr.tif --config CPL_DEBUG=ON
+dataset check warn_ovr_ok.tif --config CPL_DEBUG=ON
+raster info wd.tif --config CPL_DEBUG=ON
+raster info wd2.tif --config CPL_DEBUG=ON
+raster convert wd.tif cw1.tif -q --config CPL_DEBUG=ON
+dataset check wd.tif --config CPL_DEBUG=ON
+#norm:
+raster edit --metadata A=b wd.tif
+raster convert sbc.tif cv9.tif --co BLOCKXSIZE=15 -q
+raster convert sbc.tif cv10.gdalg.json -q
+raster convert sbc.tif cv11.vrt -q
+raster pipeline read sbc.tif ! write --of stream x -q
+raster edit --metadata A=b warn_ovr_ok.tif
+raster edit --metadata A=b sbc.tif
+raster edit --metadata A=b pure_ovr.tif
+raster edit --stats warn_main.tif
+raster edit --stats sbc.tif
+raster edit --stats bandmismatch.tif
+raster edit --nodata 3 warn_ovr_ok.tif
+dataset copy warn_ovr_ok.tif dc1.tif
+dataset copy sbc.tif dc2.tif
+dataset rename sbc.tif dc3.tif
+dataset check warn_ovr_ok.tif
+dataset check sbc.tif
+#setup: /home/agent/oracle/executable raster create --size 4,4 --band-count 3 --co COMPRESS=DEFLATE --co PREDICTOR=2 --co INTERLEAVE=PIXEL p.tif -q
+raster info p.tif
+#setup: /home/agent/oracle/executable raster create --size 4,4 --co COMPRESS=DEFLATE --co PREDICTOR=2 --co PHOTOMETRIC=MINISWHITE p.tif -q
+raster info p.tif
+#setup: /home/agent/oracle/executable raster create --size 4,4 --datatype Float32 --co COMPRESS=DEFLATE --co PREDICTOR=3 p.tif -q
+raster info p.tif
+#setup: /home/agent/oracle/executable raster create --size 10,10 --nodata 7 o.tif -q && /home/agent/oracle/executable raster overview add --levels 2,4 o.tif >/dev/null 2>&1 && /home/agent/oracle/executable raster edit --metadata FOO=bar o.tif
+raster info --checksum o.tif
+raster info --format json --checksum o.tif
+raster info o.tif
+#norm: ptr
+raster edit --stats o.tif --config CPL_DEBUG=ON
+raster edit --metadata A=b o.tif --config CPL_DEBUG=ON
+dataset check o.tif --config CPL_DEBUG=ON
+raster convert o.tif oc.tif -q --config CPL_DEBUG=ON
+#norm:
+dataset copy o.tif od.tif
+#setup:

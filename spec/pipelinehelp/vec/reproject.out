@@ -1,0 +1,15 @@
+Usage: reproject [OPTIONS]
+
+Reproject a vector dataset.
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>  Set active layer (if not specified, all)
+  -s, --src-crs <SRC-CRS>        Source CRS
+  -d, --dst-crs <DST-CRS>        Destination CRS [required]
+
+For more details, consult https://gdal.org/programs/gdal_vector_pipeline.html

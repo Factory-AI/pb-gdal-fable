@@ -1,0 +1,38 @@
+Usage: gdal raster pansharpen [OPTIONS] <INPUT> <SPECTRAL>... <OUTPUT>
+
+Perform a pansharpen operation.
+
+Positional arguments:
+  -i, --panchromatic, --input <INPUT>                      Input panchromatic raster dataset [required]
+  --spectral <SPECTRAL>                                    Input spectral band dataset [1.. values] [required]
+  -o, --output <OUTPUT>                                    Output raster dataset [required]
+
+Common Options:
+  -h, --help                                               Display help message and exit
+  --json-usage                                             Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                   Configuration option [may be repeated]
+  -q, --quiet                                              Quiet mode (no progress bar or warning message)
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>      Output format ("GDALG" allowed)
+  --co, --creation-option <KEY>=<VALUE>                    Creation option [may be repeated]
+  --overwrite                                              Whether overwriting existing output dataset is allowed
+                                                           Mutually exclusive with --append
+  --append                                                 Append as a subdataset to existing output
+                                                           Mutually exclusive with --overwrite
+  -r, --resampling <RESAMPLING>                            Resampling algorithm. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average (default: cubic)
+  --weights <WEIGHTS>                                      Weight for each input spectral band [may be repeated]
+  --nodata <NODATA>                                        Override nodata value of input bands
+  --bit-depth <BIT-DEPTH>                                  Override bit depth of input bands
+  --spatial-extent-adjustment <SPATIAL-EXTENT-ADJUSTMENT>  Select behavior when bands have not the same extent. SPATIAL-EXTENT-ADJUSTMENT=union|intersection|none|none-without-warning (default: union)
+  -j, --num-threads <NUM-THREADS>                          Number of jobs (or ALL_CPUS) (default: ALL_CPUS)
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                      Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                        Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_pansharpen.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

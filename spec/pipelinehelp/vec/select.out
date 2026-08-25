@@ -1,0 +1,21 @@
+Usage: select [OPTIONS] <FIELDS>
+
+Select a subset of fields from a vector dataset.
+
+Positional arguments:
+  --fields <FIELDS>              Fields to select (or exclude if --exclude) [may be repeated] [required]
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  --output-layer <OUTPUT-LAYER>  Output layer name
+  --active-layer <ACTIVE-LAYER>  Set active layer (if not specified, all)
+  --exclude                      Exclude specified fields
+                                 Mutually exclusive with --ignore-missing-fields
+  --ignore-missing-fields        Ignore missing fields
+                                 Mutually exclusive with --exclude
+
+For more details, consult https://gdal.org/programs/gdal_vector_select.html

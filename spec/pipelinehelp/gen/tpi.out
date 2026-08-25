@@ -1,0 +1,14 @@
+Usage: tpi [OPTIONS]
+
+Generate a Topographic Position Index (TPI) map
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+
+Options:
+  -b, --band <BAND>       Input band (1-based index) (default: 1)
+  --no-edges              Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_tpi.html

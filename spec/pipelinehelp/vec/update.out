@@ -1,0 +1,23 @@
+Usage: update [OPTIONS] <OUTPUT>
+
+Update an existing vector dataset with an input vector dataset.
+
+Positional arguments:
+  -o, --output <OUTPUT>                            Output vector dataset [required]
+
+Common Options:
+  -h, --help                                       Display help message and exit
+  --json-usage                                     Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                           Configuration option [may be repeated]
+  -q, --quiet                                      Quiet mode (no progress bar or warning message)
+
+Options:
+  --input-layer <INPUT-LAYER>                      Input layer name
+  --output-layer <OUTPUT-LAYER>                    Output layer name
+  --mode <MODE>                                    Set update mode. MODE=merge|update-only|append-only (default: merge)
+  --key <KEY>                                      Field(s) used as a key to identify features [may be repeated]
+
+Advanced Options:
+  --output-oo, --output-open-option <KEY>=<VALUE>  Output open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_update.html

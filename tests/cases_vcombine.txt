@@ -1,0 +1,248 @@
+# vector combine (leaf + pipeline step + generic dual dispatch):
+# one-level flatten vs --keep-nested, container = Multi* of simple layer
+# type else GeometryCollection, group-by tuple keys sorted as strings,
+# none-geometry layer drop (error when named via -l), duplicate-name key
+# fields (value on last slot; GeoJSON writer renames with numeric
+# suffix), collection z-promotion, SQLITE add-extra-fields stub gate in
+# token order with --of, clip-pending consumption at the combine pull
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"Point","coordinates":[10,20]}}]}' > t.json && printf %s '{"type":"FeatureCollection","name":"k","features":[{"type":"Feature","properties":{"g":1,"x":"a","y":5},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":1,"x":"a","y":6},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{"g":2,"x":"b","y":7},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > kx.json && printf %s '{"type":"FeatureCollection","name":"mp","features":[{"type":"Feature","properties":{},"geometry":{"type":"MultiPolygon","coordinates":[[[[0,0],[4,0],[4,4],[0,4],[0,0]]]]}}]}' > mp.json && printf %s '{"type":"FeatureCollection","name":"mpt","features":[{"type":"Feature","properties":{},"geometry":{"type":"MultiPoint","coordinates":[[1,1],[2,2]]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[9,9]}}]}' > mpt.json && printf %s '{"type":"FeatureCollection","name":"mix","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}}]}' > mix.json && printf %s '{"type":"FeatureCollection","name":"n","features":[{"type":"Feature","properties":{},"geometry":{"type":"GeometryCollection","geometries":[{"type":"MultiPolygon","coordinates":[[[[0,0],[1,0],[1,1],[0,1],[0,0]]]]}]}}]}' > ngc.json && printf %s '{"type":"FeatureCollection","name":"z31","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[500000,4649776,5]}}]}' > z31.json && printf %s '{"type":"FeatureCollection","name":"z","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1,5]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2,2]}}]}' > zp.json && printf %s '{"type":"FeatureCollection","name":"z2","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1,5]}}]}' > zrev.json && printf %s '{"type":"FeatureCollection","name":"z3","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[1,0],[1,1],[0,0]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1,5]}}]}' > z3.json && printf %s '{"type":"FeatureCollection","name":"ao","features":[{"type":"Feature","properties":{"a":1},"geometry":null},{"type":"Feature","properties":{"a":2},"geometry":null}]}' > ao.json && printf %s '{"type":"FeatureCollection","name":"an","features":[{"type":"Feature","properties":{"g":1},"geometry":null},{"type":"Feature","properties":{"g":1},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":2},"geometry":null}]}' > an.json && printf %s '{"type":"FeatureCollection","name":"es","features":[{"type":"Feature","properties":{"g":""},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":"a"},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{"g":null},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > es.json && printf %s '{"type":"FeatureCollection","name":"k","features":[{"type":"Feature","properties":{"g":null},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":1},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > gn.json && printf %s '{"type":"FeatureCollection","name":"s","features":[{"type":"Feature","properties":{"g":10},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":2},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{"g":-1},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > si.json && printf %s '{"type":"FeatureCollection","name":"s","features":[{"type":"Feature","properties":{"g":0},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":null},"geometry":{"type":"Point","coordinates":[2,2]}}]}' > s0.json && printf %s '{"type":"FeatureCollection","name":"s","features":[{"type":"Feature","properties":{"g":"10"},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":"2"},"geometry":{"type":"Point","coordinates":[2,2]}}]}' > s2.json && printf %s '{"type":"FeatureCollection","name":"s","features":[{"type":"Feature","properties":{"g":10.5},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":2.5},"geometry":{"type":"Point","coordinates":[2,2]}}]}' > s3.json && printf %s '{"type":"FeatureCollection","name":"ck","features":[{"type":"Feature","properties":{"g":"a,","x":"c"},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":"a","x":",c"},"geometry":{"type":"Point","coordinates":[2,2]}}]}' > ck.json && printf %s '{"type":"FeatureCollection","name":"ck2","features":[{"type":"Feature","properties":{"g":"b","x":"a"},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"g":"a","x":"z"},"geometry":{"type":"Point","coordinates":[2,2]}}]}' > ck2.json && printf %s '{"type":"FeatureCollection","name":"ab","features":[{"type":"Feature","properties":{"ab":5},"geometry":{"type":"Point","coordinates":[1,1]}}]}' > ab.json && printf %s '{"type":"FeatureCollection","name":"sp2","features":[{"type":"Feature","properties":{"a b":1,"g":2},"geometry":{"type":"Point","coordinates":[1,1]}}]}' > sp2.json && printf %s '{"type":"FeatureCollection","name":"e0","features":[]}' > e0.json && mkdir shpX dmix && /home/agent/oracle/executable vector convert -q t.json shpX/A1.shp && printf %s '{"type":"FeatureCollection","name":"two","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,1]}}]}' > like_a.json && /home/agent/oracle/executable vector convert -q like_a.json shpX/B2.shp && cp shpX/A1.dbf lone.dbf && cp lone.dbf dmix/ && /home/agent/oracle/executable vector convert -q t.json dmix/tt.shp && /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4326 --bbox 0,0,4,4 r.tif && /home/agent/oracle/executable vector combine --group-by g kx.json g1.gdalg.json && /home/agent/oracle/executable vector pipeline read mp.json ! combine --keep-nested ! write g2.gdalg.json
+# ---- leaf: basics
+vector combine t.json out.json
+vector combine -q t.json out.json
+vector combine kx.json out.json
+vector combine --group-by g kx.json out.json
+vector combine --group-by g,x kx.json out.json
+vector combine --group-by x --group-by g kx.json out.json
+vector combine --group-by x,g kx.json out.json
+# ---- leaf: flatten vs keep-nested, container types
+vector combine --keep-nested mp.json out.json
+vector combine mp.json out.json
+vector combine mpt.json out.json
+vector combine --keep-nested mpt.json out.json
+vector combine mix.json out.json
+vector combine --keep-nested mix.json out.json
+vector combine ngc.json out.json
+vector combine --keep-nested ngc.json out.json
+# ---- leaf: z handling
+vector combine z31.json out.json
+vector combine zp.json out.json
+vector combine -q zp.json out.json
+vector combine zrev.json out.json
+vector combine z3.json out.json
+# ---- leaf: null geometry, empty layers, key semantics
+vector combine ao.json out.json
+vector combine an.json out.json
+vector combine --group-by g an.json out.json
+vector combine --group-by g es.json out.json
+vector combine --group-by g gn.json out.json
+vector combine --group-by g si.json out.json
+vector combine --group-by g s0.json out.json
+vector combine --group-by g s2.json out.json
+vector combine --group-by g s3.json out.json
+vector combine --group-by g,x ck.json out.json
+vector combine --group-by g,x ck2.json out.json
+vector combine e0.json out.json
+vector combine --group-by g e0.json out.json
+# ---- leaf: field resolution (ci match, dup names)
+vector combine --group-by N t.json out.json
+vector combine --group-by g,G kx.json out.json
+vector combine --group-by ab,aB,Ab,AB ab.json out.json
+vector combine --group-by zz t.json out.json
+vector combine --group-by zz kx.json out.json
+vector combine --group-by "a b" --group-by g sp2.json out.json
+# ---- leaf: validation ordering
+vector combine --group-by g,g t.json out.json
+vector combine --group-by g,g missing77.json out.json
+vector combine --add-extra-fields always-identical t.json out.json
+vector combine --add-extra-fields sometimes-identical t.json out.json
+vector combine --add-extra-fields no t.json out.json
+vector combine --add-extra-fields Always-Identical t.json out.json
+vector combine --add-extra-fields bogus t.json out.json
+vector combine --add-extra-fields always-identical missing77.json out.json
+vector combine --add-extra-fields always-identical --of bogus t.json out.json
+vector combine --of bogus --add-extra-fields always-identical t.json out.json
+vector combine --group-by g,g --of bogus t.json out.json
+vector combine --group-by g,g --add-extra-fields always-identical t.json out.json
+vector combine --keep-nested --group-by g,g --add-extra-fields sometimes-identical t.json out.json
+vector combine --add-extra-fields always-identical --if bogus t.json out.json
+vector combine --if bogus --add-extra-fields always-identical t.json out.json
+vector combine --if bogus t.json out.json
+vector combine --of GTiff t.json out.json
+vector combine --if GTiff t.json out.json
+vector combine --of bogus t.json out.json
+vector combine missing77.json out.json
+vector combine --group-by zz missing77.json out.json
+# ---- leaf: none-geometry layers
+vector combine lone.dbf out.json
+vector combine -l lone dmix out.json
+vector combine -l lone,tt dmix out.json
+vector combine -l tt dmix out.json
+vector combine dmix out.json
+vector combine --group-by zz lone.dbf out.json
+# ---- leaf: multi-layer
+vector combine shpX out.json
+vector combine --group-by n shpX out.json
+vector combine -l A1 --group-by n shpX out.json
+vector combine -l B2 --group-by n shpX out.json
+vector combine -l A1,B2 shpX out.json
+vector combine -l nosuch shpX out.json
+# ---- leaf: output formats
+vector combine --of "ESRI Shapefile" t.json odir
+vector combine --of "ESRI Shapefile" mix.json odir
+vector combine --skip-errors --of "ESRI Shapefile" mix.json odir
+vector combine --of "ESRI Shapefile" shpX odir
+vector combine --of "ESRI Shapefile" --group-by n shpX odir
+vector combine --of "ESRI Shapefile" lone.dbf odir
+vector combine --group-by g kx.json out.geojsonl
+vector combine --group-by g,G kx.json out.geojsonl
+vector combine t.json /vsistdout/
+vector combine -f GeoJSON t.json /vsistdout/
+vector combine --group-by g,G -f GeoJSON kx.json /vsistdout/
+vector combine --of stream t.json streamed_dataset
+vector combine --of stream --group-by g kx.json streamed_dataset
+# ---- leaf: output-layer, co/lco
+vector combine --output-layer merged t.json out.json
+vector combine --group-by g --output-layer merged kx.json out.json
+vector combine --co COORDINATE_PRECISION=3 t.json out.json
+vector combine --lco WRITE_BBOX=YES t.json out.json
+# ---- leaf: GDALG echo
+vector combine t.json out.gdalg.json
+vector combine --group-by x,g --keep-nested kx.json out.gdalg.json
+vector combine --group-by x --group-by g --add-extra-fields no --keep-nested kx.json out.gdalg.json
+vector combine -l k --output-layer q --skip-errors --group-by g kx.json out.gdalg.json
+vector combine --group-by "a b" --group-by g sp2.json out.gdalg.json
+vector combine --of GDALG --group-by g kx.json /vsistdout/
+vector combine --of GDALG --add-extra-fields sometimes-identical t.json /vsistdout/
+# ---- leaf: update family
+vector combine --update t.json missing_out.json
+vector combine --overwrite-layer t.json missing_out.json
+vector combine --append t.json missing_out.json
+vector combine --upsert t.json missing_out.json
+vector combine --append --upsert t.json out.json
+vector combine --overwrite t.json out.json
+# ---- leaf: help / usage
+vector combine
+vector combine --help
+vector combine --json-usage
+vector combine --bogus t.json out.json
+vector combine t.json
+# ---- pipeline: basics
+vector pipeline read t.json ! combine ! write out.json
+vector pipeline read kx.json ! combine --group-by g ! write out.json
+vector pipeline read kx.json ! combine --group-by x --group-by g ! write out.json
+vector pipeline read kx.json ! combine --group-by x,g ! write out.json
+vector pipeline read mp.json ! combine ! write out.json
+vector pipeline read mp.json ! combine --keep-nested ! write out.json
+vector pipeline read mpt.json ! combine ! write out.json
+vector pipeline read mix.json ! combine ! write out.json
+vector pipeline read ngc.json ! combine ! write out.json
+vector pipeline read zp.json ! combine ! write out.json
+vector pipeline read z31.json ! combine ! write out.json
+vector pipeline read ao.json ! combine ! write out.json
+vector pipeline read an.json ! combine --group-by g ! write out.json
+vector pipeline read gn.json ! combine --group-by g ! write out.json
+vector pipeline read es.json ! combine --group-by g ! write out.json
+vector pipeline read si.json ! combine --group-by g ! write out.json
+vector pipeline read e0.json ! combine ! write out.json
+vector pipeline read e0.json ! combine --group-by g ! write out.json
+vector pipeline -q read t.json ! combine ! write out.json
+vector pipeline read t.json ! combine ! write --quiet out.json
+# ---- pipeline: info terminals
+vector pipeline read kx.json ! combine --group-by g ! info
+vector pipeline read kx.json ! combine --group-by g ! info --features
+vector pipeline read kx.json ! combine --group-by g ! info --summary
+vector pipeline read kx.json ! combine ! info --format json
+vector pipeline read zp.json ! combine ! info --features
+vector pipeline read ab.json ! combine --group-by ab,aB,Ab,AB ! info --features
+vector pipeline read kx.json ! combine --group-by g,G ! info --features
+vector pipeline read lone.dbf ! combine ! info
+vector pipeline read lone.dbf ! combine ! info --features
+vector pipeline read lone.dbf ! combine --group-by zz ! info
+vector pipeline read dmix ! combine ! info
+vector pipeline read shpX ! combine --group-by n ! info --features
+vector pipeline read kx.json ! combine --group-by g ! export-schema
+# ---- pipeline: step errors
+vector pipeline read t.json ! combine --group-by zz ! write out.json
+vector pipeline read t.json ! combine --group-by zz ! info
+vector pipeline read t.json ! combine --group-by g,g ! write out.json
+vector pipeline read t.json ! combine --add-extra-fields always-identical ! write out.json
+vector pipeline read t.json ! combine --add-extra-fields sometimes-identical ! info
+vector pipeline read t.json ! combine --add-extra-fields no ! write out.json
+vector pipeline read t.json ! combine --add-extra-fields bogus ! write out.json
+vector pipeline read missing77.json ! combine ! write out.json
+vector pipeline read t.json ! combine --group-by g,g --add-extra-fields always-identical ! write out.json
+vector pipeline read t.json ! combine --bogus ! write out.json
+vector pipeline read t.json ! combine extra ! write out.json
+vector pipeline combine ! write out.json
+vector pipeline read lone.dbf ! combine ! write out.json
+vector pipeline read t.json ! combine --group-by ! write out.json
+# ---- pipeline: chains
+vector pipeline read kx.json ! filter --where "g = 1" ! combine ! write out.json
+vector pipeline read kx.json ! combine --group-by g ! select --fields g ! write out.json
+vector pipeline read t.json ! reproject --dst-crs EPSG:32631 ! combine ! write out.json
+vector pipeline read kx.json ! combine --group-by g ! combine ! write out.json
+vector pipeline read kx.json ! sql --sql "SELECT * FROM k" ! combine --group-by g ! write out.json
+vector pipeline read mp.json ! explode-collections ! combine ! write out.json
+vector pipeline read kx.json ! combine --group-by g ! edit --crs EPSG:4326 ! write out.json
+# ---- pipeline: clip interplay (pending error consumption)
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! info
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! info --features
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! info --summary
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! info --limit 1
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! info --fid 0
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! export-schema
+vector pipeline read t.json ! combine ! clip --bbox 0,0,50,50 ! write out.json
+vector pipeline read t.json ! combine ! clip --bbox 0,0,50,50 ! export-schema
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! write --of "ESRI Shapefile" odir
+vector pipeline read kx.json ! clip --bbox 0,0,1.5,1.5 ! combine --group-by g ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! combine ! write out.json
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! select --fields n --ignore-missing-fields ! info
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! combine ! info
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! filter --where 1=1 ! info
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! swap-xy ! info
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! edit --crs EPSG:4326 ! info
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! clip --bbox 0,0,50,50 ! info
+vector pipeline read t.json ! clip --bbox 0,0,50,50 ! combine ! filter --where 1=1 ! write out.json
+vector pipeline read kx.json ! clip --bbox 0,0,1.5,1.5 ! combine --group-by g ! info --features
+# ---- pipeline: write options
+vector pipeline read mix.json ! combine ! write --of "ESRI Shapefile" odir
+vector pipeline read mix.json ! combine ! write --skip-errors --of "ESRI Shapefile" odir
+vector pipeline read t.json ! combine ! write --of GeoJSONSeq out.geojsonl
+vector pipeline read kx.json ! combine --group-by g,G ! write out.geojsonl
+vector pipeline read kx.json ! combine --group-by g ! write --output-layer merged out.json
+vector pipeline read t.json ! combine ! write /vsistdout/
+vector pipeline read t.json ! combine ! write --of GeoJSON /vsistdout/
+# ---- pipeline: GDALG echo
+vector pipeline read kx.json ! combine --group-by x --group-by g --keep-nested ! write out.gdalg.json
+vector pipeline read t.json ! combine --add-extra-fields no ! write out.gdalg.json
+vector pipeline read kx.json ! combine --group-by g,G ! write out.gdalg.json
+vector pipeline read sp2.json ! combine --group-by "a b" --group-by g ! write out.gdalg.json
+# ---- GDALG execution
+vector convert g1.gdalg.json out.json
+vector info --features g1.gdalg.json
+vector convert g2.gdalg.json out.json
+vector info g2.gdalg.json
+# ---- generic pipeline
+pipeline read kx.json ! combine --group-by g ! write out.json
+pipeline read kx.json ! combine --group-by g ! info
+pipeline read t.json ! combine ! info --format text
+pipeline read r.tif ! combine ! write out.json
+pipeline read t.json ! combine --add-extra-fields always-identical ! write out.json
+pipeline read t.json ! combine --group-by g,g ! write out.json
+# ---- raster pipeline rejects combine
+raster pipeline read r.tif ! combine ! write out.tif
+# ---- single-token pipelines
+vector pipeline "read kx.json ! combine --group-by g ! write out.json"
+vector pipeline "read t.json ! combine --add-extra-fields always-identical ! write out.json"
+vector pipeline "read t.json ! combine --group-by g,g ! write out.json"
+vector pipeline "read t.json ! combine --group-by zz ! write out.json"
+# ---- step help
+vector pipeline read t.json ! combine --help
+# ---- writer duplicate-field rename (shared with sql)
+vector sql -q --sql "SELECT n, n FROM t" t.json out.json
+vector sql --sql "SELECT n, n FROM t" t.json out.json
+vector sql -q --sql "SELECT n, n FROM t" t.json out.geojsonl
+vector sql -q --sql "SELECT n AS a, n AS A FROM t" t.json out.json
+vector sql -q --sql "SELECT n AS a, n AS a2, n AS a FROM t" t.json out.json

@@ -1,0 +1,32 @@
+Usage: gdal raster update [OPTIONS] <INPUT> <OUTPUT>
+
+Update the destination raster with the content of the input one.
+
+Positional arguments:
+  -i, --input <INPUT>                        Input raster datasets [required]
+  -o, --output <OUTPUT>                      Output raster dataset [required]
+
+Common Options:
+  -h, --help                                 Display help message and exit
+  --json-usage                               Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                     Configuration option [may be repeated]
+  -q, --quiet                                Quiet mode (no progress bar or warning message)
+
+Options:
+  --geometry <GEOMETRY>                      Clipping geometry (WKT or GeoJSON)
+  --geometry-crs <GEOMETRY-CRS>              CRS of clipping geometry
+  -r, --resampling <RESAMPLING>              Resampling method. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average|rms|mode|min|max|med|q1|q3|sum (default: nearest)
+  --no-update-overviews                      Do not update existing overviews
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>        Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>          Open options [may be repeated]
+  --wo, --warp-option <NAME>=<VALUE>         Warping option(s) [may be repeated]
+  --to, --transform-option <NAME>=<VALUE>    Transform option(s) [may be repeated]
+  --et, --error-threshold <ERROR-THRESHOLD>  Error threshold
+
+For more details, consult https://gdal.org/programs/gdal_raster_update.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

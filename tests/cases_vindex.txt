@@ -1,0 +1,74 @@
+# vector index: gather ladder ticks once per opened dataset (0.1 then +0.1
+# halving every five), dir expansion with recursive/filename-filter glob,
+# schema gate is OGRFieldDefn::IsSame (name/type/subtype/width/precision),
+# CRS gate vs first-tile reference (append re-opens the first referenced
+# tile for ref schema/CRS and dedupes location strings with a warning),
+# per-corner dst-crs reprojection, source-crs-field EPSG/PROJ/WKT/auto
+# flavors (wkt1GdalFull with injected component authorities), single-file
+# shapefile targets resolve to their sole layer for the whole update
+# family, precreate-then-unlink 0-byte handoff, No-layer-to-index on
+# zero opened datasets or zero selected layers.
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > a.json && printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"a":3},"geometry":{"type":"Point","coordinates":[10,20]}}]}' > b.json && printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[500000,4649776]}}]}' > utm.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"b":"x"},"geometry":{"type":"Point","coordinates":[5,6]}}]}' > c.json && printf %s '{"type":"FeatureCollection","name":"m","features":[]}' > e.json
+vector index a.json out.json
+vector index a.json b.json out.json
+vector index a.json b.json out.json -q
+vector index a.json c.json out.json -q
+vector index a.json c.json out.json --accept-different-schemas -q
+vector index a.json utm.json out.json -q
+vector index a.json utm.json out.json --accept-different-crs -q
+vector index a.json e.json out.json -q
+vector index nosuch.json out.json
+vector index a.json nosuch.json out.json -q
+vector index a.json out.json --source-crs-field-name crs -q
+vector index a.json out.json --source-crs-field-name crs --source-crs-format PROJ -q
+vector index a.json out.json --source-crs-format EPSG -q
+vector index a.json out.json --dst-crs EPSG:32631 -q
+vector index a.json out.json --dst-crs bogus
+vector index a.json out.shp -q
+vector index a.json out.json --nln idx -q
+vector index a.json out.json --dataset-name-only -q
+# --absolute-path embeds the sandbox root so the twin-sandbox digests can
+# never match; verified byte-identical manually in a shared directory
+vector index a.json out
+vector index a.json out.gdalg.json
+vector index a.json out.json --of stream
+vector index a.json /vsistdout/
+vector index a.json --of GeoJSON /vsistdout/
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > a.json && printf %s '{"type":"FeatureCollection","name":"m","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:OGC:1.3:CRS84"}},"features":[{"type":"Feature","properties":{"a":3},"geometry":{"type":"Point","coordinates":[10,20]}}]}' > b.json && mkdir -p d1/sub && cp a.json d1/one.json && cp b.json d1/sub/two.json && printf %s notavector > d1/junk.txt && cp a.json d1/three.geojson && mkdir -p d2 && /home/agent/oracle/executable vector convert a.json shpd --of "ESRI Shapefile" --quiet && /home/agent/oracle/executable vector convert a.json single.shp --of "ESRI Shapefile" --quiet && printf %s '{"type":"FeatureCollection","name":"L1","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > ml_l1.json && printf %s '{"type":"FeatureCollection","name":"L2","features":[{"type":"Feature","properties":{"a":2},"geometry":{"type":"Point","coordinates":[5,6]}}]}' > ml_l2.json && /home/agent/oracle/executable vector concat ml_l1.json ml_l2.json ml.shp.zip --mode stack --quiet 2>/dev/null; /home/agent/oracle/executable vector index a.json pre.json --quiet && /home/agent/oracle/executable vector index a.json precrs.json --source-crs-field-name crs --quiet && /home/agent/oracle/executable vector index a.json preloc.json --location-name path --quiet && printf %s '' > zero.json && /home/agent/oracle/executable vector index a.json preshp.shp --quiet
+vector index d1 out.json
+vector index d1 out.json -q
+vector index d1 out.json --recursive -q
+vector index d1 out.json --filename-filter "*.geojson" -q
+vector index d1 out.json --recursive --filename-filter "*.json" --filename-filter "*.geojson" -q
+vector index d2 out.json
+vector index shpd out.json -q
+vector index single.shp out.json -q
+vector index a.json b.json single.shp shpd out.json -q
+vector index a.json pre.json --append -q
+vector index b.json pre.json --append -q
+vector index b.json pre.json --append
+vector index b.json preloc.json --append -q
+vector index b.json preloc.json --append --location-name path -q
+vector index b.json precrs.json --append --source-crs-field-name crs -q
+vector index b.json precrs.json --append -q
+vector index b.json pre.json --update -q
+vector index b.json pre.json --overwrite -q
+vector index b.json pre.json --overwrite-layer -q
+vector index b.json pre.json --update --nln other -q
+vector index b.json preshp.shp --append -q
+vector index b.json preshp.shp --overwrite-layer -q
+vector index b.json zero.json --append -q
+vector index b.json nothere.json --update
+vector index b.json pre.json --append --nln nosuch
+vector index ml_l1.json ml_l2.json out.json -q
+vector index a.json out.json --source-layer-name m -q
+vector index a.json out.json --source-layer-name nosuch -q
+vector index a.json out.json --source-layer-index 0 -q
+vector index a.json out.json --source-layer-index 5 -q
+vector index a.json out.json --location-name spot -q
+vector index a.json b.json out.json --source-crs-field-name crs --source-crs-format WKT -q
+vector index a.json out.shp --source-crs-field-name crs --source-crs-format WKT -q
+vector index a.json out.json --of MEM
+vector index a.json b.json d1 out.json --recursive

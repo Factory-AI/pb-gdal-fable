@@ -1,0 +1,17 @@
+Usage: read [OPTIONS] <INPUT>
+
+Read a raster dataset.
+
+Positional arguments:
+  -i, --input <INPUT>                  Input raster datasets [required]
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>  Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>    Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_pipeline.html

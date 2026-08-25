@@ -1,0 +1,99 @@
+# vector rename-layer: transform matrix (ascii transliteration,
+# lower-case, filename-compatible, reserved/replacement, max-length byte
+# truncation), -l/--output-layer pairing + selected-layer reordering,
+# GDALG echo, pipeline step incl generic vector-fix-by-name info format
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"My Layer-Name","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > ml.json && printf %s '{"type":"FeatureCollection","name":"caf\u00e9 l\u00e9y","features":[{"type":"Feature","properties":{"n":1},"geometry":null}]}' > uni.json && printf %s '{"type":"FeatureCollection","name":"a/b:c*d?e\"f<g>h|i","features":[{"type":"Feature","properties":{"n":1},"geometry":null}]}' > bad.json && printf %s '{"type":"FeatureCollection","name":"\u00e9\u00e8\u00ea\u00eb\u00e0\u00e2\u00e4\u00f1\u00fc\u00f6\u00f8\u00df\u0153\u00e5\u00e7\u00ed\u00f3\u00fa\u00c9\u00c0\u00d1\u00d6\u00dc\u00c7\u0106\u0111\u0130\u0142\u0132\u0161\u017e\u0152","features":[{"type":"Feature","properties":{"n":1},"geometry":null}]}' > acc.json && printf %s '{"type":"FeatureCollection","name":"tr\u00e8s \u4e2d\u6587 x","features":[{"type":"Feature","properties":{"n":1},"geometry":null}]}' > cn.json && printf %s '{"type":"FeatureCollection","name":"My CAF\u00c9/x Layer","features":[{"type":"Feature","properties":{"n":1},"geometry":null}]}' > comb.json && printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[10,20]}},{"type":"Feature","properties":{"n":5},"geometry":{"type":"Point","coordinates":[7,8,9]}}]}' > zp.json && printf %s '{"type":"FeatureCollection","name":"abc.","features":[{"type":"Feature","properties":{"n":1},"geometry":null}]}' > tdot.json && printf %s '{"type":"FeatureCollection","name":"Aa B","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > l1.json && printf %s '{"type":"FeatureCollection","name":"Cc D","features":[{"type":"Feature","properties":{"n":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > l2.json && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" l1.json shpd2 --output-layer AaB && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" l2.json shpd2 --output-layer CcD --update && python3 /workspace/tests/mk_pipeedit_fixtures.py .
+# ---- leaf transforms
+vector rename-layer --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --output-layer q --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --lower-case --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --lower-case --quiet --of GeoJSON uni.json /vsistdout/
+vector rename-layer --ascii --quiet --of GeoJSON uni.json /vsistdout/
+vector rename-layer --ascii --quiet --of GeoJSON acc.json /vsistdout/
+vector rename-layer --ascii --quiet --of GeoJSON cn.json /vsistdout/
+vector rename-layer --ascii --replacement-character X --quiet --of GeoJSON cn.json /vsistdout/
+vector rename-layer --ascii --lower-case --quiet --of GeoJSON acc.json /vsistdout/
+vector rename-layer --filename-compatible --quiet --of GeoJSON bad.json /vsistdout/
+vector rename-layer --filename-compatible --replacement-character _ --quiet --of GeoJSON bad.json /vsistdout/
+vector rename-layer --filename-compatible --quiet --of GeoJSON uni.json /vsistdout/
+vector rename-layer --filename-compatible --quiet --of GeoJSON tdot.json /vsistdout/
+vector rename-layer --filename-compatible --replacement-character Z --quiet --of GeoJSON tdot.json /vsistdout/
+vector rename-layer --filename-compatible --max-length 4 --quiet --of GeoJSON tdot.json /vsistdout/
+vector rename-layer --max-length 4 --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --max-length 4 --quiet --of GeoJSON uni.json /vsistdout/
+vector rename-layer --max-length 99 --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --reserved-characters ae --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --reserved-characters ae --replacement-character _ --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --reserved-characters a --replacement-character "" --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --reserved-characters "" --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --reserved-characters e --ascii --quiet --of GeoJSON uni.json /vsistdout/
+vector rename-layer --reserved-characters M --lower-case --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --reserved-characters a --max-length 3 --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer --ascii --lower-case --filename-compatible --max-length 8 --quiet --of GeoJSON comb.json /vsistdout/
+vector rename-layer --replacement-character Z --quiet --of GeoJSON bad.json /vsistdout/
+# ---- -l / --output-layer pairing + reordering
+vector rename-layer -l "My Layer-Name" --output-layer QQ --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer -l nope --lower-case --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer -l nope --output-layer q --quiet --of GeoJSON ml.json /vsistdout/
+vector rename-layer -l nope --lower-case --quiet nosuch.json o9.json
+vector pipeline read shpd2 ! rename-layer --lower-case ! info --summary
+vector pipeline read shpd2 ! rename-layer -l AaB --output-layer ZZ ! info --summary
+vector pipeline read shpd2 ! rename-layer -l CcD --output-layer ZZ ! info --summary
+vector pipeline read shpd2 ! rename-layer -l AaB --output-layer ZZ --lower-case ! info --summary
+vector pipeline read shpd2 ! rename-layer --output-layer S ! info --summary
+vector pipeline read shpd2 ! rename-layer -l AaB --output-layer ZZ ! write --of GeoJSON /vsistdout/
+# ---- parse failures
+vector rename-layer --max-length 0 --quiet ml.json o.json
+vector rename-layer --max-length -1 --quiet ml.json o.json
+vector rename-layer --max-length abc --quiet ml.json o.json
+vector rename-layer --max-length 2.5 --quiet ml.json o.json
+vector rename-layer --reserved-characters a --replacement-character XY --quiet ml.json o.json
+vector rename-layer --replacement-character XY --quiet nosuch.json o.json
+vector rename-layer --output-layer q --append --upsert ml.json o.json
+vector rename-layer foo ml.json o.json
+vector rename-layer ml.json
+# ---- GDALG echoes
+vector rename-layer --lower-case ml.json rr.gdalg.json
+vector rename-layer --ascii --lower-case --filename-compatible --reserved-characters ab --replacement-character _ --max-length 9 -l "My Layer-Name" --output-layer q ml.json rr2.gdalg.json
+vector rename-layer --if GeoJSON --oo FLATTEN_NESTED_ATTRIBUTES=YES --co COORDINATE_PRECISION=5 --lco X=Y --output-open-option A=B --output-layer q -l "My Layer-Name" --skip-errors --ascii ml.json rr3.gdalg.json
+vector rename-layer --of GDALG --lower-case ml.json /vsistdout/
+# ---- write bar (count-hiding: whole bar after the Z warning)
+vector rename-layer --lower-case zp.json wq.json
+vector rename-layer --lower-case --quiet zp.json wq.json
+# ---- pipeline step
+vector pipeline read ml.json ! rename-layer --lower-case ! info
+vector pipeline read ml.json ! rename-layer --output-layer z ! info
+vector pipeline read ml.json ! rename-layer --output-layer z ! info --of json
+vector pipeline read ml.json ! rename-layer -l "My Layer-Name" --output-layer zz ! info --summary
+vector pipeline read ml.json ! rename-layer --ascii --max-length 3 ! info
+vector pipeline read ml.json ! rename-layer -l nope ! info
+vector pipeline read ml.json ! rename-layer -l nope --output-layer q ! info
+vector pipeline read ml.json ! rename-layer --max-length 0 ! info
+vector pipeline read ml.json ! rename-layer --replacement-character XY --reserved-characters a ! info
+vector pipeline read ml.json ! rename-layer --max-length abc ! info
+vector pipeline read ml.json ! rename-layer foo ! info
+vector pipeline read ml.json ! rename-layer --nodata 5 ! info
+vector pipeline read zp.json ! rename-layer --lower-case ! write wq.json
+vector pipeline read ml.json ! rename-layer -l "My Layer-Name" --output-layer q --ascii --lower-case --filename-compatible --reserved-characters ab --replacement-character _ --max-length 9 ! write s2.gdalg.json
+vector pipeline read ml.json ! rename-layer --lower-case ! write --of GDALG /vsistdout/
+vector pipeline read ml.json ! rename-layer --output-layer q ! swap-xy ! write --of GeoJSON /vsistdout/
+vector pipeline "read ml.json ! rename-layer --replacement-character XY ! write oq.json"
+vector pipeline "read ml.json ! rename-layer -l nope ! write oq.json"
+vector pipeline "read ml.json ! rename-layer --lower-case ! write /vsistdout/"
+# ---- generic pipeline: vector-only step name fixes the info format
+pipeline read ml.json ! rename-layer --lower-case ! info --features
+pipeline read ml.json ! swap-xy ! info --features
+pipeline read ml.json ! filter --where 1=1 ! info --features
+pipeline read ml.json ! segmentize --max-length 2 ! info --features
+pipeline read ml.json ! select --fields n ! info --features
+pipeline read ml.json ! edit ! info --features
+pipeline read ml.json ! swap-xy ! info --summary
+pipeline read ml.json ! rename-layer -l nope ! info
+pipeline read pe2.tif ! rename-layer --lower-case ! write o9.tif
+pipeline read pe2.tif ! swap-xy ! info --features
+pipeline read nosuch.json ! rename-layer --lower-case ! write o.json
+# ---- help surfaces
+vector rename-layer --help
+vector rename-layer --json-usage
+completion gdal vector rename-layer --

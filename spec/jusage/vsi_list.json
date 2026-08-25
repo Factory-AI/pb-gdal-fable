@@ -1,0 +1,81 @@
+{
+  "name":"list",
+  "full_path":[
+    "gdal",
+    "vsi",
+    "list"
+  ],
+  "description":"List files of one of the GDAL Virtual System Interface (VSI).",
+  "short_url":"\/programs\/gdal_vsi_list.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vsi_list.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"filename",
+      "type":"string",
+      "description":"File or directory name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "choices":[
+        "json",
+        "text"
+      ],
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"long-listing",
+      "type":"boolean",
+      "description":"Use a long listing format",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"recursive",
+      "type":"boolean",
+      "description":"List subdirectories recursively",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"depth",
+      "type":"integer",
+      "description":"Maximum depth in recursive mode",
+      "min_value":1,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"absolute-path",
+      "type":"boolean",
+      "description":"Display absolute path",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"tree",
+      "type":"boolean",
+      "description":"Use a hierarchical presentation for JSON output",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+  ]
+}

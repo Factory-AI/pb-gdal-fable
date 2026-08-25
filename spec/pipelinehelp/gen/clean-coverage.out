@@ -1,0 +1,16 @@
+Usage: clean-coverage [OPTIONS]
+
+Alter polygon boundaries to make shared edges identical, removing gaps and overlaps
+
+Common Options:
+  -h, --help                               Display help message and exit
+  --json-usage                             Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                   Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>            Set active layer (if not specified, all)
+  --snapping-distance <SNAPPING-DISTANCE>  Distance tolerance for snapping nodes
+  --merge-strategy <MERGE-STRATEGY>        Algorithm to assign overlaps to neighboring polygons. MERGE-STRATEGY=longest-border|max-area|min-area|min-index
+  --maximum-gap-width <MAXIMUM-GAP-WIDTH>  Maximum width of a gap to be closed
+
+For more details, consult https://gdal.org/programs/gdal_vector_clean_coverage.html

@@ -1,0 +1,40 @@
+{
+  "name":"move",
+  "full_path":[
+    "gdal",
+    "vsi",
+    "move"
+  ],
+  "description":"Move\/rename a file\/directory located on GDAL Virtual System Interface (VSI).",
+  "short_url":"\/programs\/gdal_vsi_move.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vsi_move.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"source",
+      "type":"string",
+      "description":"Source file or directory name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"destination",
+      "type":"string",
+      "description":"Destination file or directory name",
+      "required":true,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

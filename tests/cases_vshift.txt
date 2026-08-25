@@ -1,0 +1,38 @@
+# vertical datum shift on reproject: a compound or 3-axis CRS on either
+# side promotes both to 3D and adds the per-pixel geoid undulation to
+# single-band values (exact per pixel, never scanline-approximated);
+# band unit follows the source band, empty-window orphan double and the
+# grid shortcut interact with the vertical member
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_vshift_fixtures as f; f.make()"
+raster reproject --dst-crs EPSG:4326+5773 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 z64.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 f32.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 i16.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 nd1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --resampling bilinear b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --resampling bilinear z64.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --resampling bilinear f32.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --resampling bilinear i16.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --resampling bilinear nd1.tif o.tif -q
+raster reproject --dst-crs EPSG:4979 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:32611+5773 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+3855 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326 vsrc.tif o.tif -q
+raster reproject --dst-crs EPSG:32611 vsrc.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 vsrc.tif o.tif -q
+raster reproject --dst-crs EPSG:4326 rgbv.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 rgbu.tif o.tif -q
+raster reproject --src-crs EPSG:32611+5773 --dst-crs EPSG:4326 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --dst-nodata 34 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --dst-nodata 34 --resampling bilinear b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --size 4,4 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --resolution 0.002,0.002 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4979 --resolution 0.002,0.002 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326 --resolution 0.002,0.002 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --resolution 0.001,0.001 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:32611+5773 --resolution 2000,2000 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:32611+5773 --resolution 25,25 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:32611 --resolution 300,300 vsrc.tif o.tif -q
+raster reproject --dst-crs EPSG:4326 --resolution 0.002,0.002 rgbv.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --bbox -110,30,-109.9,30.1 b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4326+5773 --bbox -117,34.3407,-116.9994,34.3413 b1.tif o.tif -q

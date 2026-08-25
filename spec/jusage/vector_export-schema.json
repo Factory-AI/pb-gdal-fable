@@ -1,0 +1,84 @@
+{
+  "name":"export-schema",
+  "full_path":[
+    "gdal",
+    "vector",
+    "export-schema"
+  ],
+  "description":"Export the OGR_SCHEMA from a vector dataset.",
+  "short_url":"\/programs\/gdal_vector_export_schema.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vector_export_schema.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input vector datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"input-layer",
+      "type":"string_list",
+      "description":"Input layer name",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+  ],
+  "supports_streamed_output":true
+}

@@ -1,0 +1,530 @@
+gdal	vector	grid	none
+gdal	vector	grid
+gdal	vector	grid	10
+gdal	vector	grid	x.json	EPSG:43
+gdal	vector	grid	subx/
+gdal	vector	grid	sp	EPSG
+gdal	mdim	mosaic	--quiet=c.tif	--creation-option=subx/i	--input-format
+gdal	mdim	mosaic	--array	10	--open-option	EPSG:43	--overwrite=subx/i
+gdal	mdim	mosaic	--open-option	c	--output-format=c	PO
+gdal	mdim	mosaic	--array	
+gdal	mdim	mosaic	EPSG:43
+gdal	mdim	mosaic	--overwrite		--input=c	c.tif
+gdal	dataset	copy	--destination=c	--destination	-	--overwrite=EPSG
+gdal	dataset	copy	--overwrite
+gdal	dataset	copy	--destination	--source=EPSG	--destination=c
+gdal	dataset	copy	--destination=v.shp	PO	--destination=v.shp	--overwrite	-
+gdal	dataset	copy	--destination		EPSG		--source	z
+gdal	dataset	copy	--destination	--	--destination	--format=c.tif
+gdal	vector	info	--input=z	--summary	PO	--dialect	c.tif	--dialect	c.tif
+gdal	vector	info	--sql	PO	--limit	c
+gdal	vector	info	--sql=z	--sql	--crs-format=c.tif	--limit	sp
+gdal	vector	info	--output-format
+gdal	vector	info	--crs-format=EPSG	--dialect	--sql=EPSG
+gdal	vector	info	--input	z
+gdal	raster	neighbors	--method	-	--band	subx/	--open-option	EPSG
+gdal	raster	neighbors	--output	z	PO	-	--output-format	GTiff
+gdal	raster	neighbors	--input	none	--output
+gdal	raster	neighbors	--method
+gdal	raster	neighbors	--quiet	v.shp
+gdal	raster	neighbors	--output=c.tif	--input	none	-
+gdal	raster	hillshade	none
+gdal	raster	hillshade	--output-format=v.shp
+gdal	raster	hillshade	--output=c
+gdal	raster	hillshade	--overwrite	--band	EPSG:43	--open-option=z
+gdal	raster	hillshade	--open-option=	--output-format	EPSG:43	--gradient-alg	PO	c.tif
+gdal	raster	hillshade	--output-format=
+gdal	raster	edit	v.shp	--dataset	z	--nodata=c.tif
+gdal	raster	edit	--gcp
+gdal	raster	edit	--color-interpretation=c	--bbox=subx/i
+gdal	raster	edit	--metadata
+gdal	raster	edit	--color-interpretation=v.shp	--auxiliary	z	--color-interpretation=c.tif	--stats=subx/
+gdal	raster	edit	--color-interpretation=c.tif	--nodata	EPSG:43	--scale=subx/
+gdal	raster	as-features	GTiff	--output-format=v.shp	--update	PO	--append	-
+gdal	raster	as-features	--layer-creation-option	PO
+gdal	raster	as-features	subx/i
+gdal	raster	as-features	--append	c.tif	--overwrite-layer=v.shp	GTiff
+gdal	raster	as-features	v.shp	--band	subx/	none	--input-format	subx/i
+gdal	raster	as-features	--append=EPSG	--layer-creation-option	subx/	none	GTiff
+gdal	vsi	sozip	list	--input=v.shp
+gdal	vsi	sozip	list	--input=	--input	c
+gdal	vsi	sozip	list	--input	--input		--input=subx/i	--input	EPSG
+gdal	vsi	sozip	list	--input	GTiff
+gdal	vsi	sozip	list	-	--input	--input=EPSG	--input
+gdal	vsi	sozip	list	--input=c.tif	--input	--input	c
+gdal	mdim	info	--limit	subx/i	--limit	10
+gdal	mdim	info	--limit		--limit=EPSG	--array	sp	--limit=c.tif
+gdal	mdim	info	--limit	sp	--limit	--input=	--open-option=z
+gdal	mdim	info	--array-option	EPSG:43	--summary	GTiff	--limit=v.shp	--limit=v.shp
+gdal	mdim	info	--stats	x.json
+gdal	mdim	info	z	--summary=c.tif
+gdal	vector	grid	invdist	EPSG
+gdal	vector	grid	invdist	--input-format	subx/i	--size
+gdal	vector	grid	invdist	c.tif	--creation-option=v.shp
+gdal	vector	grid	invdist	none
+gdal	vector	grid	invdist	--radius2	EPSG	--min-points	c.tif	--power=	--sql	c
+gdal	vector	grid	invdist	--sql	--overwrite	10	--sql=c
+gdal	vsi	delete	--	--recursive	EPSG	--filename=v.shp
+gdal	vsi	delete	--recursive	sp	--recursive	--filename	EPSG:43	--recursive	-
+gdal	vsi	delete	--recursive	EPSG	--
+gdal	vsi	delete	--filename=v.shp	--filename	x.json	--recursive	GTiff	--recursive	EPSG:43
+gdal	vsi	delete	--filename	subx/	--recursive	-
+gdal	vsi	delete	--filename=v.shp	--filename	v.shp	--filename	v.shp
+gdal	vector	clip	--input-format	--	--update	z	--skip-errors	c	--input	z
+gdal	vector	clip	--bbox-crs	--creation-option	PO
+gdal	vector	clip	--append=EPSG	--overwrite=subx/i
+gdal	vector	clip	z	c.tif	--output-open-option=c.tif
+gdal	vector	clip	subx/	--bbox		--like-sql	none
+gdal	vector	clip	--like-sql	10
+gdal	mdim	EPSG:43
+gdal	mdim	--drivers	EPSG:43	--drivers=
+gdal	mdim	--drivers=EPSG	--drivers	EPSG:43
+gdal	mdim	--drivers	--drivers=	--drivers	EPSG:43
+gdal	mdim	--drivers=EPSG
+gdal	mdim	--drivers=subx/i	--	--drivers=subx/	--drivers	subx/
+gdal	vector	create	--fid	sp	--field=	--overwrite-layer	c.tif
+gdal	vector	create	--input-format=EPSG	--creation-option	--	z	--field	none
+gdal	vector	create	--fid=z	--layer-creation-option	--input-format	c	--input-layer	c.tif
+gdal	vector	create	--update	EPSG:43	--fid
+gdal	vector	create	--output-format	-	--output-format=z
+gdal	vector	create	--geometry-field=subx/	--schema=v.shp	--update=v.shp
+gdal	raster	sieve	--append=EPSG	--mask	--creation-option	--quiet=subx/i
+gdal	raster	sieve	--overwrite=	--append
+gdal	raster	sieve	--size-threshold	v.shp	--input-format	GTiff	--append=z
+gdal	raster	sieve	--input	v.shp	--output	--connect-diagonal-pixels	c	--size-threshold=subx/i
+gdal	raster	sieve	--	--input-format=z	--size-threshold
+gdal	raster	sieve	--overwrite=z	--connect-diagonal-pixels=z
+gdal	dataset	delete	--format	--filename	x.json	--filename	subx/	--filename	sp
+gdal	dataset	delete	--filename	EPSG:43	--filename
+gdal	dataset	delete	--filename=z	--format	--format	10	--filename=subx/i
+gdal	dataset	delete	--format	none	--format=	--format=v.shp	--filename
+gdal	dataset	delete	--format=c.tif	x.json	--filename	v.shp	z
+gdal	dataset	delete	--filename=subx/	--filename=v.shp	--format	v.shp
+gdal	vsi	sozip	optimize	EPSG:43	--output=EPSG	--output=subx/
+gdal	vsi	sozip	optimize	--quiet	EPSG
+gdal	vsi	sozip	optimize	--sozip-min-file-size=subx/	--overwrite	c.tif	--sozip-chunk-size	--overwrite
+gdal	vsi	sozip	optimize	--input	GTiff	--input=z	10
+gdal	vsi	sozip	optimize	c.tif	--quiet	--	--input
+gdal	vsi	sozip	optimize	--output	PO	v.shp
+gdal	vector	sql	--	EPSG:43	--append	10	--append=z
+gdal	vector	sql	x.json	--overwrite	c.tif	--sql=z
+gdal	vector	sql		--overwrite-layer	v.shp
+gdal	vector	sql	--output	subx/i	--layer-creation-option=subx/
+gdal	vector	sql	--input-format=v.shp	--output-format=c
+gdal	vector	sql	--quiet=	--append	--overwrite-layer	EPSG:43
+gdal	raster	create	--crs	c
+gdal	raster	create	--nodata	c.tif	--append	--copy-metadata		--metadata
+gdal	raster	create	--	--bbox=z	--output-data-type=c	--size	GTiff
+gdal	raster	create	--copy-metadata=v.shp	--crs	c.tif	--copy-overviews=c.tif	--append	10
+gdal	raster	create	--quiet	GTiff	x.json	--metadata=z	--input	c.tif
+gdal	raster	create	--copy-overviews=	GTiff	PO
+gdal	raster	fill-nodata	--strategy=subx/i	--mask=	--max-distance=v.shp
+gdal	raster	fill-nodata	--band	--	--open-option	x.json	--output-format	PO
+gdal	raster	fill-nodata	EPSG:43
+gdal	raster	fill-nodata	--mask
+gdal	raster	fill-nodata	--input	sp	--mask	
+gdal	raster	fill-nodata	--quiet=subx/i
+gdal	vector	--drivers	GTiff	--drivers=	--drivers	EPSG:43	--drivers	10
+gdal	vector	--drivers	c.tif	--drivers	none	--drivers	--drivers	subx/i
+gdal	vector	--drivers=subx/	--drivers
+gdal	vector	--drivers	x.json	--drivers	10
+gdal	vector	--drivers=subx/i
+gdal	vector	--drivers	GTiff	--drivers	--drivers=subx/i	--drivers=subx/i
+gdal	vector	edit	sp	--unset-fid=subx/	--output	-	-
+gdal	vector	edit	--overwrite-layer=subx/	--unset-metadata=c
+gdal	vector	edit	--layer-creation-option	v.shp	--unset-metadata=z
+gdal	vector	edit	--unset-metadata=EPSG	--crs
+gdal	vector	edit	GTiff	--unset-metadata=subx/	--input	none	--crs=
+gdal	vector	edit	none	--open-option	none	--input	-
+gdal	vector	set-geom-type	--active-geometry	--open-option=EPSG	--layer-only=c.tif	--skip-errors	z
+gdal	vector	set-geom-type	--skip	c	subx/	--single	10	subx/
+gdal	vector	set-geom-type	--overwrite	GTiff	z	--geometry-type=subx/
+gdal	vector	set-geom-type	--active-geometry	none
+gdal	vector	set-geom-type	--multi=c	--layer-only	x.json	--geometry-type	sp
+gdal	vector	set-geom-type	c	--append	GTiff
+gdal	vector	concat	-	--dst-crs	x.json
+gdal	vector	concat	--output-format
+gdal	vector	concat	--mode=c.tif	--quiet	none	--input-layer=
+gdal	vector	concat	--field-strategy=c	v.shp	--output
+gdal	vector	concat	--open-option=subx/i	--creation-option
+gdal	vector	concat	--skip-errors=c.tif	none	--mode=c.tif
+gdal	raster	contour	10	--output-layer	PO
+gdal	raster	contour	--offset=c	--input-format=EPSG
+gdal	raster	contour	c.tif	--interval=z	--output-open-option	-
+gdal	raster	contour	--open-option=c.tif	--elevation-name=
+gdal	raster	contour	--interval	sp	--elevation-name=c.tif	--input	v.shp
+gdal	raster	contour	--src-nodata	v.shp	--src-nodata=EPSG
+gdal	vector	grid	nearest	--quiet=v.shp
+gdal	vector	grid	nearest	--zmultiply=subx/i	--output-data-type	c.tif
+gdal	vector	grid	nearest	--radius2
+gdal	vector	grid	nearest	--zfield		EPSG	--output-data-type=subx/i	--overwrite	PO
+gdal	vector	grid	nearest	c	x.json
+gdal	vector	grid	nearest	--zmultiply=
+gdal	vector	grid	average-distance	--output-format=subx/i	--size=	--open-option	c.tif	--min-points-per-quadrant=subx/
+gdal	vector	grid	average-distance	--zmultiply	subx/	--angle=EPSG
+gdal	vector	grid	average-distance	v.shp	--max-points-per-quadrant	--extent	subx/i	--crs=v.shp
+gdal	vector	grid	average-distance	--zmultiply=EPSG	--max-points-per-quadrant	none	--max-points-per-quadrant	GTiff	--nodata	sp
+gdal	vector	grid	average-distance	--input-layer=subx/	--zfield=EPSG	--nodata	c	--open-option=subx/i
+gdal	vector	grid	average-distance	GTiff	--crs	none
+gdal	vector	grid	maximum	PO	--bbox	z	--overwrite=subx/i	--nodata
+gdal	vector	grid	maximum	sp
+gdal	vector	grid	maximum	subx/	--input=EPSG	--open-option	x.json
+gdal	vector	grid	maximum	--radius	v.shp	x.json	--max-points-per-quadrant	v.shp
+gdal	vector	grid	maximum	--radius2	c.tif	--creation-option	sp	--input-format=v.shp
+gdal	vector	grid	maximum	--extent=v.shp	--	--input
+gdal	vector	swap-xy	--output-layer	--update=subx/	--active-geometry=v.shp	--output-format=c
+gdal	vector	swap-xy	c.tif	--quiet=c.tif	--input-format=subx/
+gdal	vector	swap-xy	--active-geometry	c	--append	--active-layer=subx/i
+gdal	vector	swap-xy	--input=c	--input=EPSG	--active-layer	subx/	--quiet=subx/i
+gdal	vector	swap-xy	--active-layer=c
+gdal	vector	swap-xy	--update	--active-layer	--layer-creation-option=c.tif
+gdal	raster	set-type	--output-format	c	subx/	v.shp
+gdal	raster	set-type	GTiff	--output=
+gdal	raster	set-type	--output	subx/i
+gdal	raster	set-type		--output-data-type	none	--overwrite	c	subx/
+gdal	raster	set-type	--append	v.shp	--creation-option	--overwrite=c	--output-data-type=z
+gdal	raster	set-type	--open-option	EPSG	--input-format	sp	--overwrite=c.tif
+gdal	vsi	move	--destination=subx/	--quiet	-
+gdal	vsi	move	--source	c	--destination=EPSG	--quiet=subx/	--source	--
+gdal	vsi	move	c.tif	--source	--source=
+gdal	vsi	move	--destination	none	--destination	EPSG:43	--destination=z	--quiet	GTiff
+gdal	vsi	move	--quiet=subx/i	z	--destination	--
+gdal	vsi	move	--destination	GTiff	--destination	--source	-	none
+gdal	raster	tile	--metadata=subx/	PO		EPSG:43
+gdal	raster	tile	--mapml-template=EPSG	--copy-src-metadata	EPSG
+gdal	raster	tile	c.tif
+gdal	raster	tile	--no-alpha	PO	PO
+gdal	raster	tile	--input=c	GTiff	--excluded-values=subx/i	--max-x	GTiff
+gdal	raster	tile	EPSG:43	subx/i	--convention=v.shp
+gdal	vector	sort	--overwrite=v.shp	--skip-errors=subx/
+gdal	vector	sort	--layer-creation-option	sp	--append=subx/	--quiet=v.shp	--input	10
+gdal	vector	sort	--output-open-option=c.tif	--layer-creation-option=v.shp	--output
+gdal	vector	sort	--geometry-field	EPSG	--upsert	--
+gdal	vector	sort	v.shp
+gdal	vector	sort	--output-format=subx/i
+gdal	vsi	sozip	create	--overwrite	--recursive	c	EPSG	z
+gdal	vsi	sozip	create	--output	--enable-sozip
+gdal	vsi	sozip	create	--recursive=	--content-type	GTiff
+gdal	vsi	sozip	create	--sozip-min-file-size	v.shp	--sozip-chunk-size=v.shp	--input	10
+gdal	vsi	sozip	create	--quiet=subx/	--content-type=c.tif	--enable-sozip
+gdal	vsi	sozip	create	--input	v.shp	--overwrite	sp	--recursive
+gdal	convert		--input	z	10
+gdal	convert	--input	none	--output-format	v.shp	--output
+gdal	convert	--output	--output-format=c.tif	c
+gdal	convert	x.json	--quiet	-	--output-format	-	--output-format
+gdal	convert	--output	--output	z	none	--output=v.shp
+gdal	convert	--quiet=
+gdal	raster	calc	--input	z	--input=EPSG	--dialect	v.shp	--dialect=subx/
+gdal	raster	calc	--calc	v.shp	x.json	--calc	EPSG	--input-format=v.shp
+gdal	raster	calc	PO	EPSG	--propagate-nodata	subx/i	--quiet=
+gdal	raster	calc		--input	z	--open-option	z	--append	z
+gdal	raster	calc	none	--no-check-extent	GTiff
+gdal	raster	calc	--output-format	PO
+gdal	vector	simplify-coverage	--tolerance	--output-format=subx/i	z
+gdal	vector	simplify-coverage	--append=subx/	PO	--append	--
+gdal	vector	simplify-coverage	--overwrite=c	--open-option=subx/i
+gdal	vector	simplify-coverage	v.shp	--layer-creation-option	c	--overwrite-layer=z	subx/i
+gdal	vector	simplify-coverage	--output	c
+gdal	vector	simplify-coverage	--preserve-boundary=c.tif	--update	
+gdal	raster	pixel-info	--input=EPSG	--creation-option=subx/i
+gdal	raster	pixel-info	none	--position	x.json
+gdal	raster	pixel-info	--include-field	--creation-option	PO	--layer-creation-option	--resampling	subx/i
+gdal	raster	pixel-info	--layer-creation-option	GTiff	--include-field	--
+gdal	raster	pixel-info	--position	--	--open-option	c	--open-option=	--layer-creation-option	v.shp
+gdal	raster	pixel-info	--promote-pixel-value-to-z	--
+gdal	vector	layer-algebra	--input-prefix		--no-method-field	none	--method-field	subx/	--open-option	EPSG
+gdal	vector	layer-algebra	EPSG:43	--layer-creation-option=subx/i
+gdal	vector	layer-algebra	--append	EPSG
+gdal	vector	layer-algebra	--output-format	z	--append	--
+gdal	vector	layer-algebra	subx/
+gdal	vector	layer-algebra	--input-layer	GTiff
+gdal	raster	blend	--input-format=c.tif
+gdal	raster	blend	--output=EPSG	--open-option	EPSG:43
+gdal	raster	blend	--output-format	subx/i
+gdal	raster	blend	--output=subx/i	--quiet=c
+gdal	raster	blend	sp	GTiff
+gdal	raster	blend	--input=z	x.json	--creation-option	c	--operator
+gdal	vector	select	--update=	10	--overwrite-layer	sp	--exclude	c
+gdal	vector	select	--input=z	--append	sp
+gdal	vector	select	--input	none	--layer-creation-option	c	--output-layer	-
+gdal	vector	select	--input	c	GTiff	--input-format=v.shp	--input
+gdal	vector	select	subx/	subx/
+gdal	vector	select	--layer-creation-option	c	--layer-creation-option	--
+gdal	vector	grid	count	--resolution
+gdal	vector	grid	count	subx/i	--input	sp	--radius1	GTiff	--sql
+gdal	vector	grid	count	--radius1	--crs	sp
+gdal	vector	grid	count	--min-points	EPSG	--size	--input-format
+gdal	vector	grid	count	subx/	
+gdal	vector	grid	count	--extent=EPSG	--output=z	--nodata=subx/i	v.shp
+gdal	vsi	copy	--destination	--source=EPSG	--skip-errors=subx/i
+gdal	vsi	copy	x.json	--quiet=z	--destination	x.json	--quiet	sp
+gdal	vsi	copy	--skip-errors=z	--recursive	-	EPSG
+gdal	vsi	copy	--skip-errors	-	--source	none	--source	v.shp
+gdal	vsi	copy	--skip-errors	x.json	--skip-errors
+gdal	vsi	copy	--recursive	c.tif	--recursive	subx/	--destination=c	GTiff
+gdal	vector	set-field-type	--creation-option=subx/i	subx/	PO	--field-type
+gdal	vector	set-field-type	sp	--output-open-option	c	subx/	--output-open-option	EPSG:43
+gdal	vector	set-field-type	GTiff	sp	x.json	--output-layer	none
+gdal	vector	set-field-type	GTiff
+gdal	vector	set-field-type	--input-layer	v.shp
+gdal	vector	set-field-type	--quiet	PO	--output	subx/	--	--output-format	10
+gdal	raster	resize	--input-format=EPSG
+gdal	raster	resize	--overwrite	--
+gdal	raster	resize	PO	--append=EPSG	--size	EPSG	--output-format	none
+gdal	raster	resize	--size=EPSG	c.tif
+gdal	raster	resize	--resolution
+gdal	raster	resize	z	--append=c.tif	--open-option=c.tif
+gdal	mdim	convert	--quiet=EPSG	--output	--output-format
+gdal	mdim	convert	--scale-axes	x.json	--group=subx/i
+gdal	mdim	convert	subx/i	--strict=
+gdal	mdim	convert	subx/	--scale-axes	EPSG:43	--array-option=z
+gdal	mdim	convert	--strict=subx/i	--input=c
+gdal	mdim	convert	--scale-axes	EPSG	--subset=subx/i
+gdal	raster	proximity	--output-data-type	sp	--input	EPSG:43	x.json	--output	
+gdal	raster	proximity	--nodata=subx/
+gdal	raster	proximity	--max-distance=c.tif
+gdal	raster	proximity	--output=v.shp	--band	v.shp	--	--open-option=
+gdal	raster	proximity	10
+gdal	raster	proximity	--creation-option	
+gdal	raster	polygonize	--output-format	--overwrite	x.json	--append	subx/	--update
+gdal	raster	polygonize	--open-option	--connect-diagonal-pixels	EPSG
+gdal	raster	polygonize	--overwrite-layer	--band=c	--layer-creation-option	c.tif	--append
+gdal	raster	polygonize	--output-format	v.shp	--quiet	subx/
+gdal	raster	polygonize	--creation-option	v.shp	--attribute-name=c.tif	--input	c.tif	sp
+gdal	raster	polygonize	--overwrite-layer=c	--open-option	none	--quiet=v.shp
+gdal	raster	info	-	--checksum	z
+gdal	raster	info	--output-format	c	
+gdal	raster	info	--min-max=subx/i	--crs-format=subx/i	--stats
+gdal	raster	info	--input	subx/i
+gdal	raster	info	--checksum=v.shp
+gdal	raster	info	--checksum	v.shp	--no-md	subx/i	--min-max=subx/	--input	PO
+gdal	dataset	identify	--filename	--detailed	none
+gdal	dataset	identify	--output		--output-layer	EPSG:43
+gdal	dataset	identify	--output	--filename
+gdal	dataset	identify	--overwrite	c
+gdal	dataset	identify	--detailed=z	--force-recursive	--	--output-format=subx/
+gdal	dataset	identify	--filename	c.tif
+gdal	raster	tpi	--input-format=	--input-format=c.tif
+gdal	raster	tpi	--overwrite
+gdal	raster	tpi	--input-format=subx/i	--quiet	GTiff
+gdal	raster	tpi	--no-edges=subx/	--output	--band
+gdal	raster	tpi	--append	--output-format=subx/	--append	subx/i	--output-format
+gdal	raster	tpi	--no-edges	--quiet=c.tif
+gdal	vector	clean-coverage	--upsert	x.json	
+gdal	vector	clean-coverage	--append	--input-layer=c.tif	EPSG
+gdal	vector	clean-coverage	--open-option	--layer-creation-option	EPSG	--active-layer=subx/i	--overwrite-layer=EPSG
+gdal	vector	clean-coverage	-
+gdal	vector	clean-coverage	sp	--merge-strategy	v.shp
+gdal	vector	clean-coverage	--update	--update	EPSG:43
+gdal	pipeline	--input	c.tif	--input	GTiff
+gdal	pipeline	--output-format	--output-format	c.tif	--output-format	z
+gdal	pipeline	--output-format=c	--input
+gdal	pipeline	none	--input	sp	--output=c.tif	--quiet
+gdal	pipeline	--quiet	--input=c.tif
+gdal	pipeline	--quiet	EPSG:43	--quiet=	--input=EPSG	--quiet=subx/
+gdal	vector	explode-collections	--output-layer	PO
+gdal	vector	explode-collections	--append	subx/	--output-format	10	--open-option=c.tif	--
+gdal	vector	explode-collections	--skip-errors=	--append	subx/i	-	--active-geometry
+gdal	vector	explode-collections	--overwrite-layer=EPSG	--	--geometry-type	sp	--input-format	EPSG
+gdal	vector	explode-collections	--layer-creation-option=
+gdal	vector	explode-collections	EPSG	--input-layer=c.tif	EPSG:43	z
+gdal	info	sp	--output-format	GTiff
+gdal	info	--output-format=subx/	--output-format=c.tif	--input=v.shp
+gdal	info	--output-format	EPSG	--input	subx/i
+gdal	info	--output-format	--input=
+gdal	info	--output-format
+gdal	info	--input=subx/i	GTiff	--output-format
+gdal	raster	overview	subx/
+gdal	raster	overview	subx/	none	
+gdal	raster	overview	subx/	EPSG
+gdal	raster	overview
+gdal	raster	overview	c	GTiff
+gdal	raster	overview	c
+gdal	raster	reclassify	--output-format	c	--open-option	--append
+gdal	raster	reclassify	--append=subx/i	--overwrite	--
+gdal	raster	reclassify	--open-option	--input-format	c.tif
+gdal	raster	reclassify	--overwrite	c
+gdal	raster	reclassify	--output-data-type
+gdal	raster	reclassify	--output	PO
+gdal	raster	compare	--skip-all-optional	subx/i	--skip-geotransform
+gdal	raster	compare	none	--quiet	--	--skip-all-optional	c
+gdal	raster	compare	--skip-metadata=EPSG	--quiet	none	--skip-crs=z
+gdal	raster	compare	--skip-crs=EPSG	--input=z	sp
+gdal	raster	compare	--skip-binary	10	--skip-crs	EPSG
+gdal	raster	compare	v.shp	--skip-metadata=z	--skip-all-optional
+gdal	driver	cog	z
+gdal	driver	cog	--	EPSG	c
+gdal	driver	cog	-
+gdal	driver	cog	10	subx/
+gdal	driver	cog	PO
+gdal	driver	cog
+gdal	raster	pipeline	read	v2.shp	!	as-features	--geometry-type	x.json	--co	EPSG:43	sp
+gdal	vector	pipeline	read	nosuch	!	concat	--of	!	info	--dst-crs	c	--input	none	c.tif
+gdal	pipeline	read	r2.tif	!	as-features	--resampling	--geometry-type	EPSG	!	info	--where	v.shp	--dst-crs	none	sp
+gdal	pipeline	read	c.tif	!	simplify	!	read	--where	--resampling	v.shp	none
+gdal	raster	pipeline	read	c.tif	EPSG
+gdal	pipeline	read	nosuch	!	set-geom-type	--geometry-type	!	info	--co	c.tif	--dst-crs	!	set-geom-type	--resampling	--input	x.json	-
+gdal	raster	pipeline	read	v2.shp	subx/
+gdal	pipeline	read	v2.shp	EPSG
+gdal	pipeline	read	c.tif	x.json
+gdal	vector	pipeline	read	v2.shp	!	tile	--dst-crs	!	reproject	--of	EPSG	--where	EPSG	x.json
+gdal	raster	pipeline	read	v2.shp	!	simplify	--co	subx/i	--of	none	!	set-geom-type	EPSG
+gdal	vector	pipeline	read	v2.shp	!	write	--dst-crs	GTiff	--of	c	subx/
+gdal	vector	pipeline	read	r2.tif	!	write	--geometry-type	--geometry-type	subx/i	x.json
+gdal	raster	pipeline	read	nosuch	!	buffer	--dst-crs		-
+gdal	vector	pipeline	read	nosuch	!	write	--co	subx/	--geometry-type	!	as-features	--geometry-type	none
+gdal	pipeline	read	v2.shp	!	read	--dst-crs	--input	--
+gdal	raster	pipeline	read	nosuch	!	filter	--of	none	!	as-features	!	tile	--output-format	--where	x.json
+gdal	vector	pipeline	read	nosuch	!	as-features	--input	EPSG	--input	subx/
+gdal	vector	pipeline	read	nosuch	EPSG
+gdal	raster	pipeline	read	v2.shp	!	filter	--resampling	v.shp	!	buffer	--
+gdal	pipeline	read	r2.tif	!	edit	--co	--dst-crs	subx/i	!	read	!	select	GTiff
+gdal	raster	pipeline	read	c.tif	!	tile	--input	--where	c	GTiff
+gdal	vector	pipeline	read	r2.tif	10
+gdal	raster	pipeline	read	v2.shp	!	info	--
+gdal	pipeline	read	v2.shp	!	tee	--dst-crs	EPSG	!	filter	!	read	--output-format	--of	-
+gdal	pipeline	read	r2.tif	EPSG
+gdal	pipeline	read	nosuch	!	select	!	filter	--geometry-type		--geometry-type	10
+gdal	vector	pipeline	read	nosuch	!	tee	!	tile	--resampling	!	select	--of	x.json	v.shp
+gdal	pipeline	read	r2.tif	!	reproject	--of	GTiff	EPSG:43
+gdal	vector	pipeline	read	r2.tif	c.tif
+gdal	vector	pipeline	read	r2.tif	c.tif
+gdal	raster	pipeline	read	c.tif	!	reproject	--geometry-type	c	--output-format	!	tee	!	write	--co	EPSG:43
+gdal	vector	pipeline	read	v2.shp	!	as-features	!	concat	--co	z	--where	c.tif	!	set-geom-type	--output-format	subx/i	none
+gdal	pipeline	read	r2.tif	!	edit	--where		--of	!	reproject	--where	z	--co	!	reproject	--output-format	v.shp	EPSG:43
+gdal	raster	pipeline	read	r2.tif	subx/
+gdal	pipeline	read	nosuch	!	set-geom-type	--resampling	z	--co	!	read	v.shp
+gdal	vector	pipeline	read	v2.shp	!	tile	--geometry-type	!	reproject	--resampling	subx/i	sp
+gdal	raster	pipeline	read	nosuch	!	simplify	--dst-crs	!	set-geom-type	!	reproject	z
+gdal	pipeline	read	r2.tif	!	info	--where	subx/i	!	set-geom-type	--of	!	as-features	--input	EPSG	--co	10
+gdal	pipeline	read	r2.tif	!	tee	--of	!	tee	--output-format	--resampling	x.json	c.tif
+gdal	raster	pipeline	read	v2.shp	!	tile	--dst-crs	EPSG:43	--of	c	!	concat	--where	!	reproject	--resampling	v.shp	z
+gdal	vector	pipeline	read	v2.shp	!	filter	!	reproject	--where	!	buffer	--
+gdal	raster	pipeline	read	nosuch	--
+gdal	vector	pipeline	read	r2.tif	sp
+gdal	raster	pipeline	read	r2.tif	c
+gdal	vector	pipeline	read	nosuch	!	tee	--where	--resampling	EPSG
+gdal	raster	pipeline	read	nosuch	!	simplify	--resampling	--co	GTiff	!	edit	!	tile	--geometry-type	subx/	c.tif
+gdal	pipeline	read	v2.shp	!	select	--dst-crs	none	--output-format	subx/i	!	edit	--output-format	!	reproject	--of	c.tif
+gdal	raster	pipeline	read	c.tif	!	buffer	-
+gdal	vector	pipeline	read	r2.tif	!	as-features	--where	--input	!	select	--input	GTiff	--resampling	subx/i	!	filter	--output-format	subx/	--geometry-type	c	v.shp
+gdal	raster	pipeline	read	nosuch	!	simplify	--output-format	none	--geometry-type	!	tee	subx/
+gdal	vector	pipeline	read	nosuch	x.json
+gdal	vector	pipeline	read	c.tif	!	tee	--geometry-type	--dst-crs	!	concat	!	read	--input		subx/i
+gdal	raster	pipeline	read	v2.shp	!	tee	--input	!	simplify	--output-format	z
+gdal	raster	pipeline	read	c.tif	EPSG
+gdal	vector	pipeline	read	c.tif	!	concat	--geometry-type	--of	sp
+gdal	raster	pipeline	read	nosuch	
+gdal	vector	pipeline	read	nosuch	!	info	--output-format	x.json
+gdal	vector	pipeline	read	v2.shp	!	write	--input	c
+gdal	pipeline	read	v2.shp	sp
+gdal	pipeline	read	c.tif	!	concat	--input	v.shp	!	read	--where	v.shp
+gdal	pipeline	read	v2.shp	!	info	!	set-geom-type	--geometry-type	none	--resampling	x.json	GTiff
+gdal	vector	pipeline	read	v2.shp	!	concat	-
+gdal	pipeline	read	c.tif	!	reproject	--output-format	!	tee	--resampling	c.tif	!	set-geom-type	--where	--of	subx/	10
+gdal	pipeline	read	v2.shp	GTiff
+gdal	raster	pipeline	read	r2.tif	!	write	--geometry-type	EPSG:43	--resampling	EPSG:43	!	buffer	--of	GTiff	!	edit	--co	subx/
+gdal	vector	pipeline	read	r2.tif	subx/i
+gdal	vector	pipeline	read	v2.shp	!	as-features	!	edit	--dst-crs	--co	!	select	10
+gdal	vector	pipeline	read	nosuch	c
+gdal	pipeline	read	r2.tif	!	set-geom-type	--co	c.tif	EPSG:43
+gdal	raster	pipeline	read	c.tif	!	tee	--dst-crs	subx/i	!	tee	!	concat	c
+gdal	vector	pipeline	read	r2.tif	x.json
+gdal	vector	pipeline	read	r2.tif	!	set-geom-type	--geometry-type	--geometry-type	!	buffer	--dst-crs	
+gdal	raster	pipeline	read	v2.shp	!	select	--dst-crs	--geometry-type	v.shp
+gdal	raster	pipeline	read	nosuch	v.shp
+gdal	pipeline	read	r2.tif	sp
+gdal	vector	pipeline	read	r2.tif	!	edit	--resampling	GTiff	--input	c.tif	!	info	--output-format	GTiff	z
+gdal	vector	pipeline	read	c.tif	none
+gdal	vector	pipeline	read	r2.tif	!	reproject	!	simplify	--where	--resampling	GTiff	EPSG
+gdal	pipeline	read	nosuch	subx/i
+gdal	raster	pipeline	read	c.tif	!	tile	--geometry-type	--input	subx/	!	set-geom-type	--dst-crs	subx/	!	edit	PO
+gdal	raster	pipeline	read	nosuch	!	tee	--resampling	--where	v.shp	--
+gdal	vector	pipeline	read	r2.tif	!	tee	--co	--input	subx/i
+gdal	raster	pipeline	read	r2.tif	
+gdal	vector	pipeline	read	r2.tif	!	set-geom-type	--output-format	--geometry-type	EPSG:43	!	buffer	--input	c.tif	--geometry-type	EPSG:43	!	concat	sp
+gdal	raster	pipeline	read	r2.tif	!	as-features	--input	--input	c	v.shp
+gdal	vector	pipeline	read	c.tif	!	read	!	set-geom-type	--output-format	subx/	EPSG
+gdal	pipeline	read	v2.shp	!	filter	--where	!	read	--resampling	EPSG:43	--geometry-type	EPSG:43
+gdal	vector	pipeline	read	v2.shp	!	tee	--resampling	z	!	concat	--dst-crs	!	edit	--dst-crs	subx/	--where	
+gdal	vector	pipeline	read	v2.shp	!	select	!	reproject	--geometry-type	c	--input	x.json	!	as-features	EPSG
+gdal	raster	pipeline	read	nosuch	--
+gdal	vector	pipeline	read	c.tif	!	edit	--input	--dst-crs		!	select	--input	EPSG:43	--of	!	select	subx/
+gdal	raster	pipeline	read	v2.shp	!	info	--of	--geometry-type	!	edit	--where	!	select	PO
+gdal	vector	pipeline	read	v2.shp	!	info	--geometry-type	GTiff	--resampling	c
+gdal	pipeline	read	c.tif	!	select	!	read	!	concat	--dst-crs	--co	none	z
+gdal	vector	pipeline	read	r2.tif	--
+gdal	vector	pipeline	read	v2.shp	PO
+gdal	vector	pipeline	read	c.tif	!	as-features	!	simplify	--dst-crs	EPSG	--dst-crs	x.json	c.tif
+gdal	raster	pipeline	read	v2.shp	!	buffer	!	as-features	none
+gdal	vector	pipeline	read	c.tif	!	edit	!	simplify	--of	z	--of	c.tif	GTiff
+gdal	raster	pipeline	read	nosuch	v.shp
+gdal	raster	pipeline	read	nosuch	!	as-features	--dst-crs	none	--geometry-type	!	filter	PO
+gdal	vector	pipeline	read	c.tif	!	tile	--where	v.shp	--resampling	sp
+gdal	vector	pipeline	read	v2.shp	EPSG
+gdal	raster	pipeline	read	v2.shp	subx/i
+gdal	vector	pipeline	read	c.tif	!	set-geom-type	--of	GTiff	--of	!	as-features	--
+gdal	vector	pipeline	read	c.tif	c
+gdal	raster	pipeline	read	v2.shp	!	reproject	--of	--dst-crs	!	concat	--of	subx/
+gdal	vector	pipeline	read	c.tif	!	read	!	as-features	--geometry-type	none	--output-format	!	tee	x.json
+gdal	pipeline	read	r2.tif	!	reproject	--dst-crs	subx/i	sp
+gdal	vector	pipeline	read	v2.shp	c
+gdal	pipeline	read	nosuch	!	tile	--output-format	!	edit	--dst-crs	v.shp	subx/
+gdal	raster	pipeline	read	r2.tif	-
+gdal	raster	pipeline	read	nosuch	-
+gdal	raster	pipeline	read	nosuch	!	filter	--where	--resampling	!	buffer	--where	--of	v.shp	!	reproject	--output-format	EPSG
+gdal	raster	pipeline	read	c.tif	!	concat	--of	--geometry-type	z	!	filter	--resampling	c	--where	c.tif	EPSG:43
+gdal	pipeline	read	v2.shp	!	simplify	!	edit	--output-format	--output-format	c.tif	!	as-features	--resampling	z	--co	--
+gdal	vector	pipeline	read	r2.tif	--
+gdal	raster	pipeline	read	nosuch	!	info	--where	EPSG:43	!	write	--output-format	!	select	-
+gdal	raster	pipeline	read	c.tif	-
+gdal	raster	pipeline	read	c.tif	!	buffer	-
+gdal	raster	pipeline	read	nosuch	
+gdal	vector	pipeline	read	v2.shp	!	info	!	tile	--geometry-type	v.shp	!	edit	--where	GTiff
+gdal	raster	pipeline	read	v2.shp	!	filter	!	filter	--resampling	subx/i	--geometry-type	none	!	select	--output-format	--geometry-type	PO
+gdal	raster	pipeline	read	v2.shp	!	set-geom-type	--input		--input	c	-
+gdal	vector	pipeline	read	nosuch	!	write	--of	x.json	!	select	!	edit	--where	c.tif
+gdal	raster	pipeline	read	nosuch	!	tile	--geometry-type	subx/i	!	reproject	--output-format	GTiff	subx/
+gdal	raster	pipeline	read	nosuch	!	tee	--where	--where	!	filter	--geometry-type	c	--input	GTiff
+gdal	raster	pipeline	read	c.tif	c
+gdal	pipeline	read	nosuch	!	tile	--geometry-type	sp
+gdal	raster	pipeline	read	c.tif	!	simplify	--where	c	--of	c.tif	!	tee	--co	subx/i	c.tif
+gdal	pipeline	read	r2.tif	!	concat	!	read	--co	none	!	select	sp
+gdal	raster	pipeline	read	v2.shp	!	simplify	--where	v.shp
+gdal	vector	pipeline	read	v2.shp	z
+gdal	vector	pipeline	read	nosuch	!	as-features	--where	!	concat	--where	x.json	subx/
+gdal	vector	pipeline	read	c.tif	!	concat	--geometry-type	--where	z	!	buffer	--resampling	c	!	write	
+gdal	vector	pipeline	read	v2.shp	!	write	--of	!	buffer	--geometry-type	subx/i	none
+gdal	vector	pipeline	read	v2.shp	x.json
+gdal	pipeline	read	c.tif	!	filter	!	select	--dst-crs	--output-format	subx/i	!	tee	-
+gdal	vector	pipeline	read	nosuch	!	tee	--geometry-type	z	--input	z	!	tee	--where	none	--
+gdal	pipeline	read	nosuch	v.shp
+gdal	pipeline	read	r2.tif	!	reproject	--geometry-type	EPSG	
+gdal	pipeline	read	r2.tif	!	read	--output-format	v.shp	--
+gdal	raster	pipeline	read	c.tif	GTiff
+gdal	pipeline	read	v2.shp	EPSG:43
+gdal	raster	pipeline	read	r2.tif	!	select	!	as-features	--dst-crs	!	reproject	--output-format	EPSG	--output-format	z
+gdal	pipeline	read	c.tif	-
+gdal	vector	pipeline	read	v2.shp	!	filter	--geometry-type	--input	!	read	--co	GTiff	--geometry-type		!	as-features	--output-format	--output-format	GTiff
+gdal	pipeline	read	v2.shp	!	info	!	filter	
+gdal	pipeline	read	c.tif	!	tile	EPSG
+gdal	pipeline	read	c.tif	GTiff
+gdal	vector	pipeline	read	r2.tif	x.json
+gdal	vector	pipeline	read	v2.shp	v.shp
+gdal	raster	pipeline	read	v2.shp	!	concat	--resampling	--where	!	read	--dst-crs	c	--geometry-type	--
+gdal	vector	pipeline	read	c.tif	!	concat	--where	c	--resampling	EPSG	!	write	--input	c	--where	v.shp	x.json
+gdal	raster	pipeline	read	r2.tif	!	simplify	!	read	--resampling	--output-format	z	!	tee	--dst-crs	GTiff	--where	v.shp
+gdal	vector	pipeline	read	nosuch	!	filter	--resampling	EPSG:43	--co	c	!	select	subx/i
+gdal	pipeline	read	c.tif	!	reproject	sp
+gdal	vector	pipeline	read	c.tif	!	read	--output-format	!	reproject	subx/i
+gdal	vector	pipeline	read	c.tif	10
+gdal	--config	CPL_DEBUG=
+gdal	--config	CPL_DEBUG=ON	raster
+gdal	--config	CPL_DEBUG=ON	raster	info	
+gdal	--config
+gdal	--config	CPL_DEBUG
+gdal	--config	GDAL_CACHEMAX=
+gdal	--config	GDAL_CACHEMAX=ON	raster
+gdal	--config	GDAL_CACHEMAX=ON	raster	info	
+gdal	--config
+gdal	--config	GDAL_CACHEMAX

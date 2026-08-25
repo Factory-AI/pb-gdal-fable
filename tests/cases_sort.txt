@@ -1,0 +1,42 @@
+# vector sort: hilbert ordering + choreography
+#setup: python3 /workspace/tests/mk_sort_fixtures.py .
+vector sort pts.geojson out.geojson
+vector sort pts.geojson out.geojson -q
+vector sort --method hilbert pts.geojson out.geojson -q
+vector sort pts.geojson out.shp -q
+vector sort pts.geojson out.geojsonl -q
+vector sort pts.geojson out.csv -q
+vector sort mixed.geojson out.geojson -q
+vector sort mixed.geojson out.shp -q
+vector sort ties.geojson out.geojson -q
+vector sort flat.geojson out.geojson -q
+vector sort grid.geojson out.geojson -q
+vector sort grid.geojson out.geojson
+vector sort neg.geojson out.geojson -q
+vector sort dense.geojson out.geojson -q
+vector sort bignull.geojson out.geojson -q
+vector sort half.geojson out.geojson -q
+vector sort one.geojson out.geojson -q
+vector sort empty.geojson out.geojson -q
+vector sort nulls.geojson out.geojson -q
+vector sort --use-tempfile pts.geojson out.geojson -q
+vector sort -l pts pts.geojson out.geojson -q
+vector sort -l nope pts.geojson out.geojson -q
+vector sort --geometry-field foo pts.geojson out.geojson -q
+vector sort --geometry-field "" pts.geojson out.geojson -q
+vector sort --method strtree pts.geojson out.geojson -q
+vector sort --method foo pts.geojson out.geojson
+vector sort missing.geojson out.geojson
+vector sort pts.geojson out.gdalg.json -q
+vector sort --method strtree pts.geojson out.gdalg.json -q
+vector sort pts.geojson /vsistdout/
+vector sort pts.geojson /vsistdout/ -q
+#setup: python3 /workspace/tests/mk_sort_fixtures.py . && /home/agent/oracle/executable vector sort grid.geojson pre.geojson -q
+vector sort pts.geojson pre.geojson
+vector sort pts.geojson pre.geojson --overwrite -q
+vector sort pts.geojson pre.geojson --update -q
+vector sort pts.geojson pre.geojson --append -q
+vector sort -l nope pts.geojson pre.geojson -q
+vector sort --geometry-field foo pts.geojson pre.geojson
+vector sort --output-layer sorted pts.geojson out.geojson -q
+vector sort pts.geojson out.shp --lco SPATIAL_INDEX=YES -q

@@ -1,0 +1,18 @@
+Usage: slope [OPTIONS]
+
+Generate a slope map
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  -b, --band <BAND>              Input band (1-based index) (default: 1)
+  --unit <UNIT>                  Unit in which to express slopes. UNIT=degree|percent (default: degree)
+  --xscale <XSCALE>              Ratio of vertical units to horizontal X axis units
+  --yscale <YSCALE>              Ratio of vertical units to horizontal Y axis units
+  --gradient-alg <GRADIENT-ALG>  Algorithm used to compute terrain gradient. GRADIENT-ALG=Horn|ZevenbergenThorne (default: Horn)
+  --no-edges                     Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_slope.html

@@ -1,0 +1,631 @@
+Usage: gdal vector pipeline [OPTIONS] <PIPELINE>
+
+Process a vector dataset applying several steps.
+
+Positional arguments:
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+  -q, --quiet             Quiet mode (no progress bar or warning message)
+
+Options:
+  --skip-errors           Skip errors when writing features
+
+<PIPELINE> is of the form: read|concat [READ-OPTIONS] ( ! <STEP-NAME> [STEP-OPTIONS] )* ! write|info [WRITE-OPTIONS]
+
+Example: 'gdal vector pipeline --progress ! read in.gpkg ! \
+               reproject --dst-crs=EPSG:32632 ! write out.gpkg --overwrite'
+
+Potential steps are:
+
+* read [OPTIONS] <INPUT>
+------------------------
+
+Read a vector dataset.
+
+Positional arguments:
+  -i, --input <INPUT>                                        Input vector datasets [required]
+
+Options:
+  -l, --layer, --input-layer <INPUT-LAYER>                   Input layer name(s) [may be repeated]
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                        Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                          Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_pipeline.html
+
+* concat [OPTIONS] <INPUTS>...
+------------------------------
+
+Concatenate vector datasets.
+
+Positional arguments:
+  -i, --input <INPUTS>                                       Input vector datasets [1.. values] [required]
+
+Options:
+  -l, --layer, --input-layer <INPUT-LAYER>                   Input layer name(s) [may be repeated]
+  --mode <MODE>                                              Determine the strategy to create output layers from source layers . MODE=merge-per-layer-name|stack|single (default: merge-per-layer-name)
+  --output-layer <OUTPUT-LAYER>                              Name of the output vector layer (single mode), or template to name the output vector layers (stack mode)
+  --source-layer-field-name <SOURCE-LAYER-FIELD-NAME>        Name of the new field to add to contain identification of the source layer, with value determined from 'source-layer-field-content'
+  --source-layer-field-content <SOURCE-LAYER-FIELD-CONTENT>  A string, possibly using {AUTO_NAME}, {DS_NAME}, {DS_BASENAME}, {DS_INDEX}, {LAYER_NAME}, {LAYER_INDEX}
+  --field-strategy <FIELD-STRATEGY>                          How to determine target fields from source fields. FIELD-STRATEGY=union|intersection (default: union)
+  -s, --src-crs <SRC-CRS>                                    Source CRS
+  -d, --dst-crs <DST-CRS>                                    Destination CRS
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                        Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                          Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_concat.html
+
+* buffer [OPTIONS] <DISTANCE>
+-----------------------------
+
+Compute a buffer around geometries of a vector dataset.
+
+Positional arguments:
+  --distance <DISTANCE>                                      Distance to which to extend the geometry. [required]
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+  --endcap-style <ENDCAP-STYLE>                              Endcap style.. ENDCAP-STYLE=round|flat|square (default: round)
+  --join-style <JOIN-STYLE>                                  Join style.. JOIN-STYLE=round|mitre|bevel (default: round)
+  --mitre-limit <MITRE-LIMIT>                                Mitre ratio limit (only affects mitered join style). (default: 5)
+  --quadrant-segments <QUADRANT-SEGMENTS>                    Number of line segments used to approximate a quarter circle. (default: 8)
+  --side <SIDE>                                              Sets whether the computed buffer should be single-sided or not.. SIDE=both|left|right (default: both)
+
+For more details, consult https://gdal.org/programs/gdal_vector_buffer.html
+
+* check-coverage [OPTIONS]
+--------------------------
+
+Check a polygon coverage for validity
+
+Options:
+  --include-valid                                            Include valid inputs in output, with empty geometry
+  --geometry-field <GEOMETRY-FIELD>                          Name of geometry field to check
+  --maximum-gap-width <MAXIMUM-GAP-WIDTH>                    Maximum width of a gap to be flagged
+
+For more details, consult https://gdal.org/programs/gdal_vector_check_coverage.html
+
+* check-geometry [OPTIONS]
+--------------------------
+
+Check a dataset for invalid geometries
+
+Options:
+  --include-field <INCLUDE-FIELD>                            Fields from input layer to include in output (special values: ALL and NONE) (default: NONE) [may be repeated]
+  --include-valid                                            Include valid inputs in output, with empty geometry
+  --geometry-field <GEOMETRY-FIELD>                          Name of geometry field to check
+
+For more details, consult https://gdal.org/programs/gdal_vector_check_geometry.html
+
+* clean-coverage [OPTIONS]
+--------------------------
+
+Alter polygon boundaries to make shared edges identical, removing gaps and overlaps
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --snapping-distance <SNAPPING-DISTANCE>                    Distance tolerance for snapping nodes
+  --merge-strategy <MERGE-STRATEGY>                          Algorithm to assign overlaps to neighboring polygons. MERGE-STRATEGY=longest-border|max-area|min-area|min-index
+  --maximum-gap-width <MAXIMUM-GAP-WIDTH>                    Maximum width of a gap to be closed
+
+For more details, consult https://gdal.org/programs/gdal_vector_clean_coverage.html
+
+* clip [OPTIONS]
+----------------
+
+Clip a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --bbox <BBOX>                                              Clipping bounding box as xmin,ymin,xmax,ymax
+                                                             Mutually exclusive with --geometry, --like
+  --bbox-crs <BBOX-CRS>                                      CRS of clipping bounding box
+  --geometry <GEOMETRY>                                      Clipping geometry (WKT or GeoJSON)
+                                                             Mutually exclusive with --bbox, --like
+  --geometry-crs <GEOMETRY-CRS>                              CRS of clipping geometry
+  --like <DATASET>                                           Dataset to use as a template for bounds
+                                                             Mutually exclusive with --bbox, --geometry
+  --like-sql <SELECT-STATEMENT>                              SELECT statement to run on the 'like' dataset
+                                                             Mutually exclusive with --like-where
+  --like-layer <LAYER-NAME>                                  Name of the layer of the 'like' dataset
+  --like-where <WHERE-EXPRESSION>                            WHERE SQL clause to run on the 'like' dataset
+                                                             Mutually exclusive with --like-sql
+
+For more details, consult https://gdal.org/programs/gdal_vector_clip.html
+
+* combine [OPTIONS]
+-------------------
+
+Combine features into collections
+
+Options:
+  --group-by <GROUP-BY>                                      Names of field(s) by which inputs should be grouped [may be repeated]
+  --keep-nested                                              Avoid combining the components of multipart geometries
+  --add-extra-fields <ADD-EXTRA-FIELDS>                      Whether to add extra fields, depending on if they have identical values within each group. ADD-EXTRA-FIELDS=no|sometimes-identical|always-identical (default: no)
+
+For more details, consult https://gdal.org/programs/gdal_vector_combine.html
+
+* concave-hull [OPTIONS]
+------------------------
+
+Compute the concave hull of geometries of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+  --ratio <RATIO>                                            Ratio controlling the concavity [required]
+  --allow-holes                                              Allow holes in the output polygon
+  --tight                                                    Whether the hull must follow the outer boundaries of the input polygons
+
+For more details, consult https://gdal.org/programs/gdal_vector_concave_hull.html
+
+* convex-hull [OPTIONS]
+-----------------------
+
+Compute the convex hull of geometries of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_convex_hull.html
+
+* create [OPTIONS] <OUTPUT>
+---------------------------
+
+Create a vector dataset.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                      Output vector dataset [required]
+
+Options:
+  -i, --like, --input <TEMPLATE-DATASET>                     Input vector datasets
+                                                             Mutually exclusive with --schema, --field
+  -l, --layer, --input-layer <INPUT-LAYER>                   Input layer name(s) [may be repeated]
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>        Output format ("GDALG" allowed)
+  --co, --creation-option <KEY>=<VALUE>                      Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>               Layer creation option [may be repeated]
+  --overwrite                                                Whether overwriting existing output dataset is allowed
+  --update                                                   Whether to open existing dataset in update mode
+  --overwrite-layer                                          Whether overwriting existing output layer is allowed
+  --output-layer <OUTPUT-LAYER>                              Output layer name
+  --geometry-type <GEOMETRY-TYPE>                            Layer geometry type
+  --geometry-field <GEOMETRY-FIELD>                          Name of the geometry field to create (if supported by the output format) (default: geom)
+  --crs <CRS>                                                Set CRS
+  --fid <FID>                                                FID column name
+  --schema <SCHEMA_JSON>                                     Read OGR_SCHEMA and populate field definitions from it
+                                                             Mutually exclusive with --input, --field
+  --field <NAME>:<TYPE>[(,<WIDTH>[,<PRECISION>])]>           Add a field definition to the output layer [may be repeated]
+                                                             Mutually exclusive with --input, --schema
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                        Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                          Open options [may be repeated]
+  --output-oo, --output-open-option <KEY>=<VALUE>            Output open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_create.html
+
+* dissolve [OPTIONS]
+--------------------
+
+Dissolves multipart features
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_dissolve.html
+
+* edit [OPTIONS]
+----------------
+
+Edit metadata of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --geometry-type <GEOMETRY-TYPE>                            Layer geometry type
+  --crs <CRS>                                                Override CRS (without reprojection)
+  --metadata <KEY>=<VALUE>                                   Add/update dataset metadata item [may be repeated]
+  --unset-metadata <KEY>                                     Remove dataset metadata item [may be repeated]
+  --layer-metadata <KEY>=<VALUE>                             Add/update layer metadata item [may be repeated]
+  --unset-layer-metadata <KEY>                               Remove layer metadata item [may be repeated]
+  --unset-fid                                                Unset the identifier of each feature and the FID column name
+
+For more details, consult https://gdal.org/programs/gdal_vector_edit.html
+
+* explode-collections [OPTIONS]
+-------------------------------
+
+Explode geometries of type collection of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+  --geometry-type <GEOMETRY-TYPE>                            Geometry type
+  --skip-on-type-mismatch                                    Skip feature when change of feature geometry type failed
+
+For more details, consult https://gdal.org/programs/gdal_vector_explode_collections.html
+
+* external [OPTIONS] <COMMAND>
+------------------------------
+
+Execute an external program as a step of a pipeline
+
+Positional arguments:
+  --command <COMMAND>                                        External command, optionally with <INPUT> and/or <OUTPUT> or <INPUT-OUTPUT> placeholders [required]
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>        Output format
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                        Input formats
+
+For more details, consult https://gdal.org/programs/gdal_external.html
+
+* filter [OPTIONS]
+------------------
+
+Filter a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --bbox <BBOX>                                              Bounding box as xmin,ymin,xmax,ymax
+  --where <WHERE>|@<filename>                                Attribute query in a restricted form of the queries used in the SQL WHERE statement
+  --update-extent                                            Update layer extent to take into account the filter
+
+For more details, consult https://gdal.org/programs/gdal_vector_filter.html
+
+* limit [OPTIONS] <LIMIT>
+-------------------------
+
+Truncate a vector dataset to no more than a specified number of features.
+
+Positional arguments:
+  --limit <LIMIT>                                            Limit the number of features to read per layer [required]
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_pipeline.html
+
+* make-point [OPTIONS]
+----------------------
+
+Create point geometries from attribute fields
+
+Options:
+  --x <X>                                                    Field from which X coordinate should be read [required]
+  --y <Y>                                                    Field from which Y coordinate should be read [required]
+  --z <Z>                                                    Optional field from which Z coordinate should be read
+  --m <M>                                                    Optional field from which M coordinate should be read
+  --dst-crs <DST-CRS>                                        Destination CRS
+
+For more details, consult https://gdal.org/programs/gdal_vector_make_point.html
+
+* make-valid [OPTIONS]
+----------------------
+
+Fix validity of geometries of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+  --method <METHOD>                                          Algorithm to use when repairing invalid geometries.. METHOD=linework|structure (default: linework)
+  --keep-lower-dim                                           Keep components of lower dimension after MakeValid()
+
+For more details, consult https://gdal.org/programs/gdal_vector_make_valid.html
+
+* materialize [OPTIONS]
+-----------------------
+
+Materialize a piped dataset on disk to increase the efficiency of the following steps.
+
+Options:
+  -o, --output <OUTPUT>                                      Materialized dataset name (created by algorithm)
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>        Output format
+  --co, --creation-option <KEY>=<VALUE>                      Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>               Layer creation option [may be repeated]
+  --overwrite                                                Whether overwriting existing output dataset is allowed
+
+For more details, consult https://gdal.org/programs/gdal_vector_materialize.html
+
+* rename-layer [OPTIONS]
+------------------------
+
+Rename layer(s) of a vector dataset.
+
+Options:
+  -l, --input-layer <INPUT-LAYER>                            Input layer name
+  --output-layer <OUTPUT-LAYER>                              Output layer name
+  --ascii                                                    Force names to ASCII character
+  --lower-case                                               Force names to lower case (only on ASCII characters)
+  --filename-compatible                                      Force names to be usable as filenames
+  --reserved-characters <RESERVED-CHARACTERS>                Reserved character(s) to be removed
+  --replacement-character <REPLACEMENT-CHARACTER>            Replacement character when ASCII conversion not possible
+  --max-length <MAX-LENGTH>                                  Maximum length of layer names
+
+For more details, consult https://gdal.org/programs/gdal_vector_rename_layer.html
+
+* reproject [OPTIONS]
+---------------------
+
+Reproject a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  -s, --src-crs <SRC-CRS>                                    Source CRS
+  -d, --dst-crs <DST-CRS>                                    Destination CRS [required]
+
+For more details, consult https://gdal.org/programs/gdal_vector_pipeline.html
+
+* segmentize [OPTIONS] <MAX-LENGTH>
+-----------------------------------
+
+Segmentize geometries of a vector dataset.
+
+Positional arguments:
+  --max-length <MAX-LENGTH>                                  Maximum length of a segment [required]
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_segmentize.html
+
+* select [OPTIONS] <FIELDS>
+---------------------------
+
+Select a subset of fields from a vector dataset.
+
+Positional arguments:
+  --fields <FIELDS>                                          Fields to select (or exclude if --exclude) [may be repeated] [required]
+
+Options:
+  --output-layer <OUTPUT-LAYER>                              Output layer name
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --exclude                                                  Exclude specified fields
+                                                             Mutually exclusive with --ignore-missing-fields
+  --ignore-missing-fields                                    Ignore missing fields
+                                                             Mutually exclusive with --exclude
+
+For more details, consult https://gdal.org/programs/gdal_vector_select.html
+
+* set-field-type [OPTIONS]
+--------------------------
+
+Modify the type of a field of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --field-name <FIELD-NAME>                                  Field name [required]
+                                                             Mutually exclusive with --src-field-type
+  --src-field-type <SRC-FIELD-TYPE>                          Source field type or subtype [required]
+                                                             Mutually exclusive with --field-name
+  --dst-field-type, --field-type <FIELD-TYPE>                Target field type or subtype [required]
+
+For more details, consult https://gdal.org/programs/gdal_vector_set_field_type.html
+
+* set-geom-type [OPTIONS]
+-------------------------
+
+Modify the geometry type of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+  --layer-only                                               Only modify the layer geometry type
+                                                             Mutually exclusive with --feature-only
+  --feature-only                                             Only modify the geometry type of features
+                                                             Mutually exclusive with --layer-only
+  --geometry-type <GEOMETRY-TYPE>                            Geometry type
+  --multi                                                    Force geometries to MULTI geometry types
+                                                             Mutually exclusive with --single
+  --single                                                   Force geometries to non-MULTI geometry types
+                                                             Mutually exclusive with --multi
+  --linear                                                   Convert curve geometries to linear types
+                                                             Mutually exclusive with --curve
+  --curve                                                    Convert linear geometries to curve types
+                                                             Mutually exclusive with --linear
+  --dim <DIM>                                                Force geometries to the specified dimension. DIM=XY|XYZ|XYM|XYZM
+  --skip                                                     Skip feature when change of feature geometry type failed
+
+For more details, consult https://gdal.org/programs/gdal_vector_set_geom_type.html
+
+* simplify [OPTIONS] <TOLERANCE>
+--------------------------------
+
+Simplify geometries of a vector dataset.
+
+Positional arguments:
+  --tolerance <TOLERANCE>                                    Distance tolerance for simplification. [required]
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_simplify.html
+
+* simplify-coverage [OPTIONS] <TOLERANCE>
+-----------------------------------------
+
+Simplify shared boundaries of a polygonal vector dataset.
+
+Positional arguments:
+  --tolerance <TOLERANCE>                                    Distance tolerance for simplification. [required]
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --preserve-boundary                                        Whether the exterior boundary should be preserved.
+
+For more details, consult https://gdal.org/programs/gdal_vector_simplify_coverage.html
+
+* sort [OPTIONS]
+----------------
+
+Spatially order the features in a layer
+
+Options:
+  --geometry-field <GEOMETRY-FIELD>                          Name of geometry field to use in sort
+  --method <METHOD>                                          Geometry sorting algorithm. METHOD=hilbert|strtree (default: hilbert)
+  --use-tempfile                                             Write features to a temporary file to avoid reading the entire input dataset into memory
+
+For more details, consult https://gdal.org/programs/gdal_vector_sort.html
+
+* sql [OPTIONS] <statement>|@<filename>
+---------------------------------------
+
+Apply SQL statement(s) to a dataset.
+
+Positional arguments:
+  --sql <statement>|@<filename>                              SQL statement(s) [may be repeated] [required]
+
+Options:
+  -l, --output-layer <OUTPUT-LAYER>                          Output layer name(s) [may be repeated]
+  --dialect <DIALECT>                                        SQL dialect (e.g. OGRSQL, SQLITE)
+
+For more details, consult https://gdal.org/programs/gdal_vector_sql.html
+
+* swap-xy [OPTIONS]
+-------------------
+
+Swap X and Y coordinates of geometries of a vector dataset.
+
+Options:
+  --active-layer <ACTIVE-LAYER>                              Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>                        Geometry field name to which to restrict the processing (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_swap_xy.html
+
+* tee [OPTIONS] [<PIPELINE>...]
+-------------------------------
+
+Pipes the input into the output stream and side nested pipelines.
+
+Positional arguments:
+  --tee-pipeline <PIPELINE>                                  Nested pipeline [1.. values]
+
+For more details, consult https://gdal.org/programs/gdal_pipeline.html
+
+* update [OPTIONS] <OUTPUT>
+---------------------------
+
+Update an existing vector dataset with an input vector dataset.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                      Output vector dataset [required]
+
+Options:
+  --input-layer <INPUT-LAYER>                                Input layer name
+  --output-layer <OUTPUT-LAYER>                              Output layer name
+  --mode <MODE>                                              Set update mode. MODE=merge|update-only|append-only (default: merge)
+  --key <KEY>                                                Field(s) used as a key to identify features [may be repeated]
+
+Advanced Options:
+  --output-oo, --output-open-option <KEY>=<VALUE>            Output open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_update.html
+
+* export-schema [OPTIONS]
+-------------------------
+
+Export the OGR_SCHEMA from a vector dataset.
+
+Positional arguments:
+
+Options:
+  -l, --layer, --input-layer <INPUT-LAYER>                   Input layer name [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_vector_export_schema.html
+
+* info [OPTIONS]
+----------------
+
+Return information on a vector dataset.
+
+Positional arguments:
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>        Output format. OUTPUT-FORMAT=json|text
+  -l, --layer, --input-layer <INPUT-LAYER>                   Input layer name [may be repeated]
+                                                             Mutually exclusive with --sql, --fid
+  --features                                                 List all features (beware of RAM consumption on large layers)
+                                                             Mutually exclusive with --summary
+  --summary                                                  List the layer names and the geometry type
+                                                             Mutually exclusive with --features
+  --limit <FEATURE-COUNT>                                    Limit the number of features per layer (implies --features)
+  --sql <statement>|@<filename>                              Execute the indicated SQL statement and return the result
+                                                             Mutually exclusive with --input-layer, --fid
+  --where <WHERE>|@<filename>                                Attribute query in a restricted form of the queries used in the SQL WHERE statement
+  --fid <FID>                                                Feature identifier
+                                                             Mutually exclusive with --input-layer, --sql
+  --dialect <DIALECT>                                        SQL dialect
+
+Esoteric Options:
+  --crs-format <CRS-FORMAT>                                  Which format to use to report CRS. CRS-FORMAT=AUTO|WKT2|PROJJSON (default: AUTO)
+
+For more details, consult https://gdal.org/programs/gdal_vector_info.html
+
+* partition [OPTIONS] <OUTPUT>
+------------------------------
+
+Partition a vector dataset into multiple files.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                      Output directory [required]
+
+Options:
+  --overwrite                                                Whether overwriting existing output dataset is allowed
+                                                             Mutually exclusive with --append
+  --append                                                   Whether appending to existing layer is allowed
+                                                             Mutually exclusive with --overwrite
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>        Output format
+  --co, --creation-option <KEY>=<VALUE>                      Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>               Layer creation option [may be repeated]
+  --field <FIELD>                                            Attribute or geometry field(s) on which to partition [may be repeated]
+  --scheme <SCHEME>                                          Partitioning scheme. SCHEME=hive|flat (default: hive)
+  --pattern <PATTERN>                                        Filename pattern ('part_%010d' for scheme=hive, '{LAYER_NAME}_{FIELD_VALUE}_%010d' for scheme=flat)
+  --feature-limit <FEATURE-LIMIT>                            Maximum number of features per file
+  --max-file-size <MAX-FILE-SIZE>                            Maximum file size (MB or GB suffix can be used)
+  --omit-partitioned-field                                   Whether to omit partitioned fields from target layer definition
+  --skip-errors                                              Skip errors when writing features
+
+For more details, consult https://gdal.org/programs/gdal_vector_partition.html
+
+* write [OPTIONS] <OUTPUT>
+--------------------------
+
+Write a vector dataset.
+
+Positional arguments:
+  -o, --output <OUTPUT>                                      Output vector dataset [required]
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>        Output format ("GDALG" allowed)
+  --co, --creation-option <KEY>=<VALUE>                      Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>               Layer creation option [may be repeated]
+  --overwrite                                                Whether overwriting existing output dataset is allowed
+  --update                                                   Whether to open existing dataset in update mode
+  --overwrite-layer                                          Whether overwriting existing output layer is allowed
+  --append                                                   Whether appending to existing layer is allowed
+                                                             Mutually exclusive with --upsert
+  -l, --output-layer <OUTPUT-LAYER>                          Output layer name
+  --skip-errors                                              Skip errors when writing features
+  --no-create-empty-layers                                   Avoid creating layers to which no features will be written
+
+Advanced Options:
+  --output-oo, --output-open-option <KEY>=<VALUE>            Output open options [may be repeated]
+  --upsert                                                   Upsert features (implies 'append')
+                                                             Mutually exclusive with --append
+
+For more details, consult https://gdal.org/programs/gdal_vector_pipeline.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

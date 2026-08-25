@@ -1,0 +1,276 @@
+{
+  "name":"index",
+  "full_path":[
+    "gdal",
+    "raster",
+    "index"
+  ],
+  "description":"Create a vector index of raster datasets.",
+  "short_url":"\/programs\/gdal_raster_index.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_index.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name"
+      ]
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-update"
+    },
+    {
+      "name":"update",
+      "type":"boolean",
+      "description":"Whether to open existing dataset in update mode",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-update"
+    },
+    {
+      "name":"overwrite-layer",
+      "type":"boolean",
+      "description":"Whether overwriting existing output layer is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Whether appending to existing layer is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"output-layer",
+      "type":"string",
+      "description":"Output layer name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"recursive",
+      "type":"boolean",
+      "description":"Whether input directories should be explored recursively.",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"filename-filter",
+      "type":"string_list",
+      "description":"Pattern that the filenames in input directories should follow ('*' and '?' wildcard)",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"min-pixel-size",
+      "type":"real",
+      "description":"Minimum pixel size in term of geospatial extent per pixel (resolution) that a raster should have to be selected.",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-pixel-size",
+      "type":"real",
+      "description":"Maximum pixel size in term of geospatial extent per pixel (resolution) that a raster should have to be selected.",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"location-name",
+      "type":"string",
+      "description":"Name of the field with the raster path",
+      "default":"location",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"absolute-path",
+      "type":"boolean",
+      "description":"Whether the path to the input datasets should be stored as an absolute path",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"dst-crs",
+      "type":"string",
+      "description":"Destination CRS",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"metadata",
+      "type":"string_list",
+      "description":"Add dataset metadata item",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"skip-errors",
+      "type":"boolean",
+      "description":"Skip errors related to input datasets",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"profile",
+      "type":"string",
+      "description":"Profile of output dataset",
+      "choices":[
+        "none",
+        "STAC-GeoParquet"
+      ],
+      "default":"none",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"base-url",
+      "type":"string",
+      "description":"Base URL for STAC-GeoParquet href",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"id-method",
+      "type":"string",
+      "description":"How to derive STAC-GeoParquet 'id'",
+      "choices":[
+        "filename",
+        "md5",
+        "metadata-item"
+      ],
+      "default":"filename",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"id-metadata-item",
+      "type":"string",
+      "description":"Name of metadata item used to set STAC-GeoParquet 'id'",
+      "default":"id",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"source-crs-field-name",
+      "type":"string",
+      "description":"Name of the field to store the CRS of each dataset",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"source-crs-format",
+      "type":"string",
+      "description":"Format in which the CRS of each dataset must be written",
+      "choices":[
+        "auto",
+        "WKT",
+        "EPSG",
+        "PROJ"
+      ],
+      "default":"auto",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output vector dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

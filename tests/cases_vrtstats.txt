@@ -1,0 +1,52 @@
+# VRT stats/histogram delegation, mosaic merge, and broken-source choreography
+#setup: O=/home/agent/oracle/executable && $O raster create -q --size 3,2 --burn 7 in.tif && $O raster create -q --size 2,2 --burn 9 s2.tif && $O raster create -q --size 4,3 --datatype UInt16 --burn 5 --nodata 5 in2.tif && printf '<VRTDataset rasterXSize="3" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > v1.vrt && printf '<VRTDataset rasterXSize="3" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <NoDataValue>5</NoDataValue>\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > vn.vrt && printf '<VRTDataset rasterXSize="5" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <SrcRect xOff="0" yOff="0" xSize="3" ySize="2" />\n      <DstRect xOff="0" yOff="0" xSize="3" ySize="2" />\n    </SimpleSource>\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">s2.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <SrcRect xOff="0" yOff="0" xSize="2" ySize="2" />\n      <DstRect xOff="3" yOff="0" xSize="2" ySize="2" />\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > mos.vrt && printf '<VRTDataset rasterXSize="5" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <NoDataValue>7</NoDataValue>\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <SrcRect xOff="0" yOff="0" xSize="3" ySize="2" />\n      <DstRect xOff="0" yOff="0" xSize="3" ySize="2" />\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > zv.vrt && printf '<VRTDataset rasterXSize="1" rasterYSize="1">\n  <VRTRasterBand dataType="Byte" band="1">\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">s2.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <SrcRect xOff="1" yOff="0" xSize="1" ySize="1" />\n      <DstRect xOff="0" yOff="0" xSize="1" ySize="1" />\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > sub.vrt && printf '<VRTDataset rasterXSize="6" rasterYSize="4">\n  <VRTRasterBand dataType="Byte" band="1">\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <SrcRect xOff="0" yOff="0" xSize="3" ySize="2" />\n      <DstRect xOff="0" yOff="0" xSize="6" ySize="4" />\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > rs.vrt && printf '<VRTDataset rasterXSize="3" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <ComplexSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n    </ComplexSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > cx.vrt && printf '<VRTDataset rasterXSize="3" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <ComplexSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <ScaleRatio>2</ScaleRatio>\n    </ComplexSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > cxs.vrt && printf '<VRTDataset rasterXSize="4" rasterYSize="3">\n  <VRTRasterBand dataType="UInt16" band="1">\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">in2.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > f16.vrt && printf '<VRTDataset rasterXSize="3" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">nosuch.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > m2.vrt && sed 's/s2\.tif/miss.tif/' mos.vrt > mos2.vrt && sed 's/in\.tif/miss.tif/' mos.vrt > mos3.vrt
+raster info v1.vrt
+raster info --stats v1.vrt
+raster info --approx-stats v1.vrt
+raster info --hist v1.vrt
+raster info --stats --hist v1.vrt
+raster info --checksum v1.vrt
+raster info -f json --stats v1.vrt
+raster info --stats vn.vrt
+raster info --hist vn.vrt
+raster info --stats mos.vrt
+raster info --approx-stats mos.vrt
+raster info --hist mos.vrt
+raster info --stats --hist --checksum mos.vrt
+raster info -f json --stats mos.vrt
+raster info --stats zv.vrt
+raster info --hist zv.vrt
+raster info --stats --hist zv.vrt
+raster info --stats sub.vrt
+raster info --hist sub.vrt
+raster info --stats rs.vrt
+raster info --hist rs.vrt
+raster info --stats cx.vrt
+raster info --hist cx.vrt
+raster info --stats cxs.vrt
+raster info --hist cxs.vrt
+raster info --stats f16.vrt
+raster info --hist f16.vrt
+raster info m2.vrt
+raster info --stats m2.vrt
+raster info --hist m2.vrt
+raster info --stats --hist m2.vrt
+raster info --approx-stats m2.vrt
+raster info --checksum m2.vrt
+raster info mos2.vrt
+raster info --stats mos2.vrt
+raster info --hist mos2.vrt
+raster info --checksum mos2.vrt
+raster info --approx-stats mos2.vrt
+raster info mos3.vrt
+raster info --stats mos3.vrt
+raster info --hist mos3.vrt
+raster info --checksum mos3.vrt
+raster info --stats --hist mos3.vrt
+raster convert v1.vrt out.tif
+raster convert mos.vrt out.tif
+raster convert --of VRT v1.vrt out.vrt
+raster convert --of VRT mos.vrt out2.vrt
+#setup: O=/home/agent/oracle/executable && $O raster create -q --size 3,2 --burn 7 in.tif && printf '<VRTDataset rasterXSize="5" rasterYSize="2">\n  <VRTRasterBand dataType="Byte" band="1">\n    <NoDataValue>7</NoDataValue>\n    <SimpleSource>\n      <SourceFilename relativeToVRT="1">in.tif</SourceFilename>\n      <SourceBand>1</SourceBand>\n      <SrcRect xOff="0" yOff="0" xSize="3" ySize="2" />\n      <DstRect xOff="0" yOff="0" xSize="3" ySize="2" />\n    </SimpleSource>\n  </VRTRasterBand>\n</VRTDataset>\n' > zv.vrt && $O raster info --hist zv.vrt > /dev/null 2>&1
+raster info --hist zv.vrt
+raster info --stats zv.vrt

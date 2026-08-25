@@ -1,0 +1,30 @@
+Usage: mosaic [OPTIONS] <INPUTS>...
+
+Build a mosaic, either virtual (VRT) or materialized.
+
+Positional arguments:
+  -i, --input <INPUTS>                                            Input raster datasets (or specify a @<filename> to point to a file containing filenames) [1.. values] [required]
+
+Common Options:
+  -h, --help                                                      Display help message and exit
+  --json-usage                                                    Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                          Configuration option [may be repeated]
+
+Options:
+  -b, --band <BAND>                                               Input band(s) (1-based index) [may be repeated]
+  --absolute-path                                                 Whether the path to the input datasets should be stored as an absolute path
+  --resolution <xres>,<yres>|same|average|common|highest|lowest>  Target resolution (in destination CRS units) (default: same)
+  --bbox <BBOX>                                                   Target bounding box as xmin,ymin,xmax,ymax (in destination CRS units)
+  --target-aligned-pixels                                         Round target extent to target resolution
+  --src-nodata <SRC-NODATA>                                       Set nodata values for input bands. [1.. values]
+  --dst-nodata <DST-NODATA>                                       Set nodata values at the destination band level. [1.. values]
+  --hide-nodata                                                   Makes the destination band not report the NoData.
+  --add-alpha                                                     Adds an alpha mask band to the destination when the source raster have none.
+  --pixel-function <PIXEL-FUNCTION>                               Specify a pixel function to calculate output value from overlapping inputs. PIXEL-FUNCTION=area|argmax|argmin|cmul|complex|conj|dB|dB2amp|dB2pow|diff|div|exp|expression|geometric_mean|harmonic_mean|imag|intensity|interpolate_exp|interpolate_linear|inv|log10|max|mean|median|min|mod|mode|mul|norm_diff|phase|polar|pow|quantile|real|reclassify|replace_nodata|round|scale|sqrt|sum
+  --pixel-function-arg <NAME>=<VALUE>                             Specify argument(s) to pass to the pixel function [may be repeated]
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>                             Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>                               Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_mosaic.html

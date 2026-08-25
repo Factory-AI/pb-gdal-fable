@@ -1,0 +1,31 @@
+Usage: gdal mdim info [OPTIONS] <INPUT>
+
+Return information on a multidimensional dataset.
+
+Positional arguments:
+  -i, --dataset, --input <INPUT>       Input multidimensional raster dataset [required]
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+
+Options:
+  --summary                            Report only group and array hierarchy, without detailed information on attributes or dimensions.
+                                       Mutually exclusive with --detailed
+  --detailed                           Most verbose output. Report attribute data types and array values.
+                                       Mutually exclusive with --summary
+  --array <ARRAY>                      Name of the array, used to restrict the output to the specified array.
+  --limit <LIMIT>                      Number of values in each dimension that is used to limit the display of array values.
+  --array-option <KEY>=<VALUE>         Option passed to GDALGroup::GetMDArrayNames() to filter reported arrays. [may be repeated]
+  --stats                              Read and display image statistics.
+
+Advanced Options:
+  --oo, --open-option <KEY>=<VALUE>    Open options [may be repeated]
+  --if, --input-format <INPUT-FORMAT>  Input formats [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_mdim_info.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

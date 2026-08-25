@@ -1,0 +1,124 @@
+{
+  "name":"refresh",
+  "full_path":[
+    "gdal",
+    "raster",
+    "overview",
+    "refresh"
+  ],
+  "description":"Refresh overviews.",
+  "short_url":"\/programs\/gdal_raster_overview_refresh.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_overview_refresh.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Dataset (to be updated in-place, unless --external)",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"external",
+      "type":"boolean",
+      "description":"Refresh external overviews",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"resampling",
+      "type":"string",
+      "description":"Resampling method",
+      "choices":[
+        "nearest",
+        "average",
+        "cubic",
+        "cubicspline",
+        "lanczos",
+        "bilinear",
+        "gauss",
+        "average_magphase",
+        "rms",
+        "mode"
+      ],
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"levels",
+      "type":"integer_list",
+      "description":"Levels \/ decimation factors",
+      "min_value":2,
+      "min_value_is_included":true,
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"bbox",
+      "type":"real_list",
+      "description":"Bounding box to refresh",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":4,
+      "max_count":4,
+      "category":"Base",
+      "mutual_exclusion_group":"refresh"
+    },
+    {
+      "name":"like",
+      "type":"string_list",
+      "description":"Use extent of dataset(s)",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "mutual_exclusion_group":"refresh"
+    },
+    {
+      "name":"use-source-timestamp",
+      "type":"boolean",
+      "description":"Use timestamp of VRT or GTI sources as refresh criterion",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"refresh"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

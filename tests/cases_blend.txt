@@ -1,0 +1,93 @@
+# raster blend: operator battery over band-shape combos
+#setup: python3 /workspace/tests/mk_blend_fixtures.py .
+raster blend crgb.tif orgb.tif o.tif -q
+raster blend crgb.tif orgb.tif o.tif
+raster blend --operator multiply crgb.tif orgb.tif o.tif -q
+raster blend --operator multiply cgray.tif ogray.tif o.tif -q
+raster blend --operator multiply cgray.tif orgb.tif o.tif -q
+raster blend --operator multiply crgb.tif ogray.tif o.tif -q
+raster blend --operator multiply crgba.tif orgba.tif o.tif -q
+raster blend --operator multiply crgba.tif orgb.tif o.tif -q
+raster blend --operator multiply crgb.tif orgba.tif o.tif -q
+raster blend --operator multiply cga.tif oga.tif o.tif -q
+raster blend --operator multiply cga.tif ogray.tif o.tif -q
+raster blend --operator multiply cgray.tif oga.tif o.tif -q
+raster blend --operator multiply crgba.tif oga.tif o.tif -q
+raster blend --operator multiply cga.tif orgba.tif o.tif -q
+raster blend --operator screen crgb.tif orgb.tif o.tif -q
+raster blend --operator screen cgray.tif ogray.tif o.tif -q
+raster blend --operator screen crgba.tif orgb.tif o.tif -q
+raster blend --operator screen cgray.tif orgba.tif o.tif -q
+raster blend --operator screen cga.tif oga.tif o.tif -q
+raster blend --operator overlay crgb.tif orgb.tif o.tif -q
+raster blend --operator overlay crgba.tif orgba.tif o.tif -q
+raster blend --operator overlay cgray.tif oga.tif o.tif -q
+raster blend --operator overlay cga.tif orgb.tif o.tif -q
+raster blend --operator hard-light crgb.tif orgb.tif o.tif -q
+raster blend --operator hard-light crgba.tif orgba.tif o.tif -q
+raster blend --operator hard-light cga.tif ogray.tif o.tif -q
+raster blend --operator hard-light cgray.tif orgba.tif o.tif -q
+raster blend --operator darken crgb.tif orgb.tif o.tif -q
+raster blend --operator darken crgba.tif orgba.tif o.tif -q
+raster blend --operator darken cgray.tif ogray.tif o.tif -q
+raster blend --operator darken cga.tif oga.tif o.tif -q
+raster blend --operator lighten crgb.tif orgb.tif o.tif -q
+raster blend --operator lighten crgba.tif orgba.tif o.tif -q
+raster blend --operator lighten cgray.tif oga.tif o.tif -q
+raster blend --operator lighten cga.tif orgba.tif o.tif -q
+raster blend --operator color-dodge crgb.tif orgb.tif o.tif -q
+raster blend --operator color-dodge crgba.tif orgba.tif o.tif -q
+raster blend --operator color-dodge cgray.tif ogray.tif o.tif -q
+raster blend --operator color-dodge cga.tif oga.tif o.tif -q
+raster blend --operator color-burn crgb.tif orgb.tif o.tif -q
+raster blend --operator color-burn cgray.tif ogray.tif o.tif -q
+raster blend --operator color-burn crgb.tif ogray.tif o.tif -q
+raster blend --operator color-burn cgray.tif orgb.tif o.tif -q
+raster blend --operator src-over crgb.tif orgb.tif o.tif -q
+raster blend --operator src-over cgray.tif ogray.tif o.tif -q
+raster blend --operator src-over cgray.tif orgb.tif o.tif -q
+raster blend --operator src-over crgb.tif ogray.tif o.tif -q
+raster blend --operator src-over crgba.tif ogray.tif o.tif -q
+raster blend --operator src-over crgb.tif orgba.tif o.tif -q
+raster blend --operator src-over cga.tif ogray.tif o.tif -q
+raster blend --operator src-over cgray.tif oga.tif o.tif -q
+raster blend --operator src-over cga.tif orgb.tif o.tif -q
+raster blend --operator hsv-value crgbh.tif orgb.tif o.tif -q
+raster blend --operator hsv-value crgbh.tif orgba.tif o.tif -q
+raster blend --operator hsv-value crgba.tif orgb.tif o.tif -q
+raster blend --operator hsv-value crgba.tif orgba.tif o.tif -q
+# opacity conversion and interaction with operators
+raster blend --operator multiply --opacity 50 crgb.tif orgb.tif o.tif -q
+raster blend --operator multiply --opacity 33 crgba.tif orgb.tif o.tif -q
+raster blend --operator screen --opacity 75 cgray.tif ogray.tif o.tif -q
+raster blend --operator overlay --opacity 25 crgb.tif orgb.tif o.tif -q
+raster blend --operator darken --opacity 10 crgb.tif orgb.tif o.tif -q
+raster blend --operator lighten --opacity 90 crgba.tif orgba.tif o.tif -q
+raster blend --operator color-dodge --opacity 66 crgb.tif orgb.tif o.tif -q
+raster blend --operator src-over --opacity 50 crgb.tif orgb.tif o.tif -q
+raster blend --operator src-over --opacity 1 cgray.tif orgb.tif o.tif -q
+raster blend --operator src-over --opacity 0 crgb.tif orgb.tif o.tif -q
+raster blend --operator hsv-value --opacity 40 crgbh.tif orgb.tif o.tif -q
+raster blend --operator hsv-value --opacity 77 crgba.tif orgba.tif o.tif -q
+# 5-band color input: per-band expansion against gray overlay
+raster blend --operator multiply c5b.tif ogray.tif o.tif -q
+raster blend --operator src-over c5b.tif ogray.tif o.tif -q
+# named argument spellings
+raster blend crgb.tif --overlay orgb.tif --output o.tif --operator multiply -q
+raster blend --input crgb.tif --overlay orgb.tif --output o.tif -q
+# validation errors
+raster blend --operator bogus crgb.tif orgb.tif o.tif -q
+raster blend --operator multiply --opacity 101 crgb.tif orgb.tif o.tif -q
+raster blend --operator multiply --opacity -1 crgb.tif orgb.tif o.tif -q
+raster blend missing.tif orgb.tif o.tif -q
+raster blend crgb.tif missing.tif o.tif -q
+raster blend missing.tif missing2.tif o.tif -q
+raster blend crgb.tif osmall.tif o.tif -q
+raster blend --operator hsv-value cgray.tif orgb.tif o.tif -q
+raster blend --operator hsv-value c5b.tif orgb.tif o.tif -q
+raster blend crgb.tif orgb.tif ex.tif -q
+raster blend --overwrite crgb.tif orgb.tif ex.tif -q
+# gdalg streaming output
+raster blend crgb.tif orgb.tif o.gdalg.json -q
+raster blend --operator hsv-value --opacity 55 crgbh.tif orgb.tif o.gdalg.json -q
+raster blend --operator multiply crgb.tif orgb.tif --creation-option COMPRESS=DEFLATE o.tif -q

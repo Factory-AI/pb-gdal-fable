@@ -1,0 +1,16 @@
+Usage: color-map [OPTIONS]
+
+Generate a RGB or RGBA dataset from a single band, using a color map
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+
+Options:
+  -b, --band <BAND>                    Input band (1-based index) (default: 1)
+  --color-map <COLOR-MAP>              Color map filename
+  --add-alpha                          Adds an alpha mask band to the destination.
+  --color-selection <COLOR-SELECTION>  How to compute output colors from input values. COLOR-SELECTION=interpolate|exact|nearest (default: interpolate)
+
+For more details, consult https://gdal.org/programs/gdal_raster_color_map.html

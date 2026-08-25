@@ -1,0 +1,155 @@
+# gdal raster calc: builtin dialect value/nodata semantics, source
+# ordering, consistency gates, dims stretch, output types, VRT/GDALG/MEM/
+# stream writers, failure-bar positions, and the muparser default path
+# (source-name scan chooses dialect-unsupported vs source_names errors)
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_calc_fixtures as f; f.make()"
+raster calc --dialect builtin --calc "log10()" -i A=g2.tif out.tif
+raster calc --dialect builtin --calc "sqrt()" -i A=g2.tif out.tif
+raster calc --dialect builtin --calc "dB()" -i A=g2.tif out.tif
+raster calc --dialect builtin --calc "geometric_mean()" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "interpolate_exp(t0=0,dt=3,t=1)" -i A=g2.tif -i B=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --propagate-nodata -i A=ndA.tif -i B=ndB.tif out.tif
+raster calc --dialect builtin --calc "sum(propagateNoData=true)" -i A=ndA.tif -i B=ndB.tif out.tif
+raster calc --dialect builtin --calc "sqrt()" -i A=ndA.tif out.tif
+raster calc --dialect builtin --calc "replace_nodata()" -i A=ndA.tif out.tif
+raster calc --dialect builtin --calc "replace_nodata(to=8)" -i A=ndA.tif out.tif
+raster calc --dialect builtin --calc "cmul()" -i A=ndA.tif -i B=ndB.tif out.tif
+raster calc --dialect builtin --calc "sum()" --nodata none -i A=ndA.tif -i B=ndB.tif out.tif
+raster calc --dialect builtin --calc "sum()" --nodata 42 -i A=ndA.tif -i B=ndB.tif out.tif
+raster calc --dialect builtin --calc "sum()" --nodata nan -i A=ndA.tif -i B=ndB.tif out.tif
+raster calc --dialect builtin --calc "sum()" --nodata inf -i A=ndA.tif out.tif
+raster calc --dialect builtin --calc "diff()" -i B=g2.tif -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "diff()" -i g2.tif -i B=g1.tif out.tif
+raster calc --dialect builtin --calc "diff()" -i g2.tif -i g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=mb2.tif out.tif
+raster calc --dialect builtin --calc "sum()" --flatten -i A=mb2.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=mb2.tif -i B=gbwrong.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=mb2.tif -i B=mb3.tif out.tif
+raster calc --dialect builtin --calc "sum()" --calc "mean()" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "sum()" --ot int16 -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum(k=300)" --ot Byte -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "min()" -i A=gb.tif -i B=bnd.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=gb.tif out.tif
+raster calc --dialect builtin --calc "min()" -i A=gb.tif -i B=f32.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=g1.tif -i B=mb3.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=mb2.tif -i B=utm.tif out.tif
+raster calc --dialect builtin --calc "sum()" --no-check-crs -i A=mb2.tif -i B=utm.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=mb2.tif -i B=shift.tif out.tif
+raster calc --dialect builtin --calc "sum()" --no-check-extent -i A=mb2.tif -i B=shift.tif out.tif
+raster calc --dialect builtin --calc "diff()" -i A=hi.tif -i B=mb2.tif --flatten out.tif
+raster calc --dialect builtin --calc "sum()" -i A=mb2.tif -i B=mb3.tif --flatten out.tif
+raster calc --dialect builtin --calc "nofunc()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum(zzz=1)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "A+1" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sqrt()" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "diff()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "pow()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "pow()" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "mul()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "mul(k=abc)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "interpolate_linear(dt=1,t=1)" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "interpolate_linear(t0=0,dt=1)" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "interpolate_linear(t0=1,dt=1,t=0)" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "interpolate_linear(t0=1,dt=1,t=inf)" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "interpolate_linear(t0=1,dt=0,t=2)" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "interpolate_linear(t0=0,dt=1,t=2)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "polar(amplitude_type=foo)" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --dialect builtin --calc "polar(amplitude_type=foo)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "replace_nodata()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "replace_nodata()" --ot Byte -i A=bnd.tif out.tif
+raster calc --dialect builtin --calc "reclassify()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "reclassify(mapping=2=5)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "expression()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "expression(expression=A+1)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "expression(expression=A,dialect=foo)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=g1.tif -i A=g2.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=nosuch.tif out.tif
+raster calc --dialect builtin --calc "sum()" --nodata 0x10 -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --nodata NONE -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --ot Byte --nodata 2.5 -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --ot Float32 --nodata 0.1 -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --ot Byte -i A=ndA.tif out.tif
+raster calc --calc "sqrt()" -i A=g1.tif out.tif
+raster calc -q --calc "sqrt()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "pow(power=2,power=3)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()x" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum(k=1.5)" -i A=ndA.tif out.vrt
+raster calc --dialect builtin --calc "diff()" -i B=g2.tif -i A=ndA.tif out.vrt
+raster calc --dialect builtin --calc "mean(propagateNoData=true)" --propagate-nodata -i mb2.tif --flatten out.vrt
+raster calc --dialect builtin --calc "sum()" -i A=mb2.tif out.vrt
+raster calc --dialect builtin --calc "sqrt()" -i A=g1.tif -i B=g2.tif out.vrt
+raster calc --dialect builtin --calc "pow()" -i A=g1.tif out.vrt
+raster calc --dialect builtin --calc "reclassify(mapping=2=5;DEFAULT=PASS_THROUGH)" -i A=g1.tif out.vrt
+raster calc --dialect builtin --calc "sum()" --nodata none -i A=ndA.tif out.vrt
+raster calc --dialect builtin --calc "sum()" --ot int16 -i A=g1.tif out.vrt
+raster calc --dialect builtin --calc "sum(k=1)" -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc "sum(k=1)" --calc "mean()" -i A=g1.tif -i B=g2.tif out.gdalg.json
+raster calc --dialect builtin --calc "min()" -q --ot int16 --no-check-crs --no-check-extent --propagate-nodata --flatten --nodata 5 -i A=mb2.tif out.gdalg.json
+raster calc --dialect builtin --calc "pow(power=2)" -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc "interpolate_linear(t0=0,dt=1,t=2)" -i A=g1.tif -i B=g2.tif out.gdalg.json
+raster calc --dialect builtin --calc "reclassify(mapping=DEFAULT=0)" -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc "replace_nodata()" -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc "replace_nodata()" -i A=ndA.tif out.gdalg.json
+raster calc --dialect builtin --calc "expression(expression=A)" -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc "sqrt()" -i A=g1.tif -i B=g2.tif out.gdalg.json
+raster calc --dialect builtin --calc "nofunc()" -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc "sum()" --co COMPRESS=LZW -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc "sum()" -i A=g1.tif -f MEM out.mem
+raster calc --dialect builtin --calc "pow()" -i A=g1.tif -f MEM out.mem
+raster calc --dialect builtin --calc "sum()" -i A=g1.tif -f stream out.stream
+raster calc --dialect builtin --calc "pow()" -i A=g1.tif -f stream out.stream
+raster calc --dialect builtin --calc "sqrt()" -i A=g1.tif -i B=g2.tif -f stream out.stream
+raster calc --dialect builtin -q --calc "sum()" -i A=g1.tif out.tif
+raster calc --dialect builtin -q --calc "pow()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --co COMPRESS=LZW -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=g1.tif g1.tif
+raster calc --dialect builtin --calc "sum()" -i A=g1.tif mb2.tif
+raster calc --dialect builtin --calc "pow()" --calc "sum()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --calc "pow()" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "reclassify(mapping=1=5)" -i A=mb2.tif out.tif
+raster calc --calc "A+1" -i A=g1.tif out.tif
+raster calc --calc "X+1" -i g1.tif out.tif
+raster calc --calc "X0*2" -i g1.tif out.tif
+raster calc --calc "1+2" -i A=g1.tif out.tif
+raster calc --calc "A+1" -i A=g1.tif -i B=g2.tif out.tif
+raster calc --calc "a+1" -i A=g1.tif out.tif
+raster calc --calc "AA+1" -i A=g1.tif out.tif
+raster calc --calc "fabs(A)" -i A=g1.tif out.tif
+raster calc --calc "A[1]+1" -i A=g1.tif out.tif
+raster calc --calc "A+1" -i g1.tif -i g2.tif out.tif
+raster calc --calc "A+1" -i g1.tif -i B=g2.tif out.tif
+raster calc --calc "A+B" -i mb2.tif -i utm.tif out.tif
+raster calc --calc "A+B" -i A=mb2.tif -i B=utm.tif out.tif
+raster calc --calc "A+1" --nodata 2.5 --ot Byte -i A=g1.tif out.tif
+raster calc --calc "A+1" --nodata 2.5 -i A=gb.tif out.tif
+raster calc --calc "A+1" -i A=mb2.tif out.tif
+raster calc --calc "sqrt()" --calc "A+1" -i A=g1.tif out.tif
+raster calc --calc "A+1" --calc "sqrt()" -i A=g1.tif out.tif
+raster calc --calc "A+1" -i A=g1.tif out.vrt
+raster calc --calc "sqrt()" -i A=g1.tif out.vrt
+raster calc --calc "A+1" -f MEM -i A=g1.tif out.mem
+raster calc --calc "sqrt()" -f MEM -i A=g1.tif out.mem
+raster calc --calc "A+1" -f stream -i A=g1.tif out.stream
+raster calc --calc "sqrt()" -f stream -i A=g1.tif out.stream
+raster calc --calc "A+1" -i A=g1.tif out.gdalg.json
+raster calc --calc "sqrt()" -i A=g1.tif out.gdalg.json
+raster calc --calc "A+1" -i g1.tif -i g2.tif out.gdalg.json
+raster calc --calc "A+1" -i A=g1.tif mb2.tif
+raster calc -q --calc "A+1" -i A=g1.tif out.tif
+raster calc --calc "A+1" -i A=nosuch.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i A=mb3.tif -i B=g1.tif out.tif
+raster calc --dialect builtin --calc "sum()" --no-check-extent -i A=g1.tif -i B=mb3.tif out.tif
+raster calc --dialect builtin --calc "sum()" --no-check-extent -i A=mb2.tif -i B=hi.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i mb3.tif -i nb2.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i nb2.tif -i mb3.tif out.tif
+raster calc --dialect builtin --calc "sum()" -i B=bnd.tif -i A=gb.tif out.tif
+raster calc --dialect builtin --calc "replace_nodata()" --ot Float64 -i A=ndA.tif out.gdalg.json
+raster calc --dialect builtin --calc "sum()" --nodata infinity -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum(k=infinity)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "pow(power=infinity)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "  bogus  " -i A=g1.tif out.tif
+raster calc --dialect builtin --calc " X + A" -i X=g1.tif out.tif
+raster calc --dialect builtin --calc " sum(A)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc "sum (A)" -i A=g1.tif out.tif
+raster calc --dialect builtin --calc " sum (A)" -i A=g1.tif out.gdalg.json
+raster calc --dialect builtin --calc " sum (A)" -i A=g1.tif out.vrt

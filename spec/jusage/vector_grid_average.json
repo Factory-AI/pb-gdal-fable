@@ -1,0 +1,323 @@
+{
+  "name":"average",
+  "full_path":[
+    "gdal",
+    "vector",
+    "grid",
+    "average"
+  ],
+  "description":"Create a regular grid from scattered points using moving average interpolation.",
+  "short_url":"\/programs\/gdal_vector_grid.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vector_grid.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input vector datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"extent",
+      "type":"real_list",
+      "description":"Set the target georeferenced extent",
+      "metavar":"<xmin>,<ymin>,<xmax>,<ymax>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":4,
+      "max_count":4,
+      "category":"Base"
+    },
+    {
+      "name":"resolution",
+      "type":"real_list",
+      "description":"Set the target resolution",
+      "metavar":"<xres>,<yres>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":2,
+      "max_count":2,
+      "category":"Base",
+      "mutual_exclusion_group":"size-or-resolution"
+    },
+    {
+      "name":"size",
+      "type":"integer_list",
+      "description":"Set the target size in pixels and lines",
+      "metavar":"<xsize>,<ysize>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":2,
+      "max_count":2,
+      "category":"Base",
+      "mutual_exclusion_group":"size-or-resolution"
+    },
+    {
+      "name":"output-data-type",
+      "type":"string",
+      "description":"Output data type",
+      "choices":[
+        "UInt8",
+        "Int8",
+        "UInt16",
+        "Int16",
+        "UInt32",
+        "Int32",
+        "UInt64",
+        "Int64",
+        "CInt16",
+        "CInt32",
+        "Float16",
+        "Float32",
+        "Float64",
+        "CFloat32",
+        "CFloat64"
+      ],
+      "default":"Float64",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "type":[
+          "GDALDataType"
+        ]
+      }
+    },
+    {
+      "name":"crs",
+      "type":"string",
+      "description":"Override the projection for the output file",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"input-layer",
+      "type":"string_list",
+      "description":"Input layer name",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "mutual_exclusion_group":"layer-sql"
+    },
+    {
+      "name":"sql",
+      "type":"string",
+      "description":"SQL statement",
+      "metavar":"<statement>|@<filename>",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"layer-sql"
+    },
+    {
+      "name":"bbox",
+      "type":"real_list",
+      "description":"Select only points contained within the specified bounding box",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":4,
+      "max_count":4,
+      "category":"Base"
+    },
+    {
+      "name":"zfield",
+      "type":"string",
+      "description":"Field name from which to get Z values.",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"zoffset",
+      "type":"real",
+      "description":"Value to add to the Z field value (applied before zmultiply)",
+      "default":0.0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"zmultiply",
+      "type":"real",
+      "description":"Multiplication factor for the Z field value (applied after zoffset)",
+      "default":1.0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"radius",
+      "type":"real",
+      "description":"Radius of the search circle",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"radius"
+    },
+    {
+      "name":"radius1",
+      "type":"real",
+      "description":"First axis of the search ellipse",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"radius"
+    },
+    {
+      "name":"radius2",
+      "type":"real",
+      "description":"Second axis of the search ellipse",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"angle",
+      "type":"real",
+      "description":"Angle of search ellipse rotation in degrees (counter clockwise)",
+      "default":0.0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-points",
+      "type":"integer",
+      "description":"Minimum number of data points to use",
+      "default":0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-points",
+      "type":"integer",
+      "description":"Maximum number of data points to use",
+      "default":2147483647,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-points-per-quadrant",
+      "type":"integer",
+      "description":"Minimum number of data points to use per quadrant",
+      "default":0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-points-per-quadrant",
+      "type":"integer",
+      "description":"Maximum number of data points to use per quadrant",
+      "default":2147483647,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"nodata",
+      "type":"real",
+      "description":"Target nodata value",
+      "default":0.0,
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

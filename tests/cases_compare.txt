@@ -1,0 +1,69 @@
+# gdal raster compare: exit code equals reported difference count; binary
+# short-circuit, structural checks (size, crs, geotransform, metadata with
+# the reference/input value swap, band dtype/nodata/mask/interp/overview),
+# per-band pixel diffs, skip flags, lazy SRS-decode warning surfacing
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); import mk_compare_fixtures as f; f.make()"
+raster compare a.tif a.tif
+raster compare a.tif a_copy.tif
+raster compare a.tif a_copy.tif --skip-binary
+raster compare a.tif a_copy.tif --skip-binary -q
+raster compare a.tif b_pix.tif
+raster compare a.tif b_pix.tif -q
+raster compare a.tif b_pix.tif --skip-binary -q
+raster compare a.tif b_pix.tif --skip-all-optional -q
+raster compare a.tif b_size.tif
+raster compare a.tif b_dt.tif -q
+raster compare a.tif b_dt.tif -q --skip-all-optional
+raster compare a.tif dt_pix.tif -q
+raster compare a.tif b_gt.tif
+raster compare a.tif b_gt.tif --skip-geotransform -q
+raster compare a.tif b_nogt.tif
+raster compare a.tif b_nogt.tif -q --skip-all-optional
+raster compare a.tif b_nogt.tif -q --skip-crs --skip-geotransform --skip-metadata --skip-binary
+raster compare a.tif b_crs.tif -q
+raster compare a.tif b_crs.tif --skip-crs -q
+raster compare a.tif b_nd.tif -q
+raster compare b_nd.tif a.tif -q
+raster compare b_nd.tif a.tif -q --skip-all-optional
+raster compare nd5a.tif nd6b.tif -q
+raster compare a.tif b_md.tif
+raster compare a.tif b_md.tif --skip-metadata -q
+raster compare mdfoo1.tif mdfoo2.tif
+raster compare mdfoo1.tif mdfoo2.tif -q --skip-binary
+raster compare a.tif mdmix.tif -q
+raster compare mdpoint.tif mdmix.tif -q
+raster compare a.tif b_2b.tif
+raster compare b_2b.tif a.tif
+raster compare m2a.tif m2b.tif
+raster compare f32a.tif f32b.tif -q
+raster compare fnan_a.tif fnan_b.tif -q
+raster compare if_a.tif if_b.tif -q
+raster compare h_a.tif h_b.tif -q
+raster compare crsonly_a.tif crsonly_b.tif -q
+raster compare crsonly_b.tif crsonly_a.tif -q
+raster compare gtonly_a.tif gtonly_b.tif -q
+raster compare gtonly_b.tif gtonly_a.tif -q
+raster compare bg_a.tif bg_b.tif -q
+raster compare pal4c.tif gray83.tif -q
+raster compare gray83.tif pal4c.tif -q
+raster compare palA.tif palB.tif -q
+raster compare ovrbase.tif ovr2.tif -q
+raster compare ovr2.tif ovrbase.tif -q
+raster compare ovr2.tif ovrbase.tif -q --skip-overview
+raster compare a.tif a.vrt
+raster compare a.vrt a.tif
+raster compare a.tif nosuch.tif
+raster compare nosuch.tif a.tif
+raster compare a.tif
+raster compare a.tif b_pix.tif --skip-rpc --skip-geolocation --skip-subdataset -q
+raster compare dim_nd.tif dim_sm.tif -q
+raster compare dim_nd.tif dim_w.tif -q
+raster compare dim_full.tif dim_f2.tif -q
+raster compare dim_full.tif dim_2b.tif -q
+raster compare dim_full.tif dim_i2b.tif -q
+raster compare dim_2b.tif dim_w2.tif -q
+raster compare dim_crs1b.tif dim_no2b.tif -q
+raster compare dim_sm.tif dim_nd.tif -q
+raster compare mdzba.tif mdempty.tif -q
+raster compare mdempty.tif mdzba.tif -q
+raster compare mdzba.tif mdooo.tif -q

@@ -1,0 +1,152 @@
+# gdal mdim info/convert/mosaic (multidim VRT + MEM surface)
+#setup: python3 -c 'open("m1.vrt","w").write("<VRTDataset>\n  <Group name=\"/\">\n    <Dimension name=\"Y\" size=\"3\"/>\n    <Dimension name=\"X\" size=\"4\"/>\n    <Array name=\"temp\">\n      <DataType>Float64</DataType>\n      <DimensionRef ref=\"Y\"/>\n      <DimensionRef ref=\"X\"/>\n      <InlineValues>1 2 3 4 5 6 7 8 9 10 11 12</InlineValues>\n    </Array>\n  </Group>\n</VRTDataset>\n")' && python3 -c 'open("m2.vrt","w").write("<VRTDataset>\n  <Group name=\"/\">\n    <Attribute name=\"title\" dataType=\"String\">\n      <Value>My Title</Value>\n    </Attribute>\n    <Attribute name=\"count\" dataType=\"Int32\">\n      <Value>42</Value>\n    </Attribute>\n    <Dimension name=\"Y\" size=\"3\" type=\"HORIZONTAL_Y\" direction=\"NORTH\" indexingVariable=\"Y\"/>\n    <Dimension name=\"X\" size=\"4\" type=\"HORIZONTAL_X\" direction=\"EAST\" indexingVariable=\"X\"/>\n    <Array name=\"Y\">\n      <DataType>Float64</DataType>\n      <DimensionRef ref=\"Y\"/>\n      <RegularlySpacedValues start=\"30\" increment=\"-1\"/>\n    </Array>\n    <Array name=\"X\">\n      <DataType>Float64</DataType>\n      <DimensionRef ref=\"X\"/>\n      <RegularlySpacedValues start=\"10\" increment=\"1\"/>\n    </Array>\n    <Array name=\"temp\">\n      <DataType>Float32</DataType>\n      <DimensionRef ref=\"Y\"/>\n      <DimensionRef ref=\"X\"/>\n      <SRS dataAxisToSRSAxisMapping=\"2,1\">EPSG:4326</SRS>\n      <Unit>K</Unit>\n      <NoDataValue>-999</NoDataValue>\n      <Offset>1.5</Offset>\n      <Scale>0.5</Scale>\n      <InlineValues>1 2 3 4 5 6 7 8 9 10 11 -999</InlineValues>\n      <Attribute name=\"long_name\" dataType=\"String\">\n        <Value>temperature</Value>\n      </Attribute>\n    </Array>\n    <Group name=\"sub\">\n      <Dimension name=\"Z\" size=\"2\"/>\n      <Array name=\"press\">\n        <DataType>Int16</DataType>\n        <DimensionRef ref=\"Z\"/>\n        <InlineValues>5 6</InlineValues>\n      </Array>\n    </Group>\n  </Group>\n</VRTDataset>\n")' && python3 -c 'open("z2.vrt","w").write("<VRTDataset>\n  <Group name=\"/\">\n    <Attribute name=\"fl\" dataType=\"Float64\">\n      <Value>1.25</Value>\n      <Value>2.5</Value>\n    </Attribute>\n    <Attribute name=\"i64\" dataType=\"Int64\">\n      <Value>1234567890123</Value>\n    </Attribute>\n    <Attribute name=\"by\" dataType=\"Byte\">\n      <Value>7</Value>\n    </Attribute>\n    <Dimension name=\"N\" size=\"3\"/>\n    <Array name=\"s\">\n      <DataType>String</DataType>\n      <DimensionRef ref=\"N\"/>\n      <InlineValuesWithValueElement>\n        <Value>abc</Value>\n        <Value>de f</Value>\n        <Value></Value>\n      </InlineValuesWithValueElement>\n    </Array>\n    <Array name=\"b\">\n      <DataType>Byte</DataType>\n      <DimensionRef ref=\"N\"/>\n      <InlineValues>1 2 255</InlineValues>\n    </Array>\n    <Array name=\"k\">\n      <DataType>Float64</DataType>\n      <DimensionRef ref=\"N\"/>\n      <ConstantValue>3.5</ConstantValue>\n    </Array>\n    <Array name=\"u\">\n      <DataType>UInt64</DataType>\n      <DimensionRef ref=\"N\"/>\n      <InlineValues>1 2 18446744073709551615</InlineValues>\n    </Array>\n  </Group>\n</VRTDataset>\n")' && python3 -c 'open("z3.vrt","w").write("<VRTDataset>\n  <Group name=\"/\">\n    <Dimension name=\"N\" size=\"6\"/>\n    <Array name=\"f\">\n      <DataType>Float32</DataType>\n      <DimensionRef ref=\"N\"/>\n      <InlineValues>0.1 1.5 -2.25 3 4 5.75</InlineValues>\n    </Array>\n    <Group name=\"zz\">\n      <Attribute name=\"ga\" dataType=\"String\"><Value>x</Value></Attribute>\n    </Group>\n    <Group name=\"aa\">\n      <Dimension name=\"M\" size=\"1\"/>\n      <Array name=\"inner\">\n        <DataType>Float64</DataType>\n        <DimensionRef ref=\"M\"/>\n        <InlineValues>nan</InlineValues>\n      </Array>\n    </Group>\n  </Group>\n</VRTDataset>\n")' && python3 -c 'open("z1.vrt","w").write("<VRTDataset>\n  <Group name=\"/\">\n    <Dimension name=\"N\" size=\"3\"/>\n    <Array name=\"c\">\n      <DataType>CFloat32</DataType>\n      <DimensionRef ref=\"N\"/>\n      <InlineValues>1 2 3 4 5 6</InlineValues>\n    </Array>\n  </Group>\n</VRTDataset>\n")' && printf junk > junk.bin
+mdim info m1.vrt
+mdim info m2.vrt
+mdim info --summary m2.vrt
+mdim info --detailed m2.vrt
+mdim info --detailed --limit 1 m2.vrt
+mdim info --detailed --limit 2 m2.vrt
+mdim info --detailed --limit 3 m2.vrt
+mdim info --stats m2.vrt
+mdim info --detailed --stats m2.vrt
+mdim info --array temp m2.vrt
+mdim info --array temp --detailed m2.vrt
+mdim info --array temp --stats m2.vrt
+mdim info --array X m2.vrt
+mdim info --array /sub/press --detailed m2.vrt
+mdim info --array press m2.vrt
+mdim info --array nope m2.vrt
+mdim info --detailed z2.vrt
+mdim info z2.vrt
+mdim info --stats z2.vrt
+mdim info --detailed z3.vrt
+mdim info --detailed --limit 1 z3.vrt
+mdim info --detailed --limit 4 z3.vrt
+mdim info --array /aa/inner z3.vrt
+mdim info --array inner z3.vrt
+mdim info --summary z3.vrt
+mdim info z1.vrt
+mdim info missing.vrt
+mdim info junk.bin
+mdim info --summary --detailed m2.vrt
+mdim info --summary --detailed missing.vrt
+mdim info
+mdim info --limit abc m2.vrt
+mdim --drivers
+mdim --drivers foo
+mdim -x
+mdim --driverz
+mdim foo
+mdim
+
+# ---- mdim convert (VRT reference-mode, classic bridges, choreography) ----
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); from mk_mdim_fixtures import write_all; write_all()"
+mdim convert m2.vrt out.vrt
+mdim convert m2.vrt out.vrt --array temp
+mdim convert m2.vrt out.vrt --array name=temp,view=[::2,1:3]
+mdim convert m2.vrt out.vrt --array name=temp,transpose=[1,0]
+mdim convert m2.vrt out.vrt --array name=temp,view=[1,:]
+mdim convert m2.vrt out.vrt --array /sub/press
+mdim convert m2.vrt out.vrt --array temp --array /sub/press
+mdim convert m2.vrt out.vrt --group sub
+mdim convert m2.vrt out.vrt --subset X(11,13)
+mdim convert m2.vrt out.vrt --subset X(11)
+mdim convert m2.vrt out.vrt --subset X(13,11)
+mdim convert m2.vrt out.vrt --subset X(99,100)
+mdim convert m2.vrt out.vrt --subset X(a,b)
+mdim convert m2.vrt out.vrt --subset X(11,12,13)
+mdim convert m2.vrt out.vrt --subset X
+mdim convert m2.vrt out.vrt --subset W(1,2)
+mdim convert m2.vrt out.vrt --subset Z(1000,1001)
+mdim convert m2.vrt out.vrt --subset Y(28,29) --subset X(12,13)
+mdim convert m2.vrt out.vrt --scale-axes X(2)
+mdim convert m2.vrt out.vrt --scale-axes X(5)
+mdim convert m2.vrt out.vrt --scale-axes Y(2) --array temp
+mdim convert m2.vrt out.vrt --scale-axes W(2)
+mdim convert m2.vrt out.vrt --scale-axes X(0)
+mdim convert m2.vrt out.vrt --scale-axes X(2.5)
+mdim convert m2.vrt out.vrt --group sub --scale-axes Z(2)
+mdim convert m2.vrt out.vrt --group nope
+mdim convert m2.vrt out.vrt --array nope
+mdim convert m2.vrt out.vrt --array /nope/x
+mdim convert m2.vrt out.vrt --array sub/press
+mdim convert m2.vrt out.vrt --array name=temp,foo=bar
+mdim convert m2.vrt out.tif
+mdim convert m2.vrt out.tif --subset X(11,13)
+mdim convert two.vrt out.tif
+mdim convert two.vrt out.tif --array b
+mdim convert one1d.vrt out.tif
+mdim convert d3.vrt out.tif
+mdim convert m2.vrt out.nc
+mdim convert m2.vrt out.xyz
+mdim convert m2.vrt out
+mdim convert m2.vrt x --of MEM
+mdim convert m2.vrt x --of MEM --quiet
+mdim convert m2.vrt x --of MEM --subset X(a,b)
+mdim convert m2.vrt out.vrt --of VRT
+mdim convert ct.tif out.tif
+mdim convert ct.tif out.vrt
+mdim convert ct.tif x --of MEM
+mdim convert missing.vrt out.vrt
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); from mk_mdim_fixtures import write_all; write_all()" && cp m2.vrt ex.vrt && cp ct.tif ex.tif
+mdim convert m2.vrt ex.vrt
+mdim convert m2.vrt ex.vrt --overwrite
+mdim convert m2.vrt ex.tif
+mdim convert m2.vrt ex.tif --overwrite
+mdim convert m2.vrt ex.tif --subset X(a,b)
+mdim convert two.vrt ex.tif
+mdim convert m2.vrt ex.vrt --group sub --array press
+mdim convert m2.vrt ex.vrt --subset X(a,b)
+mdim convert m2.vrt ex.vrt --subset X(99,100)
+mdim convert m2.vrt ex.vrt --of VRT
+mdim convert m2.vrt ex.vrt --group sub --subset X(a,b)
+mdim convert m2.vrt new.vrt --group sub --array press
+mdim convert m2.vrt new.vrt --group sub --array press --subset X(a,b)
+mdim convert m2.vrt new.tif --group sub --array press
+mdim convert m2.vrt new.xyz --group sub --array press
+mdim convert m2.vrt ex.tif --group sub --array press
+mdim convert m2.vrt ex.vrt --of MEM
+mdim convert m2.vrt ex.vrt --of MEM --overwrite
+mdim convert m2.vrt out
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); from mk_mdim_fixtures import write_all, write_mosaic; write_all(); write_mosaic()" && cp ta.vrt exm.vrt && printf junk > junk.bin
+mdim mosaic ta.vrt tb.vrt w1.vrt
+mdim mosaic tb.vrt ta.vrt w2.vrt
+mdim mosaic ta.vrt tc.vrt w3.vrt
+mdim mosaic ta.vrt td.vrt w4.vrt
+mdim mosaic ta.vrt te.vrt w5.vrt
+mdim mosaic ta.vrt y28.vrt w6.vrt
+mdim mosaic ta.vrt y33.vrt w7.vrt
+mdim mosaic m2.vrt m2.vrt w8.vrt
+mdim mosaic one1d.vrt one1d.vrt w9.vrt
+mdim mosaic ta.vrt w10.vrt
+mdim mosaic tj.vrt ta.vrt w11.vrt
+mdim mosaic ta.vrt tj.vrt w12.vrt
+mdim mosaic tj.vrt tj.vrt w13.vrt
+mdim mosaic tj.vrt tn.vrt w14.vrt
+mdim mosaic ta.vrt tk.vrt w15.vrt
+mdim mosaic ta.vrt tl.vrt w16.vrt
+mdim mosaic ta.vrt tm.vrt w17.vrt
+mdim mosaic two.vrt two.vrt w18.vrt
+mdim mosaic two.vrt two3.vrt w19.vrt
+mdim mosaic d3.vrt d3.vrt w20.vrt
+mdim mosaic tw.vrt tw.vrt w21.vrt
+mdim mosaic tw.vrt ta.vrt w22.vrt
+mdim mosaic ta.vrt tb.vrt w23.tif
+mdim mosaic ta.vrt tb.vrt w24
+mdim mosaic ta.vrt tb.vrt w25.nc
+mdim mosaic ta.vrt tb.vrt mmem --of MEM
+mdim mosaic ta.vrt tb.vrt mmem --of MEM --quiet
+mdim mosaic ta.vrt tb.vrt w26 --of VRT
+mdim mosaic ta.vrt tb.vrt w27.vrt --of GTiff
+mdim mosaic ta.vrt tb.vrt w28.vrt --array temp
+mdim mosaic ta.vrt tb.vrt w29.vrt --array /temp
+mdim mosaic ta.vrt tb.vrt w30.vrt --array hum
+mdim mosaic ta.vrt tb.vrt w31.vrt --array X
+mdim mosaic ct.tif ta.vrt w32.vrt
+mdim mosaic missing.vrt ta.vrt w33.vrt
+mdim mosaic junk.bin ta.vrt w34.vrt
+mdim mosaic off2.vrt ta.vrt w35.vrt
+mdim mosaic ta.vrt tb.vrt exm.vrt
+mdim mosaic ta.vrt tb.vrt exm.vrt --overwrite
+mdim mosaic ta.vrt w36.vrt --array press
+mdim info off2.vrt

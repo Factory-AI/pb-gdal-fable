@@ -1,0 +1,109 @@
+# vector reproject: leaf verb, pipeline step, generic dispatch, middle
+# writes and dataset handoff
+#setup: python3 /workspace/tests/mk_vrp_fixtures.py .
+
+# leaf
+vector reproject --dst-crs EPSG:32631 vp.geojson o.geojson
+vector reproject --dst-crs EPSG:32631 vl.geojson o.geojson
+vector reproject --dst-crs EPSG:32631 vmp.geojson o.geojson
+vector reproject --dst-crs EPSG:32631 vnull.geojson o.geojson
+vector reproject --dst-crs EPSG:32631 vnosrs.geojson o.geojson
+vector reproject --dst-crs EPSG:32631 vmany.geojson o.geojson
+vector reproject --dst-crs EPSG:4326 vp.geojson o.geojson
+vector reproject --dst-crs OGC:CRS84 vp.geojson o.geojson
+vector reproject --src-crs EPSG:4267 --dst-crs EPSG:32631 vp.geojson o.geojson
+vector reproject --dst-crs +proj=utm +zone=31 +datum=WGS84 vp.geojson o.geojson
+vector reproject vp.geojson o.geojson
+vector reproject --dst-crs FOO vp.geojson o.geojson
+vector reproject --src-crs FOO --dst-crs EPSG:32631 vp.geojson o.geojson
+vector reproject --dst-crs EPSG:32631 vp.geojson o.shp
+vector reproject --dst-crs EPSG:32631 vp.geojson o.geojsonl
+vector reproject --dst-crs EPSG:32631 vp.geojson o.gdalg.json
+vector reproject --dst-crs EPSG:32631 --of stream vp.geojson streamed_dataset
+vector reproject --dst-crs EPSG:32631 -q vp.geojson o.geojson
+vector reproject --dst-crs EPSG:32631 nosuch.geojson o.geojson
+
+# pipeline step
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline --quiet read vp.geojson ! reproject --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --quiet --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! reproject --dst-crs EPSG:4326 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --src-crs EPSG:4267 --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vmany.geojson ! reproject --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vnosrs.geojson ! reproject --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write o.shp
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write o.geojsonl
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write --of MEM m1
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write o.gdalg.json
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! info
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! info --of json
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! info --features
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! info --features --of json
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! info --summary
+vector pipeline read vl.geojson ! reproject --dst-crs EPSG:32631 ! info --features --limit 1
+vector pipeline read vl.geojson ! reproject --dst-crs EPSG:32631 ! info --fid 1
+vector pipeline read vl.geojson ! reproject --dst-crs EPSG:32631 ! info
+
+# pipeline step errors
+vector pipeline read vp.geojson ! reproject ! write o.geojson
+vector pipeline read vp.geojson ! reproject ! info
+vector pipeline read vp.geojson ! reproject --dst-crs FOO ! write o.geojson
+vector pipeline read vp.geojson ! reproject --src-crs FOO --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --input vl.geojson --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --input nosuch.geojson --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 --dst-crs EPSG:4326 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --bogus ! write o.geojson
+vector pipeline read vp.geojson ! reproject --dst-cr EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject -x ! write o.geojson
+vector pipeline read vp.geojson ! reproject EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject -d EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --active-layer nolayer --dst-crs EPSG:32631 ! write o.geojson
+
+# generic dispatch: reproject exists on both sides
+pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write o.geojson
+pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 --resampling near ! write o.tif
+pipeline read vp.geojson ! reproject --resampling nearest ! write o.geojson
+pipeline read vp.geojson ! reproject --resampling nearest --resampling nearest ! write o.tif
+pipeline read vp.geojson ! reproject --dst-crs FOO ! write o.geojson
+pipeline read vp.geojson ! reproject --active-layer x --dst-crs FOO ! write o.geojson
+pipeline read g1.tif ! reproject --active-layer x ! write o.tif
+pipeline read g1.tif ! reproject --resampling near --dst-crs EPSG:32631 ! write o.tif
+raster pipeline read g1.tif ! reproject --resampling near --dst-crs EPSG:32631 ! write o.tif
+raster reproject --resampling near --dst-crs EPSG:32631 g1.tif o.tif
+raster reproject --resampling near g1.tif o.tif
+
+# middle writes: dataset handoff per driver
+vector pipeline read vp.geojson ! write m.geojson ! info
+vector pipeline read vp.geojson ! write m.geojson ! info --of json
+vector pipeline read vp.geojson ! write m.geojson ! info --features
+vector pipeline read vp.geojson ! write m.geojson ! write o.geojson
+vector pipeline read vp.geojson ! write m.geojson ! reproject --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write m.geojson ! info
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write m.geojson ! reproject --dst-crs EPSG:4326 ! write o.geojson
+vector pipeline read vp.geojson ! write m.geojsonl ! info
+vector pipeline read vp.geojson ! write m.geojsonl ! info --features
+vector pipeline read vp.geojson ! write m.geojsonl ! reproject --dst-crs EPSG:32631 ! info
+vector pipeline read vp.geojson ! write m.shp ! info
+vector pipeline read vp.geojson ! write m.shp ! info --of json
+vector pipeline read vp.geojson ! write m.shp ! info --features
+vector pipeline read vnosrs.geojson ! write m.shp ! info
+vector pipeline read vnosrs.geojson ! write m.shp ! info --features
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write m.shp ! info --of json
+vector pipeline read vp.geojson ! write m.shp ! reproject --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! write --of MEM mm ! info
+vector pipeline read vp.geojson ! write --of MEM mm ! reproject --dst-crs EPSG:32631 ! write o.geojson
+vector pipeline read vp.geojson ! write --of GeoJSON m.unknownext ! info
+
+# middle writes: GDALG exclusion, stream passthrough, GDALG terminal skip
+vector pipeline read vp.geojson ! write m.gdalg.json ! info
+vector pipeline read vp.geojson ! write --of GDALG m.x ! info
+vector pipeline read vp.geojson ! write --of stream sx ! info
+vector pipeline read vp.geojson ! reproject --dst-crs EPSG:32631 ! write --of stream sx ! info
+vector pipeline read vl.geojson ! reproject --dst-crs EPSG:32631 ! write --of stream sx ! info
+vector pipeline read vp.geojson ! write --of stream sx ! reproject --dst-crs EPSG:32631 ! write o.gdalg.json
+vector pipeline read vp.geojson ! write m.geojson ! reproject --dst-crs EPSG:32631 ! write o.gdalg.json
+vector pipeline read vp.geojson ! write m.geojson ! write o.gdalg.json
+raster pipeline read g1.tif ! write m.gdalg.json ! info
+raster pipeline read g1.tif ! write --of GDALG m.x ! info
+raster pipeline read g1.tif ! write --of stream rs ! info
+raster pipeline read g1.tif ! write m.tif ! reproject --dst-crs EPSG:32631 ! write o.gdalg.json

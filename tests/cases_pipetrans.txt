@@ -1,0 +1,110 @@
+# generic pipeline transition steps: contour / polygonize / footprint
+# turn a raster pipeline into a vector one mid-stream. Products, layer
+# name choreography, pre/post transforms, info/export-schema terminals,
+# gdalg echoes, the narrowed write vocabulary and the error battery.
+#setup: python3 /workspace/tests/mk_dem_fixtures.py . && printf '{"type":"FeatureCollection","features":[]}' > v.json
+
+# products
+pipeline read dsm.tif ! contour --interval 10 ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 ! write c.geojson
+pipeline read dsm.tif ! contour --interval 10 ! write c.geojsonl
+pipeline read dsm.tif ! contour --levels 15,30 --elevation-name E ! write c.geojson
+pipeline read dsm.tif ! contour --interval 10 --3d ! write c.geojson
+pipeline read dsm.tif ! contour --interval 10 -p --min-name MIN --max-name MAX ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 --off 5 --band 1 ! write c.geojson
+pipeline read dbig.tif ! contour --interval 25 --src-nodata -500 ! write c.geojson
+pipeline read dsm.tif ! polygonize ! write p.geojson
+pipeline read dsm.tif ! polygonize --connect-diagonal-pixels --attribute-name V ! write p.geojson
+pipeline read dsm.tif ! polygonize ! write p.shp
+pipeline read dsm.tif ! footprint ! write f.geojson
+pipeline read dsm.tif ! footprint --densify-distance 0.5 ! write f.geojson
+pipeline read dbig.tif ! footprint --src-nodata -500 ! write f.shp
+
+# layer name choreography: contour/footprint keep step names, direct
+# polygonize->write drops even an explicit step-level name, write-level
+# --output-layer always wins, intervening transforms preserve it
+pipeline read dsm.tif ! contour --interval 10 --output-layer topo ! write c.geojson
+pipeline read dsm.tif ! footprint --output-layer fx ! write f.geojson
+pipeline read dsm.tif ! polygonize --output-layer foo ! write p.geojson
+pipeline read dsm.tif ! polygonize --output-layer foo ! write p.geojson --output-layer bar
+pipeline read dsm.tif ! polygonize --output-layer foo ! select --fields DN ! write p.geojson
+pipeline read dsm.tif ! polygonize ! write p.geojson --output-layer wol
+
+# pre-transforms run before the verb, post-transforms after it
+pipeline read dsm.tif ! hillshade ! contour --interval 10 ! write c.geojson
+pipeline read dsm.tif ! aspect ! polygonize ! write p.geojson
+pipeline read dsm.tif ! contour --interval 10 ! reproject --dst-crs EPSG:32633 ! write c.geojson
+pipeline read dsm.tif ! contour --interval 10 --elevation-name E ! select --fields E ! write c.geojson
+pipeline read dsm.tif ! contour --interval 10 ! filter --bbox 400000,3000000,500000,4000000 ! write c.geojson
+pipeline read dsm.tif ! hillshade ! contour --interval 10 ! reproject --dst-crs EPSG:4326 ! write c.geojson
+
+# info / export-schema terminals
+pipeline read dsm.tif ! contour --interval 10 ! info
+pipeline read dsm.tif ! polygonize ! info
+pipeline read dsm.tif ! footprint ! info
+pipeline read dsm.tif ! polygonize --output-layer foo ! info
+pipeline read dsm.tif ! contour --interval 10 ! reproject --dst-crs EPSG:32633 ! info
+pipeline read dsm.tif ! contour --interval 10 ! info --format json
+
+# gdalg echoes are spec-ordered and %.17g-formatted
+pipeline read dsm.tif ! contour --interval 10.5 --min-name MIN --off 0.25 -e 2 ! write g.gdalg.json
+pipeline read dsm.tif ! contour --levels 5,10 -b 1 --quiet -p ! write g.gdalg.json
+pipeline read dsm.tif ! contour --interval 10 ! filter --bbox 0,0,100,100 ! write g.gdalg.json
+pipeline read dsm.tif ! footprint --src-nodata 3 --densify-distance 0.5 ! write g.gdalg.json
+pipeline read dsm.tif ! polygonize --attribute-name V --connect-diagonal-pixels ! write g.gdalg.json
+pipeline read dsm.tif ! hillshade ! contour --interval 010 ! write g.gdalg.json
+
+# quiet, overwrite, append
+pipeline read dsm.tif ! contour --interval 10 --quiet ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 ! write c.shp --quiet
+#setup: python3 /workspace/tests/mk_dem_fixtures.py . && /home/agent/oracle/executable pipeline read dsm.tif ! contour --interval 20 ! write pre.geojson --quiet
+pipeline read dsm.tif ! contour --interval 10 ! write pre.geojson
+pipeline read dsm.tif ! contour --interval 10 ! write pre.geojson --overwrite
+pipeline read dsm.tif ! contour --interval 10 ! write pre.geojson --append
+#setup: python3 /workspace/tests/mk_dem_fixtures.py . && printf '{"type":"FeatureCollection","features":[]}' > v.json
+
+# write vocabulary: only the verbs' own writers exist here
+pipeline read dsm.tif ! contour --interval 10 ! write out.bin
+pipeline read dsm.tif ! footprint ! write out.bin
+pipeline read dsm.tif ! polygonize ! write out.bin
+pipeline read dsm.tif ! contour --interval 10 ! write out.gpkg
+pipeline read dsm.tif ! polygonize ! write out.gpkg
+pipeline read dsm.tif ! contour --interval 10 ! write out --output-format GPKG
+pipeline read dsm.tif ! contour --interval 10 ! write out --output-format SHP
+pipeline read dsm.tif ! contour --interval 10 ! write out --output-format CSV
+pipeline read dsm.tif ! contour --interval 10 ! write out.x --output-format GeoJSONSeq
+pipeline read dsm.tif ! contour --interval 10 ! write out.x --output-format Memory
+pipeline read dsm.tif ! contour --interval 10 ! write out.x --output-format stream
+pipeline read dsm.tif ! polygonize ! write out.gpkg --update
+pipeline read dsm.tif ! polygonize ! write out.gpkg --upsert
+
+# error battery: parse-stage band, engine mutex/required, verb-stage
+# band range, duplicate levels, zero interval
+pipeline read dsm.tif ! contour --interval 10 --band 0 ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 --band 5 ! write c.shp
+pipeline read dsm.tif ! polygonize --band 0 ! write p.shp
+pipeline read dsm.tif ! polygonize --band 5 ! write p.shp
+pipeline read dsm.tif ! footprint --band 5 ! write f.shp
+pipeline read dsm.tif ! contour ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 --exp-base 2 ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 --levels 5 ! write c.shp
+pipeline read dsm.tif ! contour --levels 5,5 ! write c.shp
+pipeline read dsm.tif ! contour --interval 0 ! write c.shp
+pipeline read dsm.tif ! hillshade --band 5 ! contour --interval 10 ! write c.shp
+
+# structural rejects: typed pipelines refuse transitions, vector input,
+# post-transition raster steps, transition after transition
+raster pipeline read dsm.tif ! contour --interval 10 ! write c.shp
+vector pipeline read v.json ! polygonize ! write p.shp
+pipeline read v.json ! contour --interval 10 ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 ! hillshade ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 ! polygonize ! write p.shp
+pipeline read dsm.tif ! contour --interval 10 ! info --no-such
+pipeline read dsm.tif ! contour --interval 10 dsm.tif ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 --attribute-name x ! write c.shp
+pipeline read dsm.tif ! polygonize --iterval 3 ! write p.shp
+pipeline read dsm.tif ! footprint -z 3 ! write f.shp
+pipeline read dsm.tif ! contour --help
+pipeline read dsm.tif ! polygonize --help
+pipeline read dsm.tif ! contour --interval 10 ! select --fields NOPE ! write c.shp
+pipeline read dsm.tif ! contour --interval 10 ! reproject --dst-crs FOO ! write c.shp

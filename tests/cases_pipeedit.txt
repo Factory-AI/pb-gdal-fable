@@ -1,0 +1,142 @@
+# pipeline edit step + leaf edit streaming/grammar calibration
+#setup: python3 /workspace/tests/mk_pipeedit_fixtures.py .
+
+# --- pipeline edit step: presentation and basic mutations
+raster pipeline read pe2.tif ! edit ! info
+raster pipeline read pe2.tif ! edit --scale 2 ! info
+raster pipeline read pe2.tif ! edit --offset 3 ! info
+raster pipeline read pe2.tif ! edit --scale 1=2,2=3 --offset 7 ! info
+raster pipeline read pe2.tif ! edit --nodata 255 ! info
+raster pipeline read pe2.tif ! edit --nodata none ! info
+raster pipeline read pe2.tif ! edit --nodata nan ! info
+raster pipeline read pe2.tif ! edit --crs EPSG:4326 ! info
+raster pipeline read pe2.tif ! edit --crs none ! info
+raster pipeline read pe2.tif ! edit --bbox 1,2,3,4 ! info
+raster pipeline read pe2.tif ! edit --gcp 1,2,3,4 ! info
+raster pipeline read pe2.tif ! edit --gcp 1,2,3,4 --gcp 5,6,7,8,9 --crs EPSG:32631 ! info
+raster pipeline read pe2.tif ! edit --gcp @gcps.txt ! info
+raster pipeline read pe2.tif ! edit --gcp @gcps_bad.txt ! info
+raster pipeline read pe2.tif ! edit --gcp @missing.txt ! info
+raster pipeline read pe2.tif ! edit --gcp @ ! info
+raster pipeline read pe3.tif ! edit --color-interpretation red,green,blue ! info
+raster pipeline read pe2.tif ! edit --metadata A=1 --metadata B=x=y ! info
+raster pipeline read pe2.tif ! edit --unset-metadata AREA_OR_POINT ! info
+raster pipeline read pe2.tif ! edit --unset-metadata-domain IMAGE_STRUCTURE ! info
+raster pipeline read pe2.tif ! edit --metadata bare ! info
+raster pipeline read pe2.tif ! edit --scale 2 ! write o.tif
+raster pipeline read pe2.tif ! edit --crs EPSG:4326 --bbox 1,2,3,4 ! write o.tif
+raster pipeline read pe2.tif ! edit --nodata 255 --metadata A=1 ! write o.tif
+raster pipeline read pe3.tif ! edit --color-interpretation all=blue ! write o.tif
+raster pipeline read pe2.tif ! edit --gcp 1,2,3,4,5 ! write o.tif
+raster pipeline read pe2.tif ! edit --scale 3 --nodata 7 ! write o.gdalg.json
+raster pipeline read pe2.tif ! edit --gcp 1,2,3,4 --metadata K=v,w ! write o.gdalg.json
+raster pipeline read pe2.tif ! edit --crs none --nodata none ! write o.gdalg.json
+raster pipeline read pe2.tif ! edit --scale 2 ! edit --offset 3 ! info
+
+# --- pipeline edit step: validation errors
+raster pipeline read pe2.tif ! edit --bbox 1,2,3 ! info
+raster pipeline read pe2.tif ! edit --bbox 3,2,1,4 ! info
+raster pipeline read pe2.tif ! edit --bbox 1,4,3,2 ! info
+raster pipeline read pe2.tif ! edit --bbox 1,2,3,x ! info
+raster pipeline read pe2.tif ! edit --bbox 0x1,2,3,4 ! info
+raster pipeline read pe2.tif ! edit --scale x ! info
+raster pipeline read pe2.tif ! edit --scale 1d1 ! info
+raster pipeline read pe2.tif ! edit --scale 03 ! info
+raster pipeline read pe2.tif ! edit --offset 1=x ! info
+raster pipeline read pe2.tif ! edit --nodata bogus ! info
+raster pipeline read pe2.tif ! edit --nodata 1.#QNAN ! info
+raster pipeline read pe2.tif ! edit --nodata -1.#IND ! info
+raster pipeline read pe2.tif ! edit --nodata 0x10 ! info
+raster pipeline read pe2.tif ! edit --crs bogus ! info
+raster pipeline read pe2.tif ! edit --gcp 1,2,3 ! info
+raster pipeline read pe2.tif ! edit --gcp 1,2,3,z ! info
+raster pipeline read pe2.tif ! edit --metadata = ! info
+raster pipeline read pe2.tif ! edit --stats ! info
+raster pipeline read pe2.tif ! edit --bogus ! info
+raster pipeline read pe2.tif ! edit -- ! info
+raster pipeline read pe2.tif ! edit
+raster pipeline edit --scale 2 ! info
+
+# --- '+' alternate option syntax
+raster pipeline +read pe2.tif ! edit --scale 2 ! info
+raster pipeline read pe2.tif ! +edit +scale=2 ! info
+raster pipeline read pe2.tif ! edit + ! info
+raster pipeline read pe2.tif ! edit +=x ! info
+raster pipeline --read pe2.tif ! info
+raster pipeline read pe2.tif ! --edit --scale 2 ! info
+raster pipeline read pe2.tif ! edit +nodata=5 ! info
+
+# --- leaf edit: color-interpretation streaming semantics
+raster edit --color-interpretation red,green,blue pe3.tif
+raster edit --color-interpretation red,green pe3.tif
+raster edit --color-interpretation 1=red,gray pe3.tif
+raster edit --color-interpretation 1=red,2=green pe3.tif
+raster edit --color-interpretation all=red,1=green pe3.tif
+raster edit --color-interpretation 1=green,all=red pe3.tif
+raster edit --color-interpretation gray,0=red pe3.tif
+raster edit --color-interpretation x=red,gray pe3.tif
+raster edit --color-interpretation 2=red,gray,blue pe3.tif
+raster edit --color-interpretation red,green,blue,alpha pe3.tif
+raster edit --color-interpretation red,green,bogus pe3.tif
+raster edit --color-interpretation bogus pe3.tif
+raster edit --color-interpretation all=bogus pe3.tif
+raster edit --color-interpretation all= pe3.tif
+raster edit --color-interpretation ALL=red pe3.tif
+raster edit --color-interpretation 1==red,green,blue pe3.tif
+raster edit --color-interpretation 1=red=blue,green,blue pe3.tif
+raster edit --color-interpretation all=red=x,green,blue pe3.tif
+raster edit --color-interpretation =red,green pe3.tif
+raster edit --color-interpretation red=,green pe3.tif
+raster edit --color-interpretation 4=red,green,blue pe3.tif
+raster edit --color-interpretation 1=RED,2=Green,3=bLuE pe3.tif
+raster edit --color-interpretation all=red,all=green pe3.tif
+raster edit --color-interpretation gray,gray,gray pe3.tif
+raster edit --color-interpretation 1=gray pe3.tif
+raster edit --color-interpretation blue pe1.tif
+raster edit --color-interpretation red,green pe1.tif
+raster edit --color-interpretation 2=red pe1.tif
+
+# --- leaf edit: scale/offset streaming, value rule, partial apply
+raster edit --scale 1=9,8,7 pe2.tif
+raster edit --scale 9,8,1=7 pe2.tif
+raster edit --scale 5,0=1 pe2.tif
+raster edit --scale 0=1,1=2 pe2.tif
+raster edit --scale 1,2,3 pe2.tif
+raster edit --scale 3=1,4 pe2.tif
+raster edit --scale 1 pe2.tif
+raster edit --scale 2=1 pe2.tif
+raster edit --scale 1d5 pe2.tif
+raster edit --scale 1=1d2 pe2.tif
+raster edit --offset 1,2,3 pe2.tif
+raster edit --offset 0 pe2.tif
+raster edit --scale 9 --offset 8 pe2.tif
+raster edit --offset 2=3,4 --scale 5 pe2.tif
+raster edit --scale 2=3,4 --offset 5 pe2.tif
+raster edit --scale 2=3,4 --metadata K=V pe2.tif
+raster edit --scale 2=3,4 --nodata 9 pe2.tif
+raster edit --nodata 5 --scale 2=3,4 pe2.tif
+raster edit --scale 2=3,4 --gcp 1,2,3,4 pe2.tif
+raster edit --scale 2=3,4 --unset-metadata AREA_OR_POINT pe2.tif
+raster edit --scale 2=3,4 --crs EPSG:4326 pe2.tif
+raster edit --scale 2=3,4 --bbox 0,0,10,10 pe2.tif
+raster edit --auxiliary --scale 5 pe2.tif
+raster edit --auxiliary --offset 3 pe2.tif
+raster edit --auxiliary --scale 1 --offset 0 pe2.tif
+
+# --- leaf edit: bbox + metadata rewrite geokey re-encode quirk
+raster edit --bbox 0,0,10,10 pe2.tif
+raster edit --bbox 0,0,10,10 --metadata K=V pe2.tif
+raster edit --bbox 0,0,10,10 --nodata 9 pe2.tif
+raster edit --bbox 0,0,10,10 --unset-metadata AREA_OR_POINT pe2.tif
+raster edit --color-interpretation red,green --bbox 0,0,10,10 pe2.tif
+raster edit --gcp 1,2,3,4 --scale 2=3 pe2.tif
+raster edit --bbox 0,0,10,10 --scale 5 --offset 3 --metadata A=B pe2.tif
+
+# --- leaf edit: nodata / bbox grammar
+raster edit --nodata 1.#INF pe2.tif
+raster edit --nodata -1.#QNAN pe2.tif
+raster edit --nodata 1.#SNAN pe2.tif
+raster edit --nodata inf pe2.tif
+raster edit --bbox 3,2,1,4 pe2.tif
+raster edit --bbox 1,4,3,2 pe2.tif
+raster edit --bbox nan,2,3,4 pe2.tif

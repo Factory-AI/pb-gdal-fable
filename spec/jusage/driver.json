@@ -1,0 +1,96 @@
+{
+  "name":"driver",
+  "full_path":[
+    "gdal",
+    "driver"
+  ],
+  "description":"Command for driver specific operations.",
+  "sub_algorithms":[
+    {
+      "name":"cog",
+      "full_path":[
+        "gdal",
+        "driver",
+        "cog"
+      ],
+      "description":"Command for COG driver specific operations.",
+      "short_url":"\/drivers\/raster\/cog.html",
+      "url":"https:\/\/gdal.org\/drivers\/raster\/cog.html",
+      "sub_algorithms":[
+        {
+          "name":"validate",
+          "full_path":[
+            "gdal",
+            "driver",
+            "cog",
+            "validate"
+          ],
+          "description":"Validate if a TIFF file is a Cloud Optimized GeoTIFF",
+          "short_url":"\/programs\/gdal_driver_cog_validate.html",
+          "url":"https:\/\/gdal.org\/programs\/gdal_driver_cog_validate.html",
+          "sub_algorithms":[
+          ],
+          "input_arguments":[
+            {
+              "name":"dataset",
+              "type":"dataset",
+              "description":"COG dataset",
+              "required":true,
+              "category":"Base",
+              "dataset_type":[
+                "raster"
+              ],
+              "input_flags":[
+                "name",
+                "dataset"
+              ]
+            },
+            {
+              "name":"full-check",
+              "type":"string",
+              "description":"Whether to perform full check",
+              "choices":[
+                "auto",
+                "yes",
+                "no"
+              ],
+              "default":"auto",
+              "required":false,
+              "category":"Base"
+            },
+            {
+              "name":"quiet",
+              "type":"boolean",
+              "description":"Quiet mode (no progress bar or warning message)",
+              "required":false,
+              "category":"Common"
+            }
+          ],
+          "output_arguments":[
+            {
+              "name":"output-string",
+              "type":"string",
+              "description":"Output string, in which the result is placed",
+              "required":false,
+              "category":"Base"
+            }
+          ],
+          "input_output_arguments":[
+          ]
+        }
+      ],
+      "input_arguments":[
+      ],
+      "output_arguments":[
+      ],
+      "input_output_arguments":[
+      ]
+    }
+  ],
+  "input_arguments":[
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

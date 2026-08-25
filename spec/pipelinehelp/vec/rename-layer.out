@@ -1,0 +1,20 @@
+Usage: rename-layer [OPTIONS]
+
+Rename layer(s) of a vector dataset.
+
+Common Options:
+  -h, --help                                       Display help message and exit
+  --json-usage                                     Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                           Configuration option [may be repeated]
+
+Options:
+  -l, --input-layer <INPUT-LAYER>                  Input layer name
+  --output-layer <OUTPUT-LAYER>                    Output layer name
+  --ascii                                          Force names to ASCII character
+  --lower-case                                     Force names to lower case (only on ASCII characters)
+  --filename-compatible                            Force names to be usable as filenames
+  --reserved-characters <RESERVED-CHARACTERS>      Reserved character(s) to be removed
+  --replacement-character <REPLACEMENT-CHARACTER>  Replacement character when ASCII conversion not possible
+  --max-length <MAX-LENGTH>                        Maximum length of layer names
+
+For more details, consult https://gdal.org/programs/gdal_vector_rename_layer.html

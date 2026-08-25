@@ -1,0 +1,20 @@
+Usage: edit [OPTIONS]
+
+Edit metadata of a vector dataset.
+
+Common Options:
+  -h, --help                       Display help message and exit
+  --json-usage                     Display usage as JSON document and exit
+  --config <KEY>=<VALUE>           Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>    Set active layer (if not specified, all)
+  --geometry-type <GEOMETRY-TYPE>  Layer geometry type
+  --crs <CRS>                      Override CRS (without reprojection)
+  --metadata <KEY>=<VALUE>         Add/update dataset metadata item [may be repeated]
+  --unset-metadata <KEY>           Remove dataset metadata item [may be repeated]
+  --layer-metadata <KEY>=<VALUE>   Add/update layer metadata item [may be repeated]
+  --unset-layer-metadata <KEY>     Remove layer metadata item [may be repeated]
+  --unset-fid                      Unset the identifier of each feature and the FID column name
+
+For more details, consult https://gdal.org/programs/gdal_vector_edit.html

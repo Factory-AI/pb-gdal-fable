@@ -1,0 +1,286 @@
+{
+  "name":"footprint",
+  "full_path":[
+    "gdal",
+    "raster",
+    "footprint"
+  ],
+  "description":"Compute the footprint of a raster dataset.",
+  "short_url":"\/programs\/gdal_raster_footprint.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_footprint.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Whether appending to existing layer is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"output-layer",
+      "type":"string",
+      "description":"Output layer name",
+      "default":"footprint",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"band",
+      "type":"integer_list",
+      "description":"Input band(s) (1-based index)",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"combine-bands",
+      "type":"string",
+      "description":"Defines how the mask bands of the selected bands are combined to generate a single mask band, before being vectorized.",
+      "choices":[
+        "union",
+        "intersection"
+      ],
+      "default":"union",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"overview",
+      "type":"integer",
+      "description":"Which overview level of source file must be used",
+      "min_value":0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overview-srcnodata"
+    },
+    {
+      "name":"src-nodata",
+      "type":"real_list",
+      "description":"Set nodata values for input bands.",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":1,
+      "max_count":2147483647,
+      "category":"Base",
+      "mutual_exclusion_group":"overview-srcnodata"
+    },
+    {
+      "name":"coordinate-system",
+      "type":"string",
+      "description":"Target coordinate system",
+      "choices":[
+        "georeferenced",
+        "pixel"
+      ],
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"dst-crs",
+      "type":"string",
+      "description":"Destination CRS",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"split-multipolygons",
+      "type":"boolean",
+      "description":"Whether to split multipolygons as several features each with one single polygon",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"convex-hull",
+      "type":"boolean",
+      "description":"Whether to compute the convex hull of the footprint",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"densify-distance",
+      "type":"real",
+      "description":"Maximum distance between 2 consecutive points of the output geometry.",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"simplify-tolerance",
+      "type":"real",
+      "description":"Tolerance used to merge consecutive points of the output geometry.",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-ring-area",
+      "type":"real",
+      "description":"Minimum value for the area of a ring",
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-points",
+      "type":"string",
+      "description":"Maximum number of points of each output geometry",
+      "default":"100",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"location-field",
+      "type":"string",
+      "description":"Name of the field where the path of the input dataset will be stored.",
+      "default":"location",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"location"
+    },
+    {
+      "name":"no-location-field",
+      "type":"boolean",
+      "description":"Disable creating a field with the path of the input dataset",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"location"
+    },
+    {
+      "name":"absolute-path",
+      "type":"boolean",
+      "description":"Whether the path to the input dataset should be stored as an absolute path",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output vector dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

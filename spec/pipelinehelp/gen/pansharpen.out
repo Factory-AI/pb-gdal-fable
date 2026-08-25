@@ -1,0 +1,21 @@
+Usage: pansharpen [OPTIONS] <SPECTRAL>...
+
+Perform a pansharpen operation.
+
+Positional arguments:
+  --spectral <SPECTRAL>                                    Input spectral band dataset [1.. values] [required]
+
+Common Options:
+  -h, --help                                               Display help message and exit
+  --json-usage                                             Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                                   Configuration option [may be repeated]
+
+Options:
+  -r, --resampling <RESAMPLING>                            Resampling algorithm. RESAMPLING=nearest|bilinear|cubic|cubicspline|lanczos|average (default: cubic)
+  --weights <WEIGHTS>                                      Weight for each input spectral band [may be repeated]
+  --nodata <NODATA>                                        Override nodata value of input bands
+  --bit-depth <BIT-DEPTH>                                  Override bit depth of input bands
+  --spatial-extent-adjustment <SPATIAL-EXTENT-ADJUSTMENT>  Select behavior when bands have not the same extent. SPATIAL-EXTENT-ADJUSTMENT=union|intersection|none|none-without-warning (default: union)
+  -j, --num-threads <NUM-THREADS>                          Number of jobs (or ALL_CPUS) (default: ALL_CPUS)
+
+For more details, consult https://gdal.org/programs/gdal_raster_pansharpen.html

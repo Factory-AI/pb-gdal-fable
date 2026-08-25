@@ -1,0 +1,29 @@
+# geokey/citation serialization: ESRI/PROJ4 CRS citations drop the
+# ellipsoid when its EPSG code is known; edit-path CRS parse accepts
+# proj strings as CRSs; existing-keys quirks (0.0 double prepend, empty
+# ascii tag retention, compound ScaleZ=1.0); crs none no-op on keyless
+# files
+#setup: python3 -c "import sys; sys.path.insert(0,'/workspace/tests'); from mk_tail_fixtures import write_tif; import mk_ci_fixtures as f; write_tif('b1.tif','Byte',8,8,[[str((i*3)%256) for i in range(64)]],gt=(500000,10,0,3800000,0,-10),epsg=32611); f.make()"
+raster reproject --dst-crs ESRI:102008 b1.tif o.tif -q
+raster reproject --dst-crs ESRI:102003 b1.tif o.tif -q
+raster reproject --dst-crs ESRI:102039 b1.tif o.tif -q
+raster reproject --dst-crs "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +datum=NAD83 +units=m +no_defs" b1.tif o.tif -q
+raster reproject --dst-crs "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +ellps=GRS80 +units=m +no_defs" b1.tif o.tif -q
+raster reproject --dst-crs "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +datum=NAD27 +units=m" b1.tif o.tif -q
+raster reproject --dst-crs "+proj=utm +zone=11 +datum=WGS84" b1.tif o.tif -q
+raster reproject --dst-crs EPSG:4269 b1.tif o.tif -q
+raster edit --crs EPSG:4326+5773 b1.tif
+raster edit --crs EPSG:32611+5773 b1.tif
+raster edit --crs EPSG:4979 b1.tif
+raster edit --crs ESRI:102008 b1.tif
+raster edit --crs "+proj=aea +lat_1=20 +lat_2=60 +lat_0=40 +lon_0=-96 +datum=NAD83 +units=m +no_defs" b1.tif
+raster edit --crs "+proj=utm +zone=11 +datum=WGS84" b1.tif
+raster edit --crs none b1.tif
+raster edit --crs EPSG:4326+5773 rgb.tif
+raster edit --crs EPSG:4979 rgb.tif
+raster edit --crs "+proj=longlat +datum=WGS84" rgb.tif
+raster edit --crs none rgb.tif
+raster edit --crs EPSG:4326+5773 no338.tif
+raster edit --crs EPSG:4979 no338.tif
+raster edit --crs none no338.tif
+raster edit --crs EPSG:26711 no338.tif

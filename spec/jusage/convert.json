@@ -1,0 +1,61 @@
+{
+  "description":"Convert a dataset (shortcut for 'gdal raster convert' or 'gdal vector convert').",
+  "short_url":"\/programs\/gdal_convert.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_convert.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Input raster, vector or multidimensional raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster",
+        "vector",
+        "multidim_raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster, vector or multidimensional raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster",
+        "vector",
+        "multidim_raster"
+      ],
+      "input_flags":[
+        "name"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

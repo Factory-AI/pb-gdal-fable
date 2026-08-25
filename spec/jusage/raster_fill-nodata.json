@@ -1,0 +1,187 @@
+{
+  "name":"fill-nodata",
+  "full_path":[
+    "gdal",
+    "raster",
+    "fill-nodata"
+  ],
+  "description":"Fill nodata raster regions by interpolation from edges.",
+  "short_url":"\/programs\/gdal_raster_fill_nodata.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_fill_nodata.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATECOPY"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Append as a subdataset to existing output",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"band",
+      "type":"integer",
+      "description":"Input band (1-based index)",
+      "default":1,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-distance",
+      "type":"integer",
+      "description":"The maximum distance (in pixels) that the algorithm will search out for values to interpolate.",
+      "metavar":"MAX_DISTANCE",
+      "default":100,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"smoothing-iterations",
+      "type":"integer",
+      "description":"The number of 3x3 average filter smoothing iterations to run after the interpolation to dampen artifacts. The default is zero smoothing iterations.",
+      "metavar":"SMOOTHING_ITERATIONS",
+      "default":0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"mask",
+      "type":"dataset",
+      "description":"Use the first band of the specified file as a validity mask (zero is invalid, non-zero is valid).",
+      "required":false,
+      "category":"Base",
+      "dataset_type":[
+        "raster",
+        "vector",
+        "multidim_raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"strategy",
+      "type":"string",
+      "description":"By default, pixels are interpolated using an inverse distance weighting (invdist). It is also possible to choose a nearest neighbour (nearest) strategy.",
+      "choices":[
+        "invdist",
+        "nearest"
+      ],
+      "default":"invdist",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ],
+  "supports_streamed_output":true
+}

@@ -1,0 +1,15 @@
+#setup: printf '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > f.json && printf '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"b":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > g.json && /home/agent/oracle/executable vector convert -q f.json d.shp && mkdir dd && /home/agent/oracle/executable vector convert -q f.json dd/l1.shp
+vector convert --append --output-layer other d.shp d.shp
+vector convert --update --output-layer other d.shp d.shp
+vector convert --overwrite-layer --output-layer other d.shp d.shp
+vector convert --upsert --output-layer other d.shp d.shp
+vector convert --append --output-layer x2 g.json d.shp
+vector convert --append --output-layer x3 --lco SHPT=POINTZ g.json d.shp
+vector convert --output-layer foo g.json outdir
+vector convert --append --output-layer l2 g.json dd
+vector convert --append --output-layer l1 g.json dd
+vector convert --update --output-layer l9 g.json dd
+vector convert --output-layer named g.json single.shp
+vector convert --upsert --output-layer l2 f.json dd
+vector convert --update g.json dd
+vector convert --append --output-layer l1 --lco SPATIAL_INDEX=YES g.json dd

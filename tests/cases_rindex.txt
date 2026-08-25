@@ -1,0 +1,145 @@
+# raster index: vector index of raster footprints
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py .
+
+# ---- basics: formats guessed from extension, multi input ----
+raster index utm.tif o.json
+raster index utm.tif o.geojson
+raster index -q utm.tif o.shp
+raster index utm.tif o.dbf
+raster index utm.tif utm2.tif big.tif o.json
+raster index utm.tif utm.tif o.json
+raster index big.tif o.geojsonl
+raster index rot.vrt o.json
+raster index nonsq.tif o.json
+raster index geo.tif o.json
+raster index gtnosrs.tif o.json
+raster index nocode.vrt o.json
+raster index -f GeoJSONSeq --nln foo utm.tif /vsistdout/
+raster index -f GeoJSON --nln idx utm.tif /vsistdout/
+raster index -f GeoJSON utm.tif /vsistdout/
+raster index -f MEM --nln idx utm.tif x
+raster index -f MEM utm.tif x
+raster index utm.tif o.xyz
+raster index -f "ESRI Shapefile" utm.tif od
+raster index -f "ESRI Shapefile" --nln idx utm.tif od2
+raster index -f GeoJSON utm.tif og
+
+# ---- location field, layer name, options ----
+raster index --location-name Path utm.tif o.json
+raster index --location-name path utm.tif o.shp
+raster index --nln tiles utm.tif o.json
+raster index --nln tiles utm.tif o.shp
+raster index --co FOO=BAR utm.tif o.json
+raster index --lco COORDINATE_PRECISION=3 utm.tif o.json
+raster index --metadata FOO=BAR utm.tif o.json
+
+# ---- source crs field ----
+raster index --source-crs-field-name crs utm.tif o.json
+raster index --source-crs-field-name crs --source-crs-format WKT utm.tif o.json
+raster index --source-crs-field-name crs --source-crs-format PROJ utm.tif o.json
+raster index --source-crs-field-name crs --source-crs-format EPSG utm.tif o.json
+raster index --source-crs-field-name crs --source-crs-format WKT utm.tif o.shp
+raster index --source-crs-field-name crs utm.tif o.shp
+raster index --source-crs-field-name crs nocode.vrt o.json
+raster index --source-crs-field-name crs nocode.vrt o.shp
+raster index --source-crs-field-name crs --source-crs-format EPSG nocode.vrt o.json
+raster index --source-crs-field-name crs utm.tif geo.tif o.json
+raster index --source-crs-field-name crs gtnosrs.tif utm.tif o.json
+raster index --source-crs-format WKT utm.tif o.json
+
+# ---- dst-crs ----
+raster index --dst-crs EPSG:4326 utm.tif o.json
+raster index --dst-crs EPSG:3857 utm.tif geo.tif o.json
+raster index --dst-crs EPSG:32611 geo.tif o.json
+raster index --dst-crs invalid utm.tif o.json
+raster index --dst-crs EPSG:4326 gtnosrs.tif o.json
+raster index --dst-crs EPSG:4326 --skip-errors gtnosrs.tif utm.tif o.json
+
+# ---- pixel size filters ----
+raster index --min-pixel-size 10 utm.tif utm2.tif o.json
+raster index --min-pixel-size 10.5 utm.tif o.json
+raster index --max-pixel-size 10 utm.tif big.tif o.json
+raster index --min-pixel-size 7.07 nonsq.tif o.json
+raster index --min-pixel-size 7.0711 nonsq.tif o.json
+raster index --min-pixel-size 12.6 rot.vrt o.json
+raster index --max-pixel-size 0.01 geo.tif utm.tif o.json
+raster index --min-pixel-size 10 --max-pixel-size 10 utm.tif o.json
+raster index -q --min-pixel-size 10 utm.tif utm2.tif o.json
+
+# ---- directories and filename filters ----
+raster index dird o.json
+raster index dird --skip-errors o.json
+raster index dird --recursive --skip-errors o.json
+raster index dird --filename-filter *.tif o.json
+raster index dird --recursive --filename-filter *.tif o.json
+raster index dird --filename-filter *.TIF o.json
+raster index dird --filename-filter *.png o.json
+raster index dird --filename-filter n.* --filename-filter *.txt --skip-errors o.json
+raster index --recursive utm.tif o.json
+raster index --filename-filter *.png utm.tif o.json
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py . ; mkdir emp
+raster index emp o.json
+raster index emp utm.tif o.json
+
+# ---- input errors ----
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py . ; echo garbage > junk.tif
+raster index missing.tif o.json
+raster index --skip-errors missing.tif o.json
+raster index junk.tif o.json
+raster index --skip-errors junk.tif utm.tif o.json
+raster index nogt.tif o.json
+raster index --skip-errors nogt.tif utm.tif o.json
+raster index srsnogt.tif o.json
+raster index utm.tif missing.tif big.tif o.json
+raster index utm.tif utm12.tif o.json
+raster index -q utm.tif utm12.tif o.json
+raster index --skip-errors nogt.tif o.json
+
+# ---- existing output choreography ----
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py . ; /home/agent/oracle/executable raster index -q utm.tif o.json
+raster index utm2.tif o.json
+raster index --overwrite utm2.tif o.json
+raster index --append utm.tif utm2.tif o.json
+raster index --append -q utm2.tif o.json
+raster index --update utm2.tif o.json
+raster index --overwrite-layer utm2.tif o.json
+raster index --append --nln other utm2.tif o.json
+raster index --append geo.tif o.json
+raster index --append --source-crs-field-name crs utm2.tif o.json
+raster index --overwrite --update utm2.tif o.json
+raster index --overwrite --append utm2.tif o.json
+raster index --update --append utm2.tif o.json
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py . ; /home/agent/oracle/executable raster index -q utm.tif o.shp
+raster index --append utm2.tif o.shp
+raster index --overwrite-layer utm2.tif o.shp
+raster index --update utm2.tif o.shp
+raster index --update --nln extra utm2.tif o.shp
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py . ; /home/agent/oracle/executable raster index -q -f "ESRI Shapefile" --nln a utm.tif od
+raster index --update --nln b utm2.tif od
+raster index --append --nln a utm2.tif od
+raster index --append utm2.tif od
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py . ; /home/agent/oracle/executable raster index -q --location-name Path utm.tif o.json
+raster index --append utm2.tif o.json
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py . ; echo junk > o.json
+raster index utm.tif o.json
+raster index --append utm.tif o.json
+raster index --overwrite utm.tif o.json
+#setup: python3 /workspace/tests/mk_rindex_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_rindex_fixtures.py .
+raster index --append utm.tif o.json
+raster index --update utm.tif o.json
+raster index --overwrite-layer utm.tif o.json
+raster index --overwrite utm.tif o.json
+
+# ---- format and profile validation ----
+raster index -f FOO utm.tif o.json
+raster index -f stream utm.tif o.json
+raster index -f GDALG utm.tif o.gdalg.json
+raster index utm.tif o.gdalg.json
+raster index -f GTiff utm.tif o.tif
+raster index -f CSV utm.tif o.csv
+raster index --profile STAC-GeoParquet utm.tif o.parquet
+raster index --profile STAC-GeoParquet utm.tif o.json
+raster index --profile bogus utm.tif o.json
+raster index --source-crs-format bogus --source-crs-field-name crs utm.tif o.json
+raster index utm.tif
+raster index

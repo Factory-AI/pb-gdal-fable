@@ -1,0 +1,566 @@
+# D11 GeoTIFF CRS geokey writer/reader differential: for each CRS,
+# compare written bytes, then oracle-written file readback (text+json).
+raster create --size 2,2 --crs EPSG:4326 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4326 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4326 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:32611 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:32611 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:32611 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:26911 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:26911 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:26911 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:4267 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4267 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4267 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:2154 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:2154 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:2154 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:3857 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:3857 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:3857 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:4979 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4979 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4979 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:4978 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4978 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4978 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs OGC:CRS84 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs OGC:CRS84 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs OGC:CRS84 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:4326+5773 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4326+5773 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4326+5773 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:32611+5773 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:32611+5773 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:32611+5773 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:4979 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4979 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4979 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["FooGeog",DATUM["Foo_Datum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["FooGeog",DATUM["Foo_Datum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["FooGeog",DATUM["Foo_Datum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["G1",DATUM["MyDatum",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G1",DATUM["MyDatum",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G1",DATUM["MyDatum",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["myunit",0.02]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["myunit",0.02]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["myunit",0.02]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["G3",DATUM["European_Datum_1950",SPHEROID["International 1924",6378388,297]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G3",DATUM["European_Datum_1950",SPHEROID["International 1924",6378388,297]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G3",DATUM["European_Datum_1950",SPHEROID["International 1924",6378388,297]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Paris",2.33722917],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Paris",2.33722917],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Paris",2.33722917],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["grad",0.015707963267948967]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["grad",0.015707963267948967]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["W",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["grad",0.015707963267948967]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-177],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-177],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-177],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",177],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",177],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",177],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-51],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-51],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-51],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-171],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-171],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD27",DATUM["North_American_Datum_1927",SPHEROID["Clarke 1866",6378206.4,294.978698213898]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-171],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-45],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",10000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 72",DATUM["WGS_1972",SPHEROID["WGS 72",6378135,298.26]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 72",DATUM["WGS_1972",SPHEROID["WGS 72",6378135,298.26]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["WGS 72",DATUM["WGS_1972",SPHEROID["WGS 72",6378135,298.26]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["FG",DATUM["Foo_Datum",SPHEROID["Foo",6378000,298]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["FG",DATUM["Foo_Datum",SPHEROID["Foo",6378000,298]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u",GEOGCS["FG",DATUM["Foo_Datum",SPHEROID["Foo",6378000,298]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-117],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["myTM",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["myTM",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["myTM",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator_South_Orientated"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",19],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator_South_Orientated"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",19],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator_South_Orientated"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",19],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Conformal_Conic_1SP"],PARAMETER["latitude_of_origin",46.5],PARAMETER["central_meridian",3],PARAMETER["scale_factor",0.99],PARAMETER["false_easting",700000],PARAMETER["false_northing",6600000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Conformal_Conic_1SP"],PARAMETER["latitude_of_origin",46.5],PARAMETER["central_meridian",3],PARAMETER["scale_factor",0.99],PARAMETER["false_easting",700000],PARAMETER["false_northing",6600000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Conformal_Conic_1SP"],PARAMETER["latitude_of_origin",46.5],PARAMETER["central_meridian",3],PARAMETER["scale_factor",0.99],PARAMETER["false_easting",700000],PARAMETER["false_northing",6600000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Conformal_Conic_2SP"],PARAMETER["standard_parallel_1",49],PARAMETER["standard_parallel_2",44],PARAMETER["latitude_of_origin",46.5],PARAMETER["central_meridian",3],PARAMETER["false_easting",700000],PARAMETER["false_northing",6600000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Conformal_Conic_2SP"],PARAMETER["standard_parallel_1",49],PARAMETER["standard_parallel_2",44],PARAMETER["latitude_of_origin",46.5],PARAMETER["central_meridian",3],PARAMETER["false_easting",700000],PARAMETER["false_northing",6600000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Conformal_Conic_2SP"],PARAMETER["standard_parallel_1",49],PARAMETER["standard_parallel_2",44],PARAMETER["latitude_of_origin",46.5],PARAMETER["central_meridian",3],PARAMETER["false_easting",700000],PARAMETER["false_northing",6600000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",110],PARAMETER["scale_factor",0.997],PARAMETER["false_easting",3900000],PARAMETER["false_northing",900000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",110],PARAMETER["scale_factor",0.997],PARAMETER["false_easting",3900000],PARAMETER["false_northing",900000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mercator_1SP"],PARAMETER["central_meridian",110],PARAMETER["scale_factor",0.997],PARAMETER["false_easting",3900000],PARAMETER["false_northing",900000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mercator_2SP"],PARAMETER["standard_parallel_1",42],PARAMETER["central_meridian",51],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mercator_2SP"],PARAMETER["standard_parallel_1",42],PARAMETER["central_meridian",51],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mercator_2SP"],PARAMETER["standard_parallel_1",42],PARAMETER["central_meridian",51],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-71],PARAMETER["central_meridian",70],PARAMETER["scale_factor",1],PARAMETER["false_easting",6000000],PARAMETER["false_northing",6000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-71],PARAMETER["central_meridian",70],PARAMETER["scale_factor",1],PARAMETER["false_easting",6000000],PARAMETER["false_northing",6000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-71],PARAMETER["central_meridian",70],PARAMETER["scale_factor",1],PARAMETER["false_easting",6000000],PARAMETER["false_northing",6000000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Oblique_Stereographic"],PARAMETER["latitude_of_origin",52.15],PARAMETER["central_meridian",5.38],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Oblique_Stereographic"],PARAMETER["latitude_of_origin",52.15],PARAMETER["central_meridian",5.38],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Oblique_Stereographic"],PARAMETER["latitude_of_origin",52.15],PARAMETER["central_meridian",5.38],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Stereographic"],PARAMETER["latitude_of_origin",10],PARAMETER["central_meridian",20],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Stereographic"],PARAMETER["latitude_of_origin",10],PARAMETER["central_meridian",20],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Stereographic"],PARAMETER["latitude_of_origin",10],PARAMETER["central_meridian",20],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Azimuthal_Equal_Area"],PARAMETER["latitude_of_center",52],PARAMETER["longitude_of_center",10],PARAMETER["false_easting",4321000],PARAMETER["false_northing",3210000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Azimuthal_Equal_Area"],PARAMETER["latitude_of_center",52],PARAMETER["longitude_of_center",10],PARAMETER["false_easting",4321000],PARAMETER["false_northing",3210000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Azimuthal_Equal_Area"],PARAMETER["latitude_of_center",52],PARAMETER["longitude_of_center",10],PARAMETER["false_easting",4321000],PARAMETER["false_northing",3210000],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Albers_Conic_Equal_Area"],PARAMETER["standard_parallel_1",29.5],PARAMETER["standard_parallel_2",45.5],PARAMETER["latitude_of_center",23],PARAMETER["longitude_of_center",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Albers_Conic_Equal_Area"],PARAMETER["standard_parallel_1",29.5],PARAMETER["standard_parallel_2",45.5],PARAMETER["latitude_of_center",23],PARAMETER["longitude_of_center",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Albers_Conic_Equal_Area"],PARAMETER["standard_parallel_1",29.5],PARAMETER["standard_parallel_2",45.5],PARAMETER["latitude_of_center",23],PARAMETER["longitude_of_center",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Sinusoidal"],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Sinusoidal"],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Sinusoidal"],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cassini_Soldner"],PARAMETER["latitude_of_origin",30],PARAMETER["central_meridian",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cassini_Soldner"],PARAMETER["latitude_of_origin",30],PARAMETER["central_meridian",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cassini_Soldner"],PARAMETER["latitude_of_origin",30],PARAMETER["central_meridian",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polyconic"],PARAMETER["latitude_of_origin",30],PARAMETER["central_meridian",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polyconic"],PARAMETER["latitude_of_origin",30],PARAMETER["central_meridian",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polyconic"],PARAMETER["latitude_of_origin",30],PARAMETER["central_meridian",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Azimuthal_Equidistant"],PARAMETER["latitude_of_center",40],PARAMETER["longitude_of_center",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Azimuthal_Equidistant"],PARAMETER["latitude_of_center",40],PARAMETER["longitude_of_center",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Azimuthal_Equidistant"],PARAMETER["latitude_of_center",40],PARAMETER["longitude_of_center",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Miller_Cylindrical"],PARAMETER["latitude_of_center",0],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Miller_Cylindrical"],PARAMETER["latitude_of_center",0],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Miller_Cylindrical"],PARAMETER["latitude_of_center",0],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-90],PARAMETER["standard_parallel_1",30],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-90],PARAMETER["standard_parallel_1",30],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",-90],PARAMETER["standard_parallel_1",30],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Robinson"],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Robinson"],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Robinson"],PARAMETER["longitude_of_center",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["VanDerGrinten"],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["VanDerGrinten"],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["VanDerGrinten"],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Orthographic"],PARAMETER["latitude_of_origin",40],PARAMETER["central_meridian",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Orthographic"],PARAMETER["latitude_of_origin",40],PARAMETER["central_meridian",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Orthographic"],PARAMETER["latitude_of_origin",40],PARAMETER["central_meridian",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Gnomonic"],PARAMETER["latitude_of_origin",40],PARAMETER["central_meridian",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Gnomonic"],PARAMETER["latitude_of_origin",40],PARAMETER["central_meridian",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Gnomonic"],PARAMETER["latitude_of_origin",40],PARAMETER["central_meridian",-100],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equidistant_Conic"],PARAMETER["standard_parallel_1",30],PARAMETER["standard_parallel_2",40],PARAMETER["latitude_of_center",35],PARAMETER["longitude_of_center",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equidistant_Conic"],PARAMETER["standard_parallel_1",30],PARAMETER["standard_parallel_2",40],PARAMETER["latitude_of_center",35],PARAMETER["longitude_of_center",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equidistant_Conic"],PARAMETER["standard_parallel_1",30],PARAMETER["standard_parallel_2",40],PARAMETER["latitude_of_center",35],PARAMETER["longitude_of_center",-96],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mollweide"],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mollweide"],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Mollweide"],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Hotine_Oblique_Mercator"],PARAMETER["latitude_of_center",36],PARAMETER["longitude_of_center",-74],PARAMETER["azimuth",337],PARAMETER["rectified_grid_angle",337],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Hotine_Oblique_Mercator"],PARAMETER["latitude_of_center",36],PARAMETER["longitude_of_center",-74],PARAMETER["azimuth",337],PARAMETER["rectified_grid_angle",337],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Hotine_Oblique_Mercator"],PARAMETER["latitude_of_center",36],PARAMETER["longitude_of_center",-74],PARAMETER["azimuth",337],PARAMETER["rectified_grid_angle",337],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["pf",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["US survey foot",0.304800609601219]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["pf",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["US survey foot",0.304800609601219]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["pf",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["US survey foot",0.304800609601219]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["g",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["grad",0.015707963267948967]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["g",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["grad",0.015707963267948967]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["g",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["grad",0.015707963267948967]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cylindrical_Equal_Area"],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cylindrical_Equal_Area"],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cylindrical_Equal_Area"],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:4807 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4807 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:4807 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:27572 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:27572 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:27572 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:31370 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:31370 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:31370 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:2056 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:2056 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:2056 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:5514 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:5514 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:5514 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:3035 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:3035 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:3035 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:3413 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:3413 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:3413 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:32661 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:32661 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:32661 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:6933 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:6933 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:6933 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:2225 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:2225 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:2225 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:26717 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:26717 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:26717 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs '+proj=utm +zone=11 +datum=WGS84 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=utm +zone=11 +datum=WGS84 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=utm +zone=11 +datum=WGS84 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs '+proj=longlat +datum=WGS84 +no_defs' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=longlat +datum=WGS84 +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=longlat +datum=WGS84 +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=lcc +lat_1=49 +lat_2=44 +lat_0=46.5 +lon_0=3 +x_0=700000 +y_0=6600000 +ellps=GRS80 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs '+proj=utm +zone=31 +south +ellps=WGS72 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=utm +zone=31 +south +ellps=WGS72 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=utm +zone=31 +south +ellps=WGS72 +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs '+proj=tmerc +lat_0=1 +lon_0=-100 +k=0.9999 +x_0=3 +y_0=4 +ellps=intl +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=tmerc +lat_0=1 +lon_0=-100 +k=0.9999 +x_0=3 +y_0=4 +ellps=intl +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs '+proj=tmerc +lat_0=1 +lon_0=-100 +k=0.9999 +x_0=3 +y_0=4 +ellps=intl +units=m +no_defs' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",71],PARAMETER["central_meridian",-39],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",71],PARAMETER["central_meridian",-39],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",71],PARAMETER["central_meridian",-39],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-90],PARAMETER["central_meridian",0],PARAMETER["scale_factor",0.994],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-90],PARAMETER["central_meridian",0],PARAMETER["scale_factor",0.994],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Polar_Stereographic"],PARAMETER["latitude_of_origin",-90],PARAMETER["central_meridian",0],PARAMETER["scale_factor",0.994],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Azimuthal_Equal_Area"],PARAMETER["latitude_of_center",52],PARAMETER["longitude_of_center",10],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Azimuthal_Equal_Area"],PARAMETER["latitude_of_center",52],PARAMETER["longitude_of_center",10],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Lambert_Azimuthal_Equal_Area"],PARAMETER["latitude_of_center",52],PARAMETER["longitude_of_center",10],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator_South_Orientated"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",19],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator_South_Orientated"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",19],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator_South_Orientated"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",19],PARAMETER["scale_factor",1],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["ft",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["ft",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["ft",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["pf",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["US survey foot",0.304800609601219]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["pf",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["US survey foot",0.304800609601219]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["pf",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["US survey foot",0.304800609601219]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["g",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["grad",0.015707963267948967]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["g",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["grad",0.015707963267948967]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["g",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["grad",0.015707963267948967]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["mu",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["myunit",0.02]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["mu",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["myunit",0.02]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["mu",GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["myunit",0.02]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["cu",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["mycust",0.33]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["cu",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["mycust",0.33]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["cu",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",1],PARAMETER["central_meridian",-100],PARAMETER["scale_factor",0.9999],PARAMETER["false_easting",3],PARAMETER["false_northing",4],UNIT["mycust",0.33]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["myunit",0.02]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["myunit",0.02]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Paris",2.33722917],UNIT["myunit",0.02]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOGCS["G1",DATUM["MyDatum",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G1",DATUM["MyDatum",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOGCS["G1",DATUM["MyDatum",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOCCS["gc",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOCCS["gc",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOCCS["gc",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'GEOCCS["gc2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOCCS["gc2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'GEOCCS["gc2",DATUM["MyDatum",SPHEROID["Foo Ell",6378000,297.5]],PRIMEM["Greenwich",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["u31",GEOGCS["ED50",DATUM["European_Datum_1950",SPHEROID["International 1924",6378388,297]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",3],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u31",GEOGCS["ED50",DATUM["European_Datum_1950",SPHEROID["International 1924",6378388,297]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",3],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["u31",GEOGCS["ED50",DATUM["European_Datum_1950",SPHEROID["International 1924",6378388,297]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Transverse_Mercator"],PARAMETER["latitude_of_origin",0],PARAMETER["central_meridian",3],PARAMETER["scale_factor",0.9996],PARAMETER["false_easting",500000],PARAMETER["false_northing",0],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs EPSG:5972 --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:5972 --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs EPSG:5972 --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cylindrical_Equal_Area"],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cylindrical_Equal_Area"],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Cylindrical_Equal_Area"],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",5],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",5],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",5],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["metre",1]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:
+raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",0],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",0],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info o.tif
+#setup: /home/agent/oracle/executable raster create --size 2,2 --crs 'PROJCS["p",GEOGCS["WGS 84",DATUM["WGS_1984",SPHEROID["WGS 84",6378137,298.257223563]],PRIMEM["Greenwich",0],UNIT["degree",0.0174532925199433]],PROJECTION["Equirectangular"],PARAMETER["latitude_of_origin",0],PARAMETER["standard_parallel_1",30],PARAMETER["central_meridian",-90],PARAMETER["false_easting",1],PARAMETER["false_northing",2],UNIT["foot",0.3048]]' --bbox 0,0,1,1 o.tif -q
+raster info --format json o.tif
+#setup:

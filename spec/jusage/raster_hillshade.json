@@ -1,0 +1,224 @@
+{
+  "name":"hillshade",
+  "full_path":[
+    "gdal",
+    "raster",
+    "hillshade"
+  ],
+  "description":"Generate a shaded relief map",
+  "short_url":"\/programs\/gdal_raster_hillshade.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_hillshade.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATECOPY"
+        ],
+        "vrt_compatible":[
+          "false"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Append as a subdataset to existing output",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"band",
+      "type":"integer",
+      "description":"Input band (1-based index)",
+      "default":1,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"zfactor",
+      "type":"real",
+      "description":"Vertical exaggeration used to pre-multiply the elevations",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"xscale",
+      "type":"real",
+      "description":"Ratio of vertical units to horizontal X axis units",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"yscale",
+      "type":"real",
+      "description":"Ratio of vertical units to horizontal Y axis units",
+      "min_value":0.0,
+      "min_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"azimuth",
+      "type":"real",
+      "description":"Azimuth of the light, in degrees",
+      "default":315.0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"altitude",
+      "type":"real",
+      "description":"Altitude of the light, in degrees",
+      "default":45.0,
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":90.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"gradient-alg",
+      "type":"string",
+      "description":"Algorithm used to compute terrain gradient",
+      "choices":[
+        "Horn",
+        "ZevenbergenThorne"
+      ],
+      "default":"Horn",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"variant",
+      "type":"string",
+      "description":"Variant of the hillshading algorithm",
+      "choices":[
+        "regular",
+        "combined",
+        "multidirectional",
+        "Igor"
+      ],
+      "default":"regular",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"no-edges",
+      "type":"boolean",
+      "description":"Do not try to interpolate values at dataset edges or close to nodata values",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ],
+  "supports_streamed_output":true
+}

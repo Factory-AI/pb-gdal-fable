@@ -1,0 +1,248 @@
+#setup: python3 /workspace/tests/mk_d2_fixtures.py .
+# PHOTOMETRIC
+raster create --size 3,2 --co PHOTOMETRIC=MINISWHITE o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=MINISWHITE o.tif
+raster create --size 3,2 --band-count 2 --co PHOTOMETRIC=MINISWHITE o.tif
+raster create --size 3,2 --datatype UInt16 --co PHOTOMETRIC=MINISWHITE o.tif
+raster create --size 3,2 --co PHOTOMETRIC=PALETTE o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=PALETTE o.tif
+raster create --size 3,2 --datatype UInt16 --co PHOTOMETRIC=PALETTE o.tif
+raster create --size 3,2 --datatype Float32 --co PHOTOMETRIC=PALETTE o.tif
+raster create --size 3,2 --band-count 4 --co PHOTOMETRIC=CMYK o.tif
+raster create --size 3,2 --band-count 5 --co PHOTOMETRIC=CMYK o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=CMYK o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=CIELAB o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=ICCLAB o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=ITULAB o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=YCBCR o.tif
+raster create --size 3,2 --co PHOTOMETRIC=RGB o.tif
+raster create --size 3,2 --band-count 2 --co PHOTOMETRIC=RGB o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=RGB o.tif
+raster create --size 3,2 --band-count 4 --co PHOTOMETRIC=RGB o.tif
+raster create --size 3,2 --co PHOTOMETRIC=FOO o.tif
+raster create --size 3,2 --co PHOTOMETRIC=MINISBLACK o.tif
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=MINISBLACK o.tif
+raster create --size 3,2 --co PHOTOMETRIC=miniswhite o.tif
+raster create --size 3,2 --co PHOTOMETRIC=MASK o.tif
+# NBITS
+raster create --size 3,2 --co NBITS=4 o.tif
+raster create --size 3,2 --co NBITS=1 o.tif
+raster create --size 3,2 --co NBITS=7 --burn 3 o.tif
+raster create --size 5,3 --co NBITS=4 --burn 3 o.tif
+raster create --size 5,3 --band-count 2 --co NBITS=4 --burn 3 --burn 200 o.tif
+raster create --size 5,3 --band-count 2 --co NBITS=4 --burn 200 --burn 300 o.tif
+raster create --size 3,2 --co NBITS=4 --nodata 7 o.tif
+raster create --size 3,2 --co NBITS=4 --nodata 200 o.tif
+raster create --size 3,2 --co NBITS=33 o.tif
+raster create --size 3,2 --co NBITS=0 o.tif
+raster create --size 3,2 --co NBITS=abc o.tif
+raster create --size 3,2 --co NBITS=-3 o.tif
+raster create --size 5,2 --datatype UInt16 --co NBITS=12 --burn 300 o.tif
+raster create --size 3,2 --datatype UInt16 --co NBITS=17 o.tif
+raster create --size 3,2 --datatype UInt16 --co NBITS=0 o.tif
+raster create --size 3,2 --datatype UInt32 --co NBITS=17 --burn 100000 o.tif
+raster create --size 3,2 --datatype UInt32 --co NBITS=9 o.tif
+raster create --size 3,2 --datatype UInt32 --co NBITS=33 o.tif
+raster create --size 3,2 --datatype Int16 --co NBITS=12 o.tif
+raster create --size 3,2 --datatype Int8 --co NBITS=4 o.tif
+raster create --size 3,2 --datatype Float64 --co NBITS=16 o.tif
+raster create --size 3,2 --datatype Float16 --co NBITS=12 o.tif
+raster create --size 3,2 --datatype Float32 --co NBITS=7 o.tif
+raster create --size 3,2 --datatype Float32 --co NBITS=16 o.tif
+raster create --size 3,2 --datatype Float32 --co NBITS=16 --burn 1.5 o.tif
+raster create --size 3,2 --co NBITS=8 o.tif
+raster create --size 12,3 --co NBITS=1 --burn 1 o.tif
+raster create --size 12,3 --co NBITS=2 --burn 2 o.tif
+raster create --size 100,60 --co TILED=YES --co NBITS=4 --burn 5 o.tif
+raster create --size 40,20 --co COMPRESS=DEFLATE --co NBITS=4 --burn 5 o.tif
+raster create --size 40,20 --co COMPRESS=LZW --co NBITS=12 --datatype UInt16 --burn 500 o.tif
+# ENDIANNESS
+raster create --size 3,2 --co ENDIANNESS=BIG o.tif
+raster create --size 3,2 --co ENDIANNESS=INVERTED o.tif
+raster create --size 3,2 --co ENDIANNESS=LITTLE o.tif
+raster create --size 3,2 --co ENDIANNESS=NATIVE o.tif
+raster create --size 3,2 --co ENDIANNESS=FOO o.tif
+raster create --size 3,2 --burn 7 --datatype UInt16 --crs EPSG:32611 --bbox 1,1,2,2 --nodata 3 --metadata FOO=BAR --co ENDIANNESS=BIG o.tif
+raster create --size 3,2 --burn 7 --datatype Float64 --co ENDIANNESS=BIG o.tif
+raster create --size 3,2 --burn 7 --datatype Int32 --band-count 2 --co ENDIANNESS=BIG --co INTERLEAVE=BAND o.tif
+raster create --size 100,60 --co TILED=YES --co ENDIANNESS=BIG --burn 5 --datatype UInt16 o.tif
+raster create --size 40,20 --co COMPRESS=DEFLATE --co ENDIANNESS=BIG --burn 5 --datatype UInt16 o.tif
+raster create --size 40,20 --co COMPRESS=LZW --co ENDIANNESS=BIG --burn 5 --datatype UInt16 o.tif
+raster create --size 40,20 --co COMPRESS=PACKBITS --co ENDIANNESS=BIG --burn 5 --datatype UInt16 o.tif
+raster create --size 3,2 --co ENDIANNESS=BIG --co PHOTOMETRIC=PALETTE --datatype UInt16 o.tif
+raster create --size 3,2 --co ENDIANNESS=BIG --co NBITS=12 --datatype UInt16 --burn 300 o.tif
+# GEOTIFF_VERSION
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --crs EPSG:4326 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.0 --crs EPSG:4326 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=AUTO --crs EPSG:4326 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=2.0 --crs EPSG:4326 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --crs EPSG:32611 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --crs EPSG:2154 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --crs EPSG:26591 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --crs EPSG:4326+5773 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.0 --crs EPSG:4326+5773 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --crs EPSG:4979 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 o.tif
+# JPEG_QUALITY / ZLEVEL / WEBP_LEVEL etc
+raster create --size 3,2 --co JPEG_QUALITY=101 o.tif
+raster create --size 3,2 --co JPEG_QUALITY=50 o.tif
+raster create --size 3,2 --co JPEG_QUALITY=0 o.tif
+raster create --size 3,2 --co JPEG_QUALITY=abc o.tif
+raster create --size 3,2 --co ZLEVEL=99 o.tif
+raster create --size 3,2 --co ZLEVEL=0 o.tif
+raster create --size 3,2 --co COMPRESS=DEFLATE --co ZLEVEL=99 --burn 3 o.tif
+# PREDICTOR
+raster create --size 3,2 --co PREDICTOR=3 o.tif
+raster create --size 3,2 --co PREDICTOR=2 o.tif
+raster create --size 3,2 --co COMPRESS=DEFLATE --co PREDICTOR=3 o.tif
+raster create --size 3,2 --co COMPRESS=DEFLATE --co PREDICTOR=4 o.tif
+raster create --size 3,2 --co COMPRESS=DEFLATE --co PREDICTOR=abc o.tif
+raster create --size 3,2 --co COMPRESS=DEFLATE --co PREDICTOR=1 o.tif
+raster create --size 3,2 --co COMPRESS=LZW --co PREDICTOR=3 --datatype Int16 o.tif
+raster create --size 3,2 --co COMPRESS=LZW --co PREDICTOR=3 --datatype Float16 --burn 2.5 o.tif
+# BLOCK sizes
+raster create --size 40,40 --co TILED=YES --co BLOCKXSIZE=15 o.tif
+raster create --size 40,40 --co TILED=YES --co BLOCKYSIZE=15 o.tif
+raster create --size 40,40 --co BLOCKXSIZE=15 o.tif
+raster create --size 40,40 --co BLOCKYSIZE=15 --burn 3 o.tif
+raster create --size 40,40 --co TILED=YES --co BLOCKXSIZE=0 o.tif
+raster create --size 40,40 --co TILED=YES --co BLOCKYSIZE=abc o.tif
+raster create --size 40,40 --co BLOCKXSIZE=32 o.tif
+# YCBCR
+raster create --size 3,2 --band-count 3 --co PHOTOMETRIC=YCBCR --co COMPRESS=LZW o.tif
+# misc
+raster create --size 3,2 --co COMPRESS=DEFLATE --co COMPRESS=LZW --burn 3 o.tif
+raster create --size 3,2 --co compress=deflate --co Compress=LZW --burn 3 o.tif
+raster create --size 3,2 --co compress=packbits --burn 3 o.tif
+raster create --size 3,2 --co SPARSE_OK=YES --co ENDIANNESS=BIG o.tif
+# ordering / kitchen sink
+raster create --size 2,2 --band-count 2 --co BLOCKXSIZE=32 --co COMPRESS=bogus --co NBITS=33 --co ZLEVEL=0 --co JPEG_QUALITY=200 --co ENDIANNESS=FOO --co PREDICTOR=2 --co PHOTOMETRIC=RGB o.tif
+raster create --size 2,2 --band-count 2 --co COMPRESS=DEFLATE --co ZLEVEL=0 --co PHOTOMETRIC=RGB o.tif
+raster create --size 2,2 --co TILED=YES --co BLOCKXSIZE=15 --co COMPRESS=bogus o.tif
+raster create --size 2,2 --co COMPRESS=bogus --co PREDICTOR=2 o.tif
+raster create --size 2,2 --co PREDICTOR=9 o.tif
+raster create --size 2,2 --co COMPRESS=DEFLATE --co PREDICTOR=0 o.tif
+raster create --size 2,2 --co COMPRESS=PACKBITS --co PREDICTOR=3 o.tif
+# sizes
+raster create --size 0,2 o.tif
+raster create --size 2,0 o.tif
+raster create --size 0,0 o.tif
+raster create --size 0,2 --co TILED=abc o.tif
+raster create --size 2,2 --band-count 0 o.tif
+raster create --size 2,2 --band-count 0 --co TILED=abc o.tif
+# more create combos
+raster create --size 40,40 --co TILED=YES --co BLOCKXSIZE=32 --co BLOCKYSIZE=48 --burn 3 o.tif
+raster create --size 40,10 --co BLOCKYSIZE=4 --burn 3 o.tif
+raster create --size 6,3 --datatype Float32 --co COMPRESS=DEFLATE --co PREDICTOR=3 --burn 1.7 o.tif
+raster create --size 6,3 --datatype Float64 --co COMPRESS=LZW --co PREDICTOR=3 --burn -2.25 o.tif
+raster create --size 6,3 --datatype Float32 --co COMPRESS=DEFLATE --co PREDICTOR=3 --co ENDIANNESS=BIG --burn 1.7 o.tif
+raster create --size 6,3 --datatype Float64 --co COMPRESS=LZW --co PREDICTOR=3 --co ENDIANNESS=BIG --burn -2.25 o.tif
+raster create --size 6,3 --datatype UInt16 --co COMPRESS=LZW --co PREDICTOR=2 --co ENDIANNESS=BIG --burn 777 o.tif
+raster create --size 6,3 --datatype Int32 --co COMPRESS=DEFLATE --co PREDICTOR=2 --co ENDIANNESS=BIG --burn -12345 o.tif
+raster create --size 6,3 --datatype CFloat32 --co ENDIANNESS=BIG --burn 2.5 o.tif
+raster create --size 6,3 --datatype CInt16 --co ENDIANNESS=BIG --burn 7 o.tif
+raster create --size 6,3 --datatype Int8 --co ENDIANNESS=BIG --burn -3 o.tif
+raster create --size 6,3 --datatype Float16 --co ENDIANNESS=BIG --burn 2.5 o.tif
+raster create --size 100,60 --co TILED=YES --co SPARSE_OK=YES --co ENDIANNESS=BIG o.tif
+raster create --size 3,2 --co ENDIANNESS=BIG --co PHOTOMETRIC=PALETTE o.tif
+raster create --size 3,2 --band-count 4 --co ENDIANNESS=BIG --co PHOTOMETRIC=CMYK --metadata FOO=bar o.tif
+raster create --size 3,2 --co ENDIANNESS=BIG --nodata 5 --burn 6 --datatype Float32 o.tif
+raster create --size 3,2 --co ENDIANNESS=BIG --crs EPSG:4326 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co ENDIANNESS=big o.tif
+raster create --size 3,2 --co NBITS=4 --co NBITS=12 o.tif
+raster create --size 3,2 --co PHOTOMETRIC=MINISWHITE --co PHOTOMETRIC=RGB o.tif
+raster create --size 3,2 --co ENDIANNESS=BIG --co ENDIANNESS=LITTLE o.tif
+raster create --size 3,2 --band-count 4 --co PHOTOMETRIC=RGB --burn 1,2,3,4 o.tif
+raster create --size 3,2 --co PHOTOMETRIC=MINISWHITE --burn 7 --nodata 3 o.tif
+raster create --size 3,2 --co PHOTOMETRIC=PALETTE --co NBITS=4 --burn 3 o.tif
+raster create --size 3,2 --datatype UInt16 --co PHOTOMETRIC=PALETTE --co NBITS=12 --burn 300 o.tif
+raster create --size 3,2 --co JPEG_QUALITY=-5 o.tif
+raster create --size 3,2 --co ZLEVEL=3.5 --co COMPRESS=DEFLATE --burn 3 o.tif
+raster create --size 3,2 --datatype UInt32 --co NBITS=31 --burn 3000000000 o.tif
+raster create --size 5,3 --band-count 2 --co NBITS=4 --co INTERLEAVE=BAND --burn 3 --burn 200 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --crs EPSG:32611+5773 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.0 --crs EPSG:32611+5773 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.0 --crs EPSG:4979 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.0 --crs EPSG:32611 --bbox 1,1,2,2 o.tif
+raster create --size 3,2 --co GEOTIFF_VERSION=1.1 --co ENDIANNESS=BIG --crs EPSG:32611 --bbox 1,1,2,2 o.tif
+# convert photometric
+raster convert gray.tif o.tif --co PHOTOMETRIC=MINISWHITE
+raster convert gray.tif o.tif --co PHOTOMETRIC=PALETTE
+raster convert gray.tif o.tif --co PHOTOMETRIC=bogus
+raster convert gray.tif o.tif --co PHOTOMETRIC=RGB
+raster convert gray.tif o.tif --co PHOTOMETRIC=CMYK
+raster convert gray.tif o.tif --co PHOTOMETRIC=CIELAB
+raster convert rgb.tif o.tif --co PHOTOMETRIC=MINISBLACK
+raster convert rgb.tif o.tif --co PHOTOMETRIC=CMYK
+raster convert rgb.tif o.tif --co PHOTOMETRIC=MINISWHITE
+raster convert rgb.tif o.tif --co PHOTOMETRIC=bogus
+raster convert rgb.tif o.tif --co PHOTOMETRIC=PALETTE
+raster convert rgb.tif o.tif --co PHOTOMETRIC=ICCLAB
+raster convert rgb.tif o.tif --co PHOTOMETRIC=YCBCR
+raster convert pal.tif o.tif --co PHOTOMETRIC=MINISBLACK
+raster convert pal.tif o.tif --co PHOTOMETRIC=PALETTE
+raster convert pal.tif o.tif --co PHOTOMETRIC=RGB
+raster convert pal.tif o.tif --co PHOTOMETRIC=CMYK
+raster convert pal.tif o.tif --co PHOTOMETRIC=bogus
+raster convert pal.tif o.tif --co PHOTOMETRIC=MINISWHITE
+raster convert rgba.tif o.tif --co PHOTOMETRIC=CMYK
+raster convert rgba.tif o.tif --co PHOTOMETRIC=MINISWHITE
+raster convert rgba.tif o.tif --co PHOTOMETRIC=CIELAB
+raster convert rgba.tif o.tif --co PHOTOMETRIC=RGB
+raster convert rgba.tif o.tif --co PHOTOMETRIC=bogus
+raster convert rgba.tif o.tif --co PHOTOMETRIC=PALETTE
+raster convert two.tif o.tif --co PHOTOMETRIC=PALETTE
+raster convert two.tif o.tif --co PHOTOMETRIC=RGB
+raster convert two.tif o.tif --co PHOTOMETRIC=CMYK
+raster convert g16.tif o.tif --co PHOTOMETRIC=PALETTE
+raster convert g16.tif o.tif --co PHOTOMETRIC=PALETTE --co NBITS=12
+raster convert f32.tif o.tif --co PHOTOMETRIC=PALETTE
+# convert nbits / endianness / predictor
+raster convert f32.tif o.tif --co NBITS=16
+raster convert f32.tif o.tif --co NBITS=16 --co COMPRESS=DEFLATE
+raster convert f32.tif o.tif --co NBITS=16 --co COMPRESS=DEFLATE --co PREDICTOR=3
+raster convert f32.tif o.tif --co NBITS=7
+raster convert gray.tif o.tif --co NBITS=4
+raster convert two.tif o.tif --co NBITS=4 --co INTERLEAVE=BAND
+raster convert two.tif o.tif --co NBITS=4
+raster convert gray.tif o.tif --co ENDIANNESS=BIG
+raster convert rgb.tif o.tif --co ENDIANNESS=BIG --co COMPRESS=LZW --co PREDICTOR=2
+raster convert f32.tif o.tif --co ENDIANNESS=BIG --co COMPRESS=DEFLATE --co PREDICTOR=3
+raster convert pal.tif o.tif --co ENDIANNESS=BIG
+raster convert g16.tif o.tif --co ENDIANNESS=BIG --co NBITS=12
+raster convert g16.tif o.tif --co ENDIANNESS=INVERTED --co TILED=YES
+raster convert tall.tif o.tif --co ENDIANNESS=BIG --co COMPRESS=PACKBITS
+# convert misc option handling
+raster convert gray.tif o.tif --co ZLEVEL=0 --co COMPRESS=DEFLATE
+raster convert gray.tif o.tif --co JPEG_QUALITY=200
+raster convert rgb.tif o.tif --co COMPRESS=DEFLATE --co ZLEVEL=0 --co PHOTOMETRIC=CMYK
+raster convert gray.tif o.tif --co BLOCKXSIZE=32
+raster convert gray.tif o.tif --co TILED=YES --co BLOCKXSIZE=15
+raster convert gray.tif o.tif --co TILED=YES --co BLOCKXSIZE=32 --co BLOCKYSIZE=32
+raster convert gray.tif o.tif --co BLOCKXSIZE=32 --co NBITS=33 --co ZLEVEL=0 --co ENDIANNESS=FOO --co PREDICTOR=2 --co PHOTOMETRIC=RGB
+raster convert gray.tif o.tif --co GEOTIFF_VERSION=1.1
+raster convert gray.tif o.tif --co COMPRESS=DEFLATE --co PREDICTOR=7
+# MINISWHITE/MINISBLACK palette synthesis + GMD colorinterp CT gating
+raster info mw04.tif
+raster info mw08.tif
+raster info mw16.tif
+raster info mw32.tif
+raster info mb04.tif
+raster info gmd0.tif
+raster info gmd3.tif
+raster info --format json gmd0.tif
+raster info --format json gmd3.tif
+raster convert mw04.tif out.tif
+raster convert mw08.tif out.tif
+raster convert mw16.tif out.tif
+raster convert mw32.tif out.tif
+raster convert mb04.tif out.tif
+raster convert gmd0.tif out.tif
+raster convert gmd3.tif out.tif
+raster convert mw08.tif out.vrt
+# custom "unknown" angular unit stays 2055 + AUnits through the writer
+raster info gk0.tif
+raster info gku.tif
+raster convert gk0.tif out.tif
+raster convert gku.tif out.tif
+raster edit --scale 3 --offset 2 mw08.tif

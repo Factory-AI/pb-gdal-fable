@@ -1,0 +1,80 @@
+#setup: printf '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > f.json && cp f.json exist.json && cp f.json "sp ace.json" && printf '{"type":"FeatureCollection",' > bad.json && mkdir dd2 && cp f.json dd2/x.json && /home/agent/oracle/executable raster create -q --size 2,2 r.tif && /home/agent/oracle/executable vector convert -q f.json d.shp && printf '{\n  "type":"gdal_streamed_alg",\n  "command_line":"gdal vector buffer --input f.json --distance 1 --output-format stream --output streamed_dataset",\n  "gdal_version":"3130000"\n}' > pre.gdalg.json
+vector buffer --distance 1 f.json o1.json
+vector simplify --tolerance 1 f.json o2.json
+vector convex-hull f.json o3.json
+vector concave-hull --ratio 0.5 f.json o4.json
+vector make-valid f.json o5.json
+vector dissolve f.json o6.json
+vector check-coverage f.json o7.json
+vector clean-coverage f.json o8.json
+vector simplify-coverage f.json o9.json 1
+vector check-geometry f.json o10.json
+vector layer-algebra union --input f.json --method f.json o11.json
+vector buffer f.json o.json
+vector buffer --distance 1 missing.json o.json
+vector buffer --distance 1 --of FOO f.json o.json
+vector buffer --distance 1 --of GTiff f.json o.tif
+vector buffer --distance 1 --of MEM f.json o
+vector buffer --distance 1 --of stream f.json o
+vector buffer --distance 1 --of GDALG f.json og1.json
+vector buffer --distance 1 f.json og2.gdalg.json
+vector buffer --overwrite --output-layer foo -l f --distance 2.5 f.json og3.gdalg.json
+vector buffer -q --oo A=B --if GeoJSON --co X=Y --lco W=Z --distance 1 f.json og4.gdalg.json
+vector buffer -l f -l f --distance 1 f.json og5.gdalg.json
+vector buffer --distance -1.5e10 f.json og6.gdalg.json
+vector buffer --distance 0.1 f.json og7.gdalg.json
+vector buffer --distance 1e-3 f.json og8.gdalg.json
+vector buffer --distance 1e300 f.json og9.gdalg.json
+vector buffer --distance 3 --quadrant-segments 12 --endcap-style flat f.json og10.gdalg.json
+vector buffer --distance 1 "sp ace.json" og11.gdalg.json
+vector buffer --append --distance 1 f.json og12.gdalg.json
+vector buffer --distance 1 -l nope f.json og13.gdalg.json
+vector buffer --distance 1 ./f.json og14.gdalg.json
+vector buffer --distance 1 f.json exist.json
+vector buffer --distance 1 --overwrite f.json exist2.json
+vector buffer --distance 1 f.json dd2
+vector buffer --distance 1 -l nope f.json o.json
+vector buffer --distance 1 bad.json o.json
+vector buffer --distance 1 bad.json o.gdalg.json
+vector buffer --distance 1 f.json o3.xyz
+vector buffer --update --distance 1 f.json missing_out.json
+vector buffer --append --distance 1 missing.json f.json
+vector buffer --update --distance 1 f.json exist.json
+vector buffer --append --distance 1 f.json exist.json
+vector buffer --upsert --distance 1 f.json exist.json
+vector buffer --overwrite-layer --distance 1 f.json exist.json
+vector buffer --update --distance 1 f.json pre.gdalg.json
+vector buffer --append --distance 1 f.json pre.gdalg.json
+vector buffer --append -l nope --distance 1 f.json pre.gdalg.json
+vector buffer --overwrite -l nope --distance 1 f.json exist.json
+vector buffer --endcap-style bogus --distance 1 f.json o.json
+vector buffer --distance 1 f.json r.tif
+vector buffer --distance 1 r.tif o.json
+vector buffer --distance 1 f.json d.shp
+vector layer-algebra union --input missing.json --method f.json o.json
+vector layer-algebra union --input f.json --method missing.json o.json
+vector layer-algebra union --input missing.json --method f.json o.gdalg.json
+vector layer-algebra -q union --input f.json --method f.json o.gdalg.json
+vector layer-algebra union --input f.json --method f.json exist.json
+vector layer-algebra --overwrite union --input f.json --method f.json exist3.json
+vector layer-algebra frobnicate --input f.json --method f.json o.json
+vector layer-algebra --of MEM union --input f.json --method f.json o
+vector layer-algebra union --input f.json ol.json
+vector layer-algebra --append union --input f.json --method f.json pre.gdalg.json
+vector layer-algebra union --input f.json --method f.json --input-layer nope o.json
+vector check-coverage --of MEM f.json om2
+vector check-coverage -l nope f.json om3.json
+vector check-coverage --include-valid f.json og20.gdalg.json
+vector check-coverage f.json occ.shp
+vector check-coverage --append f.json pre.gdalg.json
+vector check-coverage --update f.json pre.gdalg.json
+vector make-valid --method structure --keep-lower-dim f.json og21.gdalg.json
+vector concave-hull --ratio 0.5 --allow-holes f.json og22.gdalg.json
+vector simplify --skip-errors --tolerance 1e-3 f.json og23.gdalg.json
+vector simplify-coverage f.json og24.gdalg.json 0.5
+vector check-geometry --include-valid f.json og25.gdalg.json
+vector clean-coverage f.json og26.gdalg.json
+vector dissolve --geometry-field geometry f.json o.json
+vector buffer --help
+vector layer-algebra --help
+vector check-coverage --json-usage

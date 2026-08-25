@@ -1,0 +1,145 @@
+# DEM verb suite: slope/aspect/hillshade/roughness/tpi/tri
+#setup: python3 /workspace/tests/mk_dem_fixtures.py .
+raster slope dbig.tif o.tif -q
+raster slope --unit percent dbig.tif o.tif -q
+raster slope --gradient-alg ZevenbergenThorne dbig.tif o.tif -q
+raster slope --xscale 3 --yscale 7 dbig.tif o.tif -q
+raster slope --no-edges dbig.tif o.tif -q
+raster slope --unit percent --gradient-alg ZevenbergenThorne --no-edges dbig.tif o.tif -q
+raster aspect dbig.tif o.tif -q
+raster aspect --zero-for-flat dbig.tif o.tif -q
+raster aspect --convention trigonometric-angle dbig.tif o.tif -q
+raster aspect --gradient-alg ZevenbergenThorne dbig.tif o.tif -q
+raster aspect --convention trigonometric-angle --zero-for-flat --no-edges dbig.tif o.tif -q
+raster hillshade dbig.tif o.tif -q
+raster hillshade --variant combined dbig.tif o.tif -q
+raster hillshade --variant multidirectional dbig.tif o.tif -q
+raster hillshade --variant Igor dbig.tif o.tif -q
+raster hillshade -z 3 --azimuth 20 --altitude 70 dbig.tif o.tif -q
+raster hillshade --gradient-alg ZevenbergenThorne dbig.tif o.tif -q
+raster hillshade --xscale 2 --yscale 5 dbig.tif o.tif -q
+raster hillshade --variant combined -z 2 --azimuth 120 --altitude 30 dbig.tif o.tif -q
+raster hillshade --variant multidirectional -z 2 --altitude 60 dbig.tif o.tif -q
+raster hillshade --variant Igor -z 2 --azimuth 100 dbig.tif o.tif -q
+raster hillshade --no-edges dbig.tif o.tif -q
+raster roughness dbig.tif o.tif -q
+raster roughness --no-edges dbig.tif o.tif -q
+raster tpi dbig.tif o.tif -q
+raster tpi --no-edges dbig.tif o.tif -q
+raster tri dbig.tif o.tif -q
+raster tri --algorithm Wilson dbig.tif o.tif -q
+raster tri --algorithm Riley --no-edges dbig.tif o.tif -q
+# geographic source: ellipsoid autoscale
+raster slope dgeo.tif o.tif -q
+raster slope --xscale 3 --yscale 7 dgeo.tif o.tif -q
+raster aspect dgeo.tif o.tif -q
+raster hillshade dgeo.tif o.tif -q
+raster hillshade --variant Igor dgeo.tif o.tif -q
+raster hillshade -z 2 dgeo.tif o.tif -q
+raster tri dgeo.tif o.tif -q
+raster tpi dgeo.tif o.tif -q
+# small / no-nodata / ungeoreferenced / multiband
+raster slope dsm.tif o.tif -q
+raster hillshade dsm.tif o.tif -q
+raster slope dnond.tif o.tif -q
+raster aspect --zero-for-flat dnond.tif o.tif -q
+raster tri dnond.tif o.tif -q
+raster slope dnogt.tif o.tif -q
+raster aspect dnogt.tif o.tif -q
+raster hillshade dnogt.tif o.tif -q
+raster hillshade --variant Igor dnogt.tif o.tif -q
+raster roughness dnogt.tif o.tif -q
+raster slope --band 2 dmb.tif o.tif -q
+raster hillshade --band 2 dmb.tif o.tif -q
+raster tri --band 2 dmb.tif o.tif -q
+# progress line
+raster slope dbig.tif o.tif
+raster hillshade dbig.tif o.tif
+# errors: band
+raster slope --band 3 dmb.tif o.tif
+raster slope --band 0 dmb.tif o.tif
+raster slope --band -2 dmb.tif o.tif
+raster hillshade --band 5 dbig.tif o.tif
+# errors: xscale pair
+raster slope --xscale 3 dbig.tif o.tif
+raster slope --yscale 3 dbig.tif o.tif
+raster hillshade --xscale 3 dbig.tif o.tif
+# errors: unknown options
+raster tpi --xscale 2 dbig.tif o.tif
+raster roughness --xscale 2 --yscale 2 dbig.tif o.tif
+raster tri --xscale 2 dbig.tif o.tif
+# errors: ranges
+raster slope --xscale 0 --yscale 2 dbig.tif o.tif
+raster slope --xscale -1 --yscale 2 dbig.tif o.tif
+raster hillshade -z 0 dbig.tif o.tif
+raster hillshade --azimuth 361 dbig.tif o.tif
+raster hillshade --azimuth -0.5 dbig.tif o.tif
+raster hillshade --altitude 91 dbig.tif o.tif
+raster hillshade --altitude -1 dbig.tif o.tif
+# errors: variant conflicts
+raster hillshade --variant multidirectional --azimuth 30 dbig.tif o.tif
+raster hillshade --variant igor --altitude 30 dbig.tif o.tif
+raster hillshade --variant igor --azimuth 30 dbig.tif o.tif -q
+raster hillshade --variant combined --azimuth 30 dbig.tif o.tif
+raster hillshade --variant multidirectional --altitude 45 --band 5 dbig.tif o.tif
+# errors: choices
+raster hillshade --variant bogus dbig.tif o.tif
+raster slope --unit bogus dbig.tif o.tif
+raster aspect --convention bogus dbig.tif o.tif
+raster slope --gradient-alg bogus dbig.tif o.tif
+raster tri --algorithm bogus dbig.tif o.tif
+# help / usage
+raster slope --help
+raster hillshade --help
+raster aspect --help
+raster roughness --help
+raster tpi --help
+raster tri --help
+raster slope
+raster hillshade
+# vrt refusal
+raster slope dbig.tif o.vrt
+raster hillshade dbig.tif /vsimem/x.vrt
+# gdalg echo
+raster slope dbig.tif o.gdalg.json
+raster hillshade --variant Igor -z 2 --azimuth 100 dbig.tif o.gdalg.json
+raster aspect --zero-for-flat --convention trigonometric-angle dbig.tif o.gdalg.json
+raster tri --algorithm Wilson --no-edges dbig.tif o.gdalg.json
+raster tpi --band 2 dmb.tif o.gdalg.json
+raster roughness --no-edges dbig.tif o.gdalg.json
+raster slope --unit percent --xscale 2 --yscale 4 --no-edges --gradient-alg ZevenbergenThorne dbig.tif o.gdalg.json
+raster hillshade --variant multidirectional -z 3 --altitude 40 --gradient-alg ZevenbergenThorne --no-edges dbig.tif o.gdalg.json
+# overwrite guard
+#setup: python3 /workspace/tests/mk_dem_fixtures.py . && cp dsm.tif o.tif
+raster slope dbig.tif o.tif
+#setup: python3 /workspace/tests/mk_dem_fixtures.py .
+# pipeline forms
+pipeline read dbig.tif ! slope ! write o.tif -q
+pipeline read dbig.tif ! hillshade --variant combined ! write o.tif -q
+pipeline read dbig.tif ! aspect --zero-for-flat ! write o.tif -q
+pipeline read dmb.tif ! tri --band 2 ! write o.tif -q
+pipeline read dbig.tif ! slope ! write o.tif
+pipeline read dbig.tif ! slope --xscale 2 ! write o.tif
+pipeline read dbig.tif ! hillshade --xscale 2 ! write o.tif
+pipeline read dbig.tif ! hillshade --variant igor --altitude 30 ! write o.tif
+pipeline read dbig.tif ! slope --band 0 ! write o.tif
+pipeline read dmb.tif ! slope --band 3 ! write o.tif
+pipeline read dbig.tif ! hillshade -z 0 ! write o.tif
+pipeline read dbig.tif ! hillshade --azimuth 400 ! write o.tif
+pipeline read dbig.tif ! slope ! info
+pipeline read dbig.tif ! hillshade ! info
+pipeline read dbig.tif ! aspect --zero-for-flat ! info
+pipeline read dnogt.tif ! hillshade ! info
+pipeline read dnogt.tif ! slope ! info
+pipeline read dbig.tif ! slope ! write o.gdalg.json
+pipeline read dbig.tif ! hillshade --variant Igor ! write o.gdalg.json
+pipeline read dbig.tif ! slope ! write o.vrt
+pipeline read dnogt.tif ! hillshade ! write o.tif -q
+pipeline read dbig.tif ! slope ! reproject --dst-crs EPSG:4326 ! write o.tif -q
+pipeline read dbig.tif ! scale ! slope ! write o.tif -q
+pipeline read dbig.tif ! slope ! set-type Float64 ! write o.tif -q
+pipeline read dbig.tif ! slope ! scale ! write o.tif -q
+pipeline read dgeo.tif ! hillshade --variant Igor ! write o.tif -q
+pipeline read dbig.tif ! slope ! clip --bbox 100,-150,300,0 ! write o.tif -q
+raster pipeline read dbig.tif ! slope ! write o.tif -q
+raster pipeline read dbig.tif ! tri --algorithm Wilson ! write o.tif -q

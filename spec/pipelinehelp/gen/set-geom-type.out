@@ -1,0 +1,29 @@
+Usage: set-geom-type [OPTIONS]
+
+Modify the geometry type of a vector dataset.
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>        Set active layer (if not specified, all)
+  --active-geometry <ACTIVE-GEOMETRY>  Geometry field name to which to restrict the processing (if not specified, all)
+  --layer-only                         Only modify the layer geometry type
+                                       Mutually exclusive with --feature-only
+  --feature-only                       Only modify the geometry type of features
+                                       Mutually exclusive with --layer-only
+  --geometry-type <GEOMETRY-TYPE>      Geometry type
+  --multi                              Force geometries to MULTI geometry types
+                                       Mutually exclusive with --single
+  --single                             Force geometries to non-MULTI geometry types
+                                       Mutually exclusive with --multi
+  --linear                             Convert curve geometries to linear types
+                                       Mutually exclusive with --curve
+  --curve                              Convert linear geometries to curve types
+                                       Mutually exclusive with --linear
+  --dim <DIM>                          Force geometries to the specified dimension. DIM=XY|XYZ|XYM|XYZM
+  --skip                               Skip feature when change of feature geometry type failed
+
+For more details, consult https://gdal.org/programs/gdal_vector_set_geom_type.html

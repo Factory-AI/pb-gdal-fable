@@ -1,0 +1,16 @@
+Usage: limit [OPTIONS] <LIMIT>
+
+Truncate a vector dataset to no more than a specified number of features.
+
+Positional arguments:
+  --limit <LIMIT>                Limit the number of features to read per layer [required]
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  --active-layer <ACTIVE-LAYER>  Set active layer (if not specified, all)
+
+For more details, consult https://gdal.org/programs/gdal_vector_pipeline.html

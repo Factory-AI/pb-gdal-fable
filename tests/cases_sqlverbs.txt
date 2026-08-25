@@ -1,0 +1,109 @@
+# vector filter / select / sql verbs
+#setup: printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"pop":30,"name":"alpha","flt":1.5,"flag":true,"tag":null},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"pop":60,"name":"Beta","flt":2.5,"flag":false},"geometry":{"type":"Point","coordinates":[2,2]}},{"type":"Feature","properties":{"pop":80,"name":"gamma","flt":-0.5,"flag":true,"tag":"x"},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > p.geojson && printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","id":10,"properties":{"v":1,"s":"aa","d":"2021-03-04","big":3000000000},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[2,1],[2,2],[1,2],[1,1]]]}},{"type":"Feature","id":20,"properties":{"v":2,"s":"bb","d":"2021-05-06","big":4000000000},"geometry":{"type":"MultiPolygon","coordinates":[[[[10,10],[12,10],[12,12],[10,12],[10,10]]],[[[20,20],[21,20],[21,21],[20,21],[20,20]]]]}},{"type":"Feature","id":30,"properties":{"v":3,"s":"cc","d":null,"big":1},"geometry":{"type":"LineString","coordinates":[[0,0],[5,5]]}}]}' > g.geojson && printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"v":1},"geometry":{"type":"GeometryCollection","geometries":[{"type":"Polygon","coordinates":[[[0,0],[2,0],[2,2],[0,2],[0,0]]]},{"type":"Point","coordinates":[9,9]}]}},{"type":"Feature","properties":{"v":2},"geometry":null}]}' > gc.geojson && cp p.geojson pw.geojson && printf %s 'pop > 50' > w1.txt && printf %s 'SELECT name FROM p' > s1.sql && echo KEEP > exists.bin && mkdir md2 && /home/agent/oracle/executable vector convert -q p.geojson md2/a.shp && printf %s '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"pop":60,"name":"Beta"},"geometry":{"type":"Point","coordinates":[2,2]}}]}' > bq.geojson && /home/agent/oracle/executable vector convert -q bq.geojson md2/b.shp && /home/agent/oracle/executable vector sql -q --sql "SELECT name, pop FROM p WHERE pop > 40" p.geojson ap.geojson
+vector filter --where "pop > 50" p.geojson out.geojson
+vector filter --where "pop > 50" p.geojson out.shp
+vector filter --bbox 1.5,1.5,2.5,2.5 p.geojson out.geojson
+vector filter --where "pop > 40" --bbox 0,0,1.5,1.5 p.geojson out.geojson
+vector filter p.geojson out.geojson
+vector filter --where "nope > 1" p.geojson out.geojson
+vector filter --where "pop >" p.geojson out.geojson
+vector filter --bbox 1,2,3 p.geojson out.geojson
+vector filter --bbox 3,3,1,1 p.geojson out.geojson
+vector filter --bbox 3,3,1,1 nofile.geojson out.geojson
+vector filter --of GTiff --bbox 3,3,1,1 p.geojson o.tif
+vector filter --of GTiff --where "pop > 50" p.geojson o.tif
+vector filter --where "nope > 1" p.geojson exists.bin
+vector filter --where "pop > 50" p.geojson exists.bin
+vector filter --overwrite --where "pop > 50" p.geojson exists.bin
+vector filter --where "pop > 50" --update-extent p.geojson out.geojson
+vector filter --where "" p.geojson out.geojson
+vector filter --where @w1.txt p.geojson out.geojson
+vector filter --where @nsf.txt p.geojson out.geojson
+vector filter --input-format GeoJSON --oo X=Y -l p --where "pop > 50" --bbox 1.5,1.5,2.75,2.5 --update-extent --active-layer p p.geojson t1.gdalg.json -q
+vector filter --where "nope > 1" p.geojson t2.gdalg.json
+vector filter --bbox 3,3,1,1 p.geojson t2.gdalg.json
+vector filter --where "pop > 50" --co A=B --lco C=D --skip-errors --output-layer OL --output-open-option E=F p.geojson t3.gdalg.json
+vector filter --bbox 1.2,1.2,1.8,1.8 g.geojson out.geojson
+vector filter --bbox 0,0,50,50 gc.geojson out.geojson
+vector filter --where "v >= 1" gc.geojson out.geojson
+vector filter --active-layer zzz --where "pop > 50" p.geojson out.geojson
+vector filter -l zzz --where "nope > 1" p.geojson out.geojson
+vector filter -l a --where "flt > 2" --of "ESRI Shapefile" md2 outdir
+vector filter --where "flt > 2" --of "ESRI Shapefile" md2 outdir
+vector filter --update --where "pop > 50" p.geojson missing.geojson
+vector filter --where "FID = 1" p.geojson out.geojson
+vector filter --where "OGR_GEOMETRY = 'POINT'" g.geojson out.geojson
+vector select --fields name,pop p.geojson out.geojson
+vector select --fields name,pop p.geojson outsel.shp
+vector select --fields NAME p.geojson out.geojson
+vector select --fields nope,name p.geojson out.geojson
+vector select --ignore-missing-fields --fields nope,name p.geojson out.geojson
+vector select -q --ignore-missing-fields --fields nope,name p.geojson out.geojson
+vector select --exclude --fields name,tag p.geojson out.geojson
+vector select --fields "name,OGR_GEOMETRY" p.geojson out.geojson
+vector select --fields geometry p.geojson out.geojson
+vector select --exclude --fields geometry p.geojson out.geojson
+vector select --fields "" p.geojson out.geojson
+vector select --fields name,name p.geojson out.geojson
+vector select --fields NAME,name p.geojson out.geojson
+vector select --exclude --ignore-missing-fields --fields name p.geojson out.geojson
+vector select --fields name --active-layer zzz p.geojson out.geojson
+vector select -l a --fields flt --of "ESRI Shapefile" md2 outdir
+vector select --fields flt --of "ESRI Shapefile" md2 outdir
+vector select --fields name nofile.geojson out.geojson
+vector select --fields nope p.geojson exists.bin
+vector select --co A=B --lco C=D --skip-errors --output-layer OL --output-open-option E=F --fields name --ignore-missing-fields p.geojson t6.gdalg.json
+vector select --fields s,big g.geojson out.geojson
+vector select --exclude --fields d g.geojson out.geojson
+vector sql --sql "SELECT name, pop FROM p WHERE pop > 40" p.geojson out.geojson
+vector sql --sql "SELECT name, pop FROM p WHERE pop > 40" p.geojson outsql.shp
+vector sql --sql "SELECT name FROM p" --output-layer mylyr p.geojson out.geojson
+vector sql --sql "SELECT name FROM p" --sql "SELECT pop FROM p" p.geojson out.geojson
+vector sql --sql "SELECT name FROM p" --sql "SELECT pop FROM p" --of "ESRI Shapefile" p.geojson outdir
+vector sql --sql "SELECT name FROM p" --sql "SELECT pop FROM p" --output-layer a,b --of "ESRI Shapefile" p.geojson outdir
+vector sql --sql "SELECT name FROM p" --sql "SELECT pop FROM p" --sql "SELECT flt FROM p" --of "ESRI Shapefile" p.geojson outdir
+vector sql --sql "SELECT name FROM p" --output-layer a,b p.geojson out.geojson
+vector sql --sql "SELECT nope FROM p" p.geojson out.geojson
+vector sql --sql "SELECT name FROM zzz" p.geojson out.geojson
+vector sql --sql "SELECT name FROM p; SELECT pop FROM p" p.geojson out.geojson
+vector sql --sql "" p.geojson out.geojson
+vector sql --overwrite --sql "SELECT nope FROM p" p.geojson exists.bin
+vector sql --sql "SELECT name FROM p" p.geojson exists.bin
+vector sql --sql "SELECT name FROM pw" pw.geojson
+vector sql -q --sql "SELECT name FROM pw" pw.geojson
+vector sql --update --sql "SELECT name FROM pw" pw.geojson
+vector sql --sql "SELECT nope FROM pw" pw.geojson
+vector sql --update --sql "SELECT nope FROM pw" pw.geojson
+vector sql --update --sql "SELECT nope FROM pw" --sql "SELECT name FROM pw" pw.geojson
+vector sql --update --sql "SELECT name FROM pw" --sql "SELECT pop FROM pw" pw.geojson
+vector sql --update --sql "SELECT name FROM pw" --output-layer a,b pw.geojson
+vector sql --of GDALG --sql "SELECT name FROM p" p.geojson
+vector sql --dialect SQLITE --sql "SELECT name FROM p" p.geojson out.geojson
+vector sql --dialect SQLITE --sql "SELECT name FROM p" p.geojson exists.bin
+vector sql --dialect SQLITE --sql "SELECT name FROM p" --output-layer a,b p.geojson out.geojson
+vector sql --dialect SQLITE --sql "SELECT name FROM p" pw.geojson
+vector sql --dialect SQLITE --update --sql "SELECT name FROM pw" pw.geojson
+vector sql --dialect FOO --sql "SELECT name FROM p" p.geojson out.geojson
+vector sql --dialect FOO --sql "SELECT nope FROM p" p.geojson out.geojson
+vector sql -q --dialect FOO --sql "SELECT name FROM p" p.geojson out.geojson
+vector sql --dialect OGRSQL --sql "SELECT name FROM p" p.geojson out.geojson
+vector sql -q --sql "SELECT 1 FROM p" --sql "SELECT 2 FROM p" p.geojson t4.gdalg.json
+vector sql --co A=B --lco C=D --skip-errors --output-open-option E=F --sql "SELECT 1 FROM p" --output-layer L --dialect OGRSQL p.geojson t5.gdalg.json
+vector sql --sql "SELECT nope FROM p" p.geojson t7.gdalg.json
+vector sql --append --sql "SELECT name, pop FROM p" --output-layer p p.geojson ap.geojson
+vector sql --sql @s1.sql p.geojson out.geojson
+vector sql --sql @nsf.sql p.geojson out.geojson
+vector sql --sql "SELECT name FROM 'p.geojson'.p" p.geojson out.geojson
+vector sql --update --sql "SELECT name FROM p" p.geojson missing.geojson
+vector sql --sql "SELECT DISTINCT flag FROM p" p.geojson out.geojson
+vector sql --sql "SELECT COUNT(*), MIN(pop) FROM p" p.geojson out.geojson
+vector sql --sql "SELECT * FROM p ORDER BY pop DESC LIMIT 2" p.geojson out.geojson
+vector sql --sql "SELECT CAST(pop AS CHARACTER(4)) c FROM p" p.geojson out.geojson
+vector sql --sql "SELECT OGR_GEOM_AREA a FROM g" g.geojson out.geojson
+# required mutual-exclusion groups: any set member satisfies the group
+vector set-field-type --field-name pop --field-type Zzz p.geojson out.geojson
+vector set-field-type --src-field-type Zzz --field-type String p.geojson out.geojson
+vector set-field-type --field-type String p.geojson out.geojson
+vector set-field-type --field-name pop --src-field-type Integer --field-type String p.geojson out.geojson
+vector set-field-type --field-name pop p.geojson out.geojson
+vector set-field-type p.geojson out.geojson

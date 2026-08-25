@@ -1,0 +1,17 @@
+Usage: select [OPTIONS] <BAND>
+
+Select a subset of bands from a raster dataset.
+
+Positional arguments:
+  -b, --band <BAND>       Band(s) (1-based index, 'mask', 'mask:<band>' or color interpretation such as 'red') [1.. values] [required]
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+
+Options:
+  --exclude               Exclude specified bands
+  --mask <MASK>           Mask band (1-based index, 'mask', 'mask:<band>' or 'none')
+
+For more details, consult https://gdal.org/programs/gdal_raster_select.html

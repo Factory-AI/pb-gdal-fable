@@ -1,0 +1,188 @@
+# raster tile: raster tiling scheme (GTiff tiles + viewers)
+#setup: python3 /workspace/tests/mk_tile_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_tile_fixtures.py .
+
+# ---- basics across inputs ----
+raster tile --tiling-scheme raster -f GTiff -q big600.tif t01
+raster tile --tiling-scheme raster -f GTiff -q geo.tif t02
+raster tile --tiling-scheme raster -f GTiff -q rgb.tif t03
+raster tile --tiling-scheme raster -f GTiff -q nogt.tif t04
+raster tile --tiling-scheme raster -f GTiff -q gtnosrs.tif t05
+raster tile --tiling-scheme raster -f GTiff -q f32.tif t06
+raster tile --tiling-scheme raster -f GTiff -q utm.tif t07
+raster tile --tiling-scheme raster -f GTiff big600.tif t08
+
+# ---- multi-level pyramids ----
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 w1200.tif t10
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 w768.tif t11
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 nogt700.tif t12
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 f32.tif t13
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 rgb.tif t14
+
+# ---- overview resampling methods ----
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling nearest big600.tif t20
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling bilinear big600.tif t21
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling cubic big600.tif t22
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling cubicspline big600.tif t23
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling lanczos big600.tif t24
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling average big600.tif t25
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling rms big600.tif t26
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling mode big600.tif t27
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling nearest odd601.tif t28
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling bilinear odd601.tif t29
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling cubic odd601.tif t30
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling cubicspline odd601.tif t31
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling lanczos odd601.tif t32
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling average odd601.tif t33
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling rms odd601.tif t34
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling mode odd601.tif t35
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling nearest w1200.tif t36
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling bilinear w1200.tif t37
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling cubic w1200.tif t38
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling cubicspline w1200.tif t39
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling lanczos w1200.tif t40
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling average w1200.tif t41
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling rms w1200.tif t42
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --overview-resampling mode w1200.tif t43
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 -r bilinear odd601.tif t44
+
+# ---- conventions, tile sizes, zoom/tile filters ----
+raster tile --tiling-scheme raster -f GTiff -q --convention tms --min-zoom 0 big600.tif t50
+raster tile --tiling-scheme raster -f GTiff -q --tile-size 128 --min-zoom 0 big600.tif t51
+raster tile --tiling-scheme raster -f GTiff -q --tile-size 512 big600.tif t52
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --min-x 1 --max-x 2 --min-y 0 --max-y 0 big600.tif t53
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --min-y 1 --max-y 1 big600.tif t54
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --min-x 2 big600.tif t55
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --max-x 0 big600.tif t56
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --min-x 1 --max-x 1 --min-y 1 --max-y 1 -r average big600.tif t57
+raster tile --tiling-scheme raster -f GTiff -q --min-zoom 0 --max-x 1 --max-y 0 w1200.tif t58
+
+# ---- alpha / nodata handling ----
+raster tile --tiling-scheme raster -f GTiff -q --no-alpha --min-zoom 0 big600.tif t60
+raster tile --tiling-scheme raster -f GTiff -q --no-alpha --min-zoom 0 -r bilinear odd601.tif t61
+raster tile --tiling-scheme raster -f GTiff -q --no-alpha --min-zoom 0 -r average w1200.tif t62
+raster tile --tiling-scheme raster -f GTiff -q --no-alpha --min-zoom 0 -r mode big600.tif t63
+raster tile --tiling-scheme raster -f GTiff -q --add-alpha big600.tif t64
+raster tile --tiling-scheme raster -f GTiff -q --dst-nodata 255 --min-zoom 0 big600.tif t65
+raster tile --tiling-scheme raster -f GTiff -q --dst-nodata -5 --min-zoom 0 f32.tif t66
+
+# ---- creation options ----
+raster tile --tiling-scheme raster -f GTiff -q --co COMPRESS=DEFLATE big600.tif t70
+raster tile --tiling-scheme raster -f GTiff -q --co COMPRESS=DEFLATE --co ZLEVEL=9 big600.tif t71
+raster tile --tiling-scheme raster -f GTiff -q --co COMPRESS=DEFLATE --co PREDICTOR=2 big600.tif t72
+raster tile --tiling-scheme raster -f GTiff -q --co COMPRESS=ZSTD big600.tif t73
+raster tile --tiling-scheme raster -f GTiff -q --co COMPRESS=NONE big600.tif t74
+raster tile --tiling-scheme raster -f GTiff -q --co COMPRESS=NONE rgb.tif t75
+raster tile --tiling-scheme raster -f GTiff -q --co INTERLEAVE=BAND big600.tif t76
+raster tile --tiling-scheme raster -f GTiff -q --co COMPRESS=NONE --co INTERLEAVE=PIXEL big600.tif t77
+
+# ---- webviewers, title/copyright, metadata ----
+raster tile --tiling-scheme raster -f GTiff -q --webviewer none --min-zoom 0 big600.tif t80
+raster tile --tiling-scheme raster -f GTiff -q --webviewer openlayers big600.tif t81
+raster tile --tiling-scheme raster -f GTiff -q --webviewer stac big600.tif t82
+raster tile --tiling-scheme raster -f GTiff -q --title "My Tiles" --copyright "c 2026 X" big600.tif t83
+raster tile --tiling-scheme raster -f GTiff -q --metadata FOO=BAR big600.tif t84
+raster tile --tiling-scheme raster -f GTiff -q --metadata FOO=BAR --metadata "BAZ=a b" --min-zoom 0 big600.tif t85
+raster tile --tiling-scheme raster -f GTiff -q --copy-src-metadata big600.tif t86
+raster tile --tiling-scheme raster -f GTiff -q --copy-src-metadata --metadata FOO=BAR big600.tif t87
+
+# ---- average with excluded values ----
+raster tile --tiling-scheme raster -f GTiff -q --excluded-values 10 -r average --min-zoom 0 big600.tif t90
+raster tile --tiling-scheme raster -f GTiff -q --excluded-values 10,20 -r average --min-zoom 0 big600.tif t91
+raster tile --tiling-scheme raster -f GTiff -q --excluded-values 10 --excluded-values-pct-threshold 20 -r average --min-zoom 0 big600.tif t92
+raster tile --tiling-scheme raster -f GTiff -q --nodata-values-pct-threshold 50 -r average --min-zoom 0 big600.tif t93
+
+# ---- kml tree ----
+raster tile --tiling-scheme raster -f GTiff -q --kml --min-zoom 0 big600.tif t100
+raster tile --tiling-scheme raster -f GTiff -q --kml big600.tif t101
+raster tile --tiling-scheme raster -f GTiff -q --kml --min-zoom 0 w1200.tif t102
+raster tile --tiling-scheme raster -f GTiff -q --kml --min-zoom 0 geo.tif t103
+raster tile --tiling-scheme raster -f GTiff -q --kml --convention tms --min-zoom 0 big600.tif t104
+raster tile --tiling-scheme raster -f GTiff -q --kml --min-zoom 0 utm.tif t105
+raster tile --tiling-scheme raster -f GTiff -q --kml --min-x 1 big600.tif t106
+
+# ---- threading / resume knobs (deterministic output) ----
+raster tile --tiling-scheme raster -f GTiff -q --num-threads 4 --min-zoom 0 big600.tif t110
+raster tile --tiling-scheme raster -f GTiff -q --num-threads 1 --min-zoom 0 big600.tif t111
+raster tile --tiling-scheme raster -f GTiff -q --parallel-method thread big600.tif t112
+raster tile --tiling-scheme raster -f GTiff -q --resume big600.tif t113
+raster tile --tiling-scheme raster -f GTiff -q --skip-blank --min-zoom 0 big600.tif t114
+raster tile --tiling-scheme raster -f GTiff -q --skip-blank --min-zoom 0 --min-x 1 --max-x 1 --min-y 1 --max-y 1 big600.tif t115
+
+# ---- errors ----
+raster tile --min-zoom 0 big600.tif e01
+raster tile -f JPEG big600.tif e02
+raster tile --tiling-scheme raster -f GTiff --min-zoom 3 --max-zoom 1 big600.tif e03
+raster tile --tiling-scheme WebMercatorQuad -f GTiff nogt.tif e04
+raster tile --tiling-scheme raster -f GTiff --tile-size 32 big600.tif e05
+raster tile -f GTiff --add-alpha --no-alpha big600.tif e06
+raster tile --tiling-scheme raster -f GTiff --kml gtnosrs.tif e07
+raster tile --tiling-scheme raster -f GTiff --kml nogt.tif e08
+raster tile --tiling-scheme raster -f GTiff --excluded-values 10 big600.tif e09
+raster tile --tiling-scheme raster -f GTiff --nodata-values-pct-threshold 50 big600.tif e10
+raster tile --tiling-scheme raster -f GTiff --excluded-values-pct-threshold 50 big600.tif e11
+
+# ---- WebMercatorQuad scheme ----
+# excluded (oracle-vs-mine last-ulp GT crumbs or undecoded resampling):
+#   utm.tif with overviews (z13 tile 1331/4096 GT y0 differs by 2^-41)
+#   --overview-resampling average/mode/rms/lanczos/cubicspline (tie dust)
+#   -r near --min-zoom 8 big600 (GT y0 last-ulp tag crumb)
+raster tile -f GTiff -q big600.tif w01
+raster tile -f GTiff -q utm.tif w02
+raster tile -f GTiff -q al300.tif w03
+raster tile -f GTiff -q geo.tif w04
+raster tile -f GTiff -q rgb.tif w05
+raster tile -f GTiff -q f32.tif w06
+raster tile -f GTiff big600.tif w07
+raster tile -f GTiff -q --min-zoom 12 big600.tif w10
+raster tile -f GTiff -q --min-zoom 8 big600.tif w11
+raster tile -f GTiff -q --max-zoom 12 --min-zoom 11 big600.tif w13
+raster tile -f GTiff -q --min-zoom 0 big600.tif w15
+raster tile -f GTiff -q --min-zoom 4 al300.tif w16
+raster tile -f GTiff -q -r near --min-zoom 12 big600.tif w20
+raster tile -f GTiff -q -r bilinear --min-zoom 12 big600.tif w21
+raster tile -f GTiff -q --overview-resampling nearest --min-zoom 12 big600.tif w25
+raster tile -f GTiff -q --overview-resampling bilinear --min-zoom 12 big600.tif w26
+raster tile -f GTiff -q -r bilinear --overview-resampling cubic --min-zoom 12 big600.tif w27
+raster tile -f GTiff -q --tile-size 512 --min-zoom 12 big600.tif w30
+raster tile -f GTiff -q --convention tms --min-zoom 12 big600.tif w31
+raster tile -f GTiff -q --kml --min-zoom 12 big600.tif w32
+raster tile -f GTiff -q --kml --convention tms --min-zoom 12 big600.tif w33
+raster tile -f GTiff -q --webviewer openlayers --min-zoom 12 big600.tif w34
+raster tile -f GTiff -q --webviewer leaflet --min-zoom 12 big600.tif w35
+raster tile -f GTiff -q --webviewer all --min-zoom 12 big600.tif w36
+raster tile -f GTiff -q --kml --min-zoom 11 big600.tif w37
+raster tile -f GTiff -q --metadata FOO=bar --copy-src-metadata --min-zoom 12 big600.tif w40
+raster tile -f GTiff -q --copyright "(c) test" --title "My Tiles" --min-zoom 12 big600.tif w41
+raster tile -f GTiff -q --min-x 2868 --max-x 2869 --min-y 6425 --max-y 6426 --min-zoom 12 big600.tif w45
+raster tile -f GTiff -q --min-x 2869 --min-zoom 13 big600.tif w46
+raster tile -f GTiff -q --add-alpha --min-zoom 12 big600.tif w50
+raster tile -f GTiff -q --co COMPRESS=DEFLATE --min-zoom 12 big600.tif w55
+raster tile -f GTiff -q --tile-size 512 utm.tif w56
+raster tile -f GTiff -q --webviewer none --min-zoom 12 big600.tif w57
+raster tile -f GTiff -q --webviewer mapml --convention tms --min-zoom 12 big600.tif w58
+raster tile -f GTiff -q --webviewer mapml --min-zoom 12 big600.tif w59
+
+# ---- --parallel-method spawn: `gdal --version` sanity check from PATH
+# (c8 §1.2). Missing binary: posix_spawnp pair; empty output: single
+# could-not-find; version mismatch: dedicated error; match: in-process.
+# Check runs before default-PNG resolution and output validation.
+#setup: python3 /workspace/tests/mk_tile_fixtures.py . 2>/dev/null || python3 /tmp/wsF/tests/mk_tile_fixtures.py .; mkdir -p /tmp/dtile_good /tmp/dtile_bad /tmp/dtile_empty; printf '#!/bin/sh\necho "GDAL 3.13.0dev-cbc00e6b71, released 2026/06/11"\n' > /tmp/dtile_good/gdal; printf '#!/bin/sh\necho "GDAL 9.9.9, released 1999/01/01"\n' > /tmp/dtile_bad/gdal; printf '#!/bin/sh\nexit 0\n' > /tmp/dtile_empty/gdal; chmod +x /tmp/dtile_good/gdal /tmp/dtile_bad/gdal /tmp/dtile_empty/gdal
+#env: PATH=/usr/bin:/bin
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method spawn --num-threads 2 geo.tif tsp1
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method spawn --num-threads 1 geo.tif tsp2
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method spawn geo.tif tsp3
+raster tile --parallel-method spawn geo.tif tsp4
+raster tile --tiling-scheme WebMercatorQuad --parallel-method spawn nogt.tif tsp5
+raster tile -f GTiff --min-zoom 5 --max-zoom 3 --parallel-method spawn geo.tif tsp6
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method SPAWN geo.tif tsp7
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method fork --num-threads 2 -q geo.tif tsp8
+#env: PATH=/tmp/dtile_good:/usr/bin:/bin
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method spawn --num-threads 2 geo.tif tsg1
+raster tile -f GTiff -q --parallel-method spawn --min-zoom 12 big600.tif tsg2
+#env: PATH=/tmp/dtile_bad:/usr/bin:/bin
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method spawn geo.tif tsb1
+#env: PATH=/tmp/dtile_empty:/usr/bin:/bin
+raster tile --output-format GTiff --tiling-scheme raster --parallel-method spawn geo.tif tse1
+#env:
+raster tile -f GTiff -q --min-zoom 10 --max-zoom 11 byteutm.tif t90
+raster tile -f GTiff -q --min-zoom 10 --max-zoom 11 --kml byteutm.tif t91

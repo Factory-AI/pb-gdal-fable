@@ -1,0 +1,17 @@
+Usage: fill-nodata [OPTIONS]
+
+Fill nodata raster regions by interpolation from edges.
+
+Common Options:
+  -h, --help                                         Display help message and exit
+  --json-usage                                       Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                             Configuration option [may be repeated]
+
+Options:
+  -b, --band <BAND>                                  Input band (1-based index) (default: 1)
+  -d, --max-distance <MAX_DISTANCE>                  The maximum distance (in pixels) that the algorithm will search out for values to interpolate. (default: 100)
+  -s, --smoothing-iterations <SMOOTHING_ITERATIONS>  The number of 3x3 average filter smoothing iterations to run after the interpolation to dampen artifacts. The default is zero smoothing iterations. (default: 0)
+  --mask <MASK>                                      Use the first band of the specified file as a validity mask (zero is invalid, non-zero is valid).
+  --strategy <STRATEGY>                              By default, pixels are interpolated using an inverse distance weighting (invdist). It is also possible to choose a nearest neighbour (nearest) strategy.. STRATEGY=invdist|nearest (default: invdist)
+
+For more details, consult https://gdal.org/programs/gdal_raster_fill_nodata.html

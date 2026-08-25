@@ -1,0 +1,54 @@
+{
+  "name":"copy",
+  "full_path":[
+    "gdal",
+    "vsi",
+    "copy"
+  ],
+  "description":"Copy files located on GDAL Virtual System Interface (VSI).",
+  "short_url":"\/programs\/gdal_vsi_copy.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vsi_copy.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"source",
+      "type":"string",
+      "description":"Source file or directory name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"destination",
+      "type":"string",
+      "description":"Destination file or directory name",
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"recursive",
+      "type":"boolean",
+      "description":"Copy subdirectories recursively",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"skip-errors",
+      "type":"boolean",
+      "description":"Skip errors",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

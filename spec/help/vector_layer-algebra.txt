@@ -1,0 +1,52 @@
+Usage: gdal vector layer-algebra [OPTIONS] <OPERATION> <INPUT> <METHOD> <OUTPUT>
+
+Perform algebraic operation between 2 layers.
+
+Positional arguments:
+  --operation <OPERATION>                              Operation to perform. OPERATION=union|intersection|sym-difference|identity|update|clip|erase [required]
+  -i, --input <INPUT>                                  Input vector dataset [required]
+  --method <METHOD>                                    Method vector dataset [required]
+  -o, --output <OUTPUT>                                Output vector dataset [required]
+
+Common Options:
+  -h, --help                                           Display help message and exit
+  --json-usage                                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                               Configuration option [may be repeated]
+  -q, --quiet                                          Quiet mode (no progress bar or warning message)
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>  Output format
+  --co, --creation-option <KEY>=<VALUE>                Creation option [may be repeated]
+  --lco, --layer-creation-option <KEY>=<VALUE>         Layer creation option [may be repeated]
+  --overwrite                                          Whether overwriting existing output dataset is allowed
+  --update                                             Whether to open existing dataset in update mode
+  --overwrite-layer                                    Whether overwriting existing output layer is allowed
+  --append                                             Whether appending to existing layer is allowed
+  --input-layer <INPUT-LAYER>                          Input layer name
+  --method-layer <METHOD-LAYER>                        Method layer name
+  --output-layer <OUTPUT-LAYER>                        Output layer name
+  --geometry-type <GEOMETRY-TYPE>                      Geometry type
+
+Advanced Options:
+  --oo, --open-option <KEY>=<VALUE>                    Open options [may be repeated]
+  --if, --input-format <INPUT-FORMAT>                  Input formats [may be repeated]
+  --input-prefix <INPUT-PREFIX>                        Prefix for fields corresponding to input layer
+  --input-field <INPUT-FIELD>                          Input field(s) to add to output layer [may be repeated]
+                                                       Mutually exclusive with --no-input-field, --all-input-field
+  --no-input-field                                     Do not add any input field to output layer
+                                                       Mutually exclusive with --input-field, --all-input-field
+  --all-input-field                                    Add all input fields to output layer
+                                                       Mutually exclusive with --input-field, --no-input-field
+  --method-prefix <METHOD-PREFIX>                      Prefix for fields corresponding to method layer
+  --method-field <METHOD-FIELD>                        Method field(s) to add to output layer [may be repeated]
+                                                       Mutually exclusive with --no-method-field, --all-method-field
+  --no-method-field                                    Do not add any method field to output layer
+                                                       Mutually exclusive with --method-field, --all-method-field
+  --all-method-field                                   Add all method fields to output layer
+                                                       Mutually exclusive with --method-field, --no-method-field
+
+For more details, consult https://gdal.org/programs/gdal_vector_layer_algebra.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

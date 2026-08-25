@@ -1,0 +1,31 @@
+Usage: gdal raster overview add [OPTIONS] <INPUT>
+
+Adding overviews.
+
+Positional arguments:
+  -i, --dataset, --input <INPUT>         Dataset (to be updated in-place, unless --external) [required]
+
+Common Options:
+  -h, --help                             Display help message and exit
+  --json-usage                           Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                 Configuration option [may be repeated]
+  -q, --quiet                            Quiet mode (no progress bar or warning message)
+
+Options:
+  --overview-src <OVERVIEW-SRC>          Source overview dataset [may be repeated]
+                                         Mutually exclusive with --levels
+  --external                             Add external overviews
+  -r, --resampling <RESAMPLING>          Resampling method. RESAMPLING=nearest|average|cubic|cubicspline|lanczos|bilinear|gauss|average_magphase|rms|mode
+  --levels <LEVELS>                      Levels / decimation factors [may be repeated]
+                                         Mutually exclusive with --overview-src
+  --min-size <MIN-SIZE>                  Maximum width or height of the smallest overview level.
+  --co, --creation-option <KEY>=<VALUE>  Overview creation option [may be repeated]
+
+Advanced Options:
+  --oo, --open-option <KEY>=<VALUE>      Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_overview_add.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

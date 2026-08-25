@@ -1,0 +1,6 @@
+__pycache__/
+work/
+r23work/
+cache/*
+!cache/r23edges.json
+!cache/r23orders.json

@@ -1,0 +1,33 @@
+Usage: zonal-stats [OPTIONS] <INPUT>
+
+Calculate raster zonal statistics
+
+Positional arguments:
+  -i, --input <INPUT>                  Input raster datasets [required]
+
+Common Options:
+  -h, --help                           Display help message and exit
+  --json-usage                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>               Configuration option [may be repeated]
+  -q, --quiet                          Quiet mode (no progress bar or warning message)
+
+Options:
+  -b, --band <BAND>                    Input band(s) (1-based index) [may be repeated]
+  --zones <ZONES>                      Dataset containing zone definitions [required]
+  --zones-band <ZONES-BAND>            Band from which zones should be read
+                                       Mutually exclusive with --zones-layer
+  --zones-layer <ZONES-LAYER>          Layer from which zones should be read
+                                       Mutually exclusive with --zones-band
+  --weights <WEIGHTS>                  Weighting raster dataset
+  --weights-band <WEIGHTS-BAND>        Band from which weights should be read (default: 1)
+  --pixels <PIXELS>                    Method to determine which pixels are included in stat calculation.. PIXELS=default|fractional|all-touched
+  --stat <STAT>                        Statistic(s) to compute for each zone. STAT=center_x|center_y|count|coverage|frac|max|max_center_x|max_center_y|mean|median|min|minority|min_center_x|min_center_y|mode|stdev|sum|unique|values|variance|variety|weighted_mean|weighted_stdev|weighted_sum|weighted_variance|weights [may be repeated] [required]
+  --include-field <INCLUDE-FIELD>      Fields from polygon zones to include in output [may be repeated]
+  --strategy <STRATEGY>                For polygon zones, whether to iterate over input features or raster chunks. STRATEGY=feature|raster (default: feature)
+  --chunk-size <CHUNK-SIZE>            Maximum size of raster chunks read into memory (default: 5%)
+
+Advanced Options:
+  --if, --input-format <INPUT-FORMAT>  Input formats [may be repeated]
+  --oo, --open-option <KEY>=<VALUE>    Open options [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_zonal_stats.html

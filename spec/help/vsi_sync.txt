@@ -1,0 +1,24 @@
+Usage: gdal vsi sync [OPTIONS] <SOURCE> <DESTINATION>
+
+Synchronize source and target file/directory located on GDAL Virtual System Interface (VSI).
+
+Positional arguments:
+  --source <SOURCE>                Source file or directory name [required]
+  --destination <DESTINATION>      Destination file or directory name [required]
+
+Common Options:
+  -h, --help                       Display help message and exit
+  --json-usage                     Display usage as JSON document and exit
+  --config <KEY>=<VALUE>           Configuration option [may be repeated]
+  -q, --quiet                      Quiet mode (no progress bar or warning message)
+
+Options:
+  -r, --recursive                  Synchronize recursively
+  --strategy <STRATEGY>            Synchronization strategy. STRATEGY=timestamp|ETag|overwrite (default: timestamp)
+  -j, --num-threads <NUM-THREADS>  Number of jobs (or ALL_CPUS)
+
+For more details, consult https://gdal.org/programs/gdal_vsi_sync.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

@@ -1,0 +1,211 @@
+{
+  "name":"scale",
+  "full_path":[
+    "gdal",
+    "raster",
+    "scale"
+  ],
+  "description":"Scale the values of the bands of a raster dataset.",
+  "short_url":"\/programs\/gdal_raster_scale.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_scale.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATECOPY"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Append as a subdataset to existing output",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"output-data-type",
+      "type":"string",
+      "description":"Output data type",
+      "choices":[
+        "UInt8",
+        "Int8",
+        "UInt16",
+        "Int16",
+        "UInt32",
+        "Int32",
+        "UInt64",
+        "Int64",
+        "CInt16",
+        "CInt32",
+        "Float16",
+        "Float32",
+        "Float64",
+        "CFloat32",
+        "CFloat64"
+      ],
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "type":[
+          "GDALDataType"
+        ]
+      }
+    },
+    {
+      "name":"band",
+      "type":"integer",
+      "description":"Select band to restrict the scaling (1-based index)",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"src-min",
+      "type":"real",
+      "description":"Minimum value of the source range",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"src-max",
+      "type":"real",
+      "description":"Maximum value of the source range",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"dst-min",
+      "type":"real",
+      "description":"Minimum value of the destination range",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"dst-max",
+      "type":"real",
+      "description":"Maximum value of the destination range",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"exponent",
+      "type":"real",
+      "description":"Exponent to apply non-linear scaling with a power function",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"no-clip",
+      "type":"boolean",
+      "description":"Do not clip input values to [srcmin, srcmax]",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ],
+  "supports_streamed_output":true
+}

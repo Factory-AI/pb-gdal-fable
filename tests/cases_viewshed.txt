@@ -1,0 +1,100 @@
+# raster viewshed: LOS recursion, curvature, arc masks, cumulative
+#setup: python3 /workspace/tests/mk_viewshed_fixtures.py .
+raster viewshed flat.tif o.tif -p 5.5,4.5,3 --mode normal
+raster viewshed flat.tif o.tif -p 5.5,4.5,3 --mode DEM
+raster viewshed flat.tif o.tif -p 5.5,4.5,3 --mode ground
+raster viewshed rampx.tif o.tif -p 2.5,7.5,2 --mode normal
+raster viewshed rampx.tif o.tif -p 2.5,7.5,2 --mode DEM
+raster viewshed rampx.tif o.tif -p 2.5,7.5,2 --mode ground
+raster viewshed peak.tif o.tif -p 5.5,4.5,1 --mode normal
+raster viewshed peak.tif o.tif -p 5.5,4.5,1 --mode DEM
+raster viewshed peak.tif o.tif -p 5.5,4.5,1 --mode ground
+raster viewshed wall.tif o.tif -p 2.5,4.5,2 --mode normal
+raster viewshed wall.tif o.tif -p 2.5,4.5,2 --mode DEM
+raster viewshed wall.tif o.tif -p 2.5,4.5,2 --mode ground
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --mode normal
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --mode DEM
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --mode ground
+raster viewshed rnd2.tif o.tif -p 10.5,6.5,3 --mode normal
+raster viewshed rnd2.tif o.tif -p 10.5,6.5,3 --mode DEM
+raster viewshed rnd2.tif o.tif -p 10.5,6.5,3 --mode ground
+raster viewshed rndr.tif o.tif -p 110.5,495.25,2 --mode normal
+raster viewshed rndr.tif o.tif -p 110.5,495.25,2 --mode DEM
+raster viewshed rndr.tif o.tif -p 110.5,495.25,2 --mode ground
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --curvature-coefficient 0
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --curvature-coefficient 5000
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --mode DEM --curvature-coefficient 2000
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --visible-value 7 --invisible-value 9 --out-of-range-value 3 --max-distance 5
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --visible-value 200.6 --invisible-value 3.5
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --dst-nodata 9
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --target-height 2
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --target-height 2 --mode DEM
+raster viewshed rnd.tif o.tif -p 8.5,8.5 -z 4
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --max-distance 4.2
+raster viewshed rnd2.tif o.tif -p 10.5,6.5,3 --max-distance 6
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --min-distance 2.5
+raster viewshed rnd2.tif o.tif -p 10.5,6.5,3 --min-distance 2 --max-distance 5.5
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --min-distance 2.5 --mode DEM
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --high-pitch 10
+raster viewshed rnd2.tif o.tif -p 10.5,6.5,3 --high-pitch 25
+raster viewshed flat.tif o.tif -p 5.5,4.5,3 --low-pitch -20
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 30 --end-angle 44
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 46 --end-angle 135
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 80 --end-angle 280
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 170 --end-angle 190
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 45 --end-angle 225
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 225 --end-angle 45
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 350 --end-angle 10
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 90 --end-angle 90
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 0 --end-angle 90
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 160.302 --end-angle 59.7751
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 292.843 --end-angle 347.102
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 105.059 --end-angle 285.213
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 87.9 --end-angle 347.39
+raster viewshed rnd2.tif o.tif -p 4.5,10.5,2 --start-angle 281.866 --end-angle 322.449
+raster viewshed rnd2.tif o.tif -p 4.5,10.5,2 --start-angle 289.457 --end-angle 353.136
+raster viewshed rnd2.tif o.tif -p 16.5,3.5,2 --start-angle 15.138 --end-angle 186.995
+raster viewshed rnd2.tif o.tif -p 16.5,3.5,2 --start-angle 56.392 --end-angle 173.563
+raster viewshed rndr.tif o.tif -p 117.2,496.4,2 --start-angle 160.302 --end-angle 59.7751 --curvature-coefficient 1
+raster viewshed rndr.tif o.tif -p 105.3,494.9,10 --min-distance 0.74 --start-angle 281.866 --end-angle 322.449 --visible-value 200 --invisible-value 17 --out-of-range-value 66 --dst-nodata 255
+raster viewshed rndr.tif o.tif -p 110.7,497.3,2 --start-angle 37.9913 --end-angle 72.4837 --target-height 3.34 --out-of-range-value 66 -q
+raster viewshed rndr.tif o.tif -p 104.6,495.2,2 --min-distance 1.2 --start-angle 105.059 --end-angle 285.213 --mode ground -q
+raster viewshed rnd.tif o.tif -p 8.5,8.5,4 --start-angle 46 --end-angle 135 --max-distance 5
+raster viewshed rnd.tif o.tif --mode cumulative
+raster viewshed rnd.tif o.tif --mode cumulative --observer-spacing 3
+raster viewshed rnd2.tif o.tif --mode cumulative --observer-spacing 2 -z 3
+raster viewshed e.tif o.tif --mode cumulative --observer-spacing 1
+raster viewshed rnd.tif o.tif --mode cumulative --observer-spacing 3 -j 2
+raster viewshed rnd.tif o.tif --mode cumulative --observer-spacing 4 --target-height 2
+raster viewshed rnd.tif o.tif --mode cumulative --observer-spacing 4 -j ALL_CPUS
+raster viewshed mb.tif o.tif -p 2.5,2.5,3 --band 2
+raster viewshed nd.tif o.tif -p 2.5,2.5,3
+raster viewshed nd.tif o.tif -p 4.5,0.5,3 --max-distance 1
+raster viewshed flat.tif o.tif -p 25.5,4.5,3
+raster viewshed nogt.tif o.tif -p 2,2,3
+raster viewshed e.tif o.tif -p 2.5,2.5,3
+raster viewshed e.tif o.tif -p 2.5,2.5,3 -q
+raster viewshed e.tif o.tif -p 2.5,2.5,3 --co COMPRESS=DEFLATE
+raster viewshed e.tif exists.tif -p 2,2
+raster viewshed e.tif o.tif -p 2,2,3 --overwrite
+raster viewshed e.tif o.tif
+raster viewshed e.tif o.tif -p 2,2 -j 2
+raster viewshed e.tif o.tif --mode cumulative -p 2,2
+raster viewshed e.tif o.tif --mode cumulative -p 2,2 --max-distance 5 --start-angle 10 --low-pitch -5
+raster viewshed e.tif o.tif -p 2,2,5 -z 3
+raster viewshed e.tif o.tif -p 2,2 --low-pitch 10 --high-pitch 5
+raster viewshed e.tif o.tif -p 2,2 --visible-value 256
+raster viewshed e.tif o.tif -p 2,2 --visible-value -1
+raster viewshed e.tif o.tif -p 2,2 --start-angle 10 --end-angle 360
+raster viewshed e.tif o.tif -p 2,2 --start-angle -4
+raster viewshed e.tif o.tif -p 2,2 --mode bogus
+raster viewshed e.tif o.tif -p 2,2 --band 0
+raster viewshed e.tif o.tif -p 2,2 --band 9
+raster viewshed e.tif o.tif --mode cumulative --observer-spacing 0
+raster viewshed e.tif o.tif --mode cumulative -j x
+raster viewshed e.tif o.tif -p 2,2 --max-distance -3
+raster viewshed e.tif o.tif -p 2,2 --sd-filename nofile.tif
+raster viewshed nofile999.tif o.tif -p 2,2
+raster viewshed rnd.tif o.gdalg.json -p 8.5,8.5,4 --mode DEM --max-distance 5.5 --curvature-coefficient 0.5 --band 1 --target-height 1.5
+raster viewshed rnd.tif o.gdalg.json --mode cumulative --observer-spacing 4 -z 2 -j 2 --dst-nodata 5 --visible-value 7

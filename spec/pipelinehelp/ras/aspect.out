@@ -1,0 +1,17 @@
+Usage: aspect [OPTIONS]
+
+Generate an aspect map
+
+Common Options:
+  -h, --help                     Display help message and exit
+  --json-usage                   Display usage as JSON document and exit
+  --config <KEY>=<VALUE>         Configuration option [may be repeated]
+
+Options:
+  -b, --band <BAND>              Input band (1-based index) (default: 1)
+  --convention <CONVENTION>      Convention for output angles. CONVENTION=azimuth|trigonometric-angle (default: azimuth)
+  --gradient-alg <GRADIENT-ALG>  Algorithm used to compute terrain gradient. GRADIENT-ALG=Horn|ZevenbergenThorne (default: Horn)
+  --zero-for-flat                Whether to output zero for flat areas
+  --no-edges                     Do not try to interpolate values at dataset edges or close to nodata values
+
+For more details, consult https://gdal.org/programs/gdal_raster_aspect.html

@@ -1,0 +1,16 @@
+Usage: sieve [OPTIONS]
+
+Remove small polygons from a raster dataset.
+
+Common Options:
+  -h, --help                             Display help message and exit
+  --json-usage                           Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                 Configuration option [may be repeated]
+
+Options:
+  --mask <MASK>                          Use the first band of the specified file as a validity mask (all pixels with a value other than zero will be considered suitable for inclusion in polygons)
+  -b, --band <BAND>                      Input band (1-based index)
+  -s, --size-threshold <SIZE-THRESHOLD>  Minimum size of polygons to keep (default: 2)
+  -c, --connect-diagonal-pixels          Consider diagonal pixels as connected
+
+For more details, consult https://gdal.org/programs/gdal_raster_sieve.html

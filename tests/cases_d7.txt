@@ -1,0 +1,50 @@
+# D7: config keys (CPL_DEBUG traces, GDAL_SKIP, GDAL_PAM_ENABLED,
+# GDAL_CACHEMAX, OGR_GEOJSON_MAX_OBJ_SIZE). Debug traces carry heap
+# pointers; the ptr normalization maps 0x... tokens on both sides.
+#norm: ptr
+#setup: python3 /workspace/tests/mk_warp_fixtures.py . && python3 /workspace/tests/mk_m_fixtures.py .
+
+# CPL_DEBUG value semantics + raster convert trace
+--config CPL_DEBUG=ON raster convert g1.tif d1.tif
+--debug ON raster convert g1.tif d1.tif
+--config CPL_DEBUG=GDAL raster convert g1.tif d1.tif
+--config CPL_DEBUG= raster convert g1.tif d1.tif
+--config CPL_DEBUG=GTiff raster convert g1.tif d1.tif
+--config CPL_DEBUG=ON raster convert m2n.tif d1.tif
+--config CPL_DEBUG=ON dataset identify g1.tif
+
+# GDAL_CACHEMAX echo in the trace
+--config CPL_DEBUG=ON --config GDAL_CACHEMAX=64 raster convert g1.tif d1.tif
+--config CPL_DEBUG=ON --config GDAL_CACHEMAX=10% raster convert g1.tif d1.tif
+
+# warp trace: identity/affine reprojects (exact kernel scales)
+--config CPL_DEBUG=ON raster reproject --dst-crs EPSG:4326 g1.tif d1.tif
+--config CPL_DEBUG=ON raster reproject --dst-crs EPSG:4326 --size 5,4 g1.tif d1.tif
+--config CPL_DEBUG=ON raster reproject --dst-crs EPSG:4326 --size 20,16 --resampling bilinear g1.tif d1.tif
+--config CPL_DEBUG=ON raster reproject --dst-crs EPSG:4326 --size 5,4 --resampling bilinear m2n.tif d1.tif
+--config CPL_DEBUG=ON raster reproject --dst-crs EPSG:4326 --dst-nodata 7 g1.tif d1.tif
+--config CPL_DEBUG=ON raster reproject --dst-crs EPSG:4326 --dst-nodata 7,9 mb3.tif d1.tif
+--config CPL_DEBUG=WARP --num-threads 4 raster reproject --dst-crs EPSG:4326 big.tif d1.tif
+--config CPL_DEBUG=ON raster reproject --dst-crs EPSG:4326 --size 256,128 big.tif d1.tif
+
+# GDAL_PAM_ENABLED gate
+--config GDAL_PAM_ENABLED=NO raster info --stats g1.tif
+raster info --stats g1.tif
+
+# GDAL_SKIP: unregistered drivers
+--config GDAL_SKIP=GTiff raster convert g1.tif d1.tif
+--config GDAL_SKIP=GTiff dataset identify g1.tif
+--config GDAL_SKIP=GTiff,HFA dataset identify g1.tif
+--config CPL_DEBUG=ON --config GDAL_SKIP=DERIVED raster convert g1.tif d1.tif
+
+# vector traces
+--config CPL_DEBUG=ON vector convert mix1.shp d1.geojson
+--config CPL_DEBUG=ON vector convert ap1.json d1.shp
+--config CPL_DEBUG=ON vector info mix1.shp
+--config CPL_DEBUG=ON vector convert --of GeoJSONSeq ap1.json d1.geojsonl
+
+# OGR_GEOJSON_MAX_OBJ_SIZE gate (non-firing thresholds; the firing
+# side's reported character number is a known residual - see NOTES)
+--config OGR_GEOJSON_MAX_OBJ_SIZE=0.005 vector convert ap1.json d1.geojson
+--config OGR_GEOJSON_MAX_OBJ_SIZE=0.01 vector convert ap1.json d1.geojson
+--config OGR_GEOJSON_MAX_OBJ_SIZE=0 vector convert ap1.json d1.geojson

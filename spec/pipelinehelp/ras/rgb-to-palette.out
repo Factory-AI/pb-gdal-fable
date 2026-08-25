@@ -1,0 +1,17 @@
+Usage: rgb-to-palette [OPTIONS]
+
+Convert a RGB image into a pseudo-color / paletted image.
+
+Common Options:
+  -h, --help                   Display help message and exit
+  --json-usage                 Display usage as JSON document and exit
+  --config <KEY>=<VALUE>       Configuration option [may be repeated]
+
+Options:
+  --color-count <COLOR-COUNT>  Select the number of colors in the generated color table (default: 256)
+  --color-map <COLOR-MAP>      Color map filename
+  --dst-nodata <DST-NODATA>    Destination nodata value
+  --no-dither                  Disable Floyd-Steinberg dithering
+  --bit-depth <BIT-DEPTH>      Bit depth of color palette component (8 bit causes longer computation time). BIT-DEPTH=5|8 (default: 5)
+
+For more details, consult https://gdal.org/programs/gdal_raster_rgb_to_palette.html

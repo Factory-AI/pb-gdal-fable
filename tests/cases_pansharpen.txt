@@ -1,0 +1,68 @@
+# raster pansharpen: weighted Brovey with positional spectral inputs
+#setup: python3 /workspace/tests/mk_pansharpen_fixtures.py .
+raster pansharpen pan.tif ms.tif o.tif -q
+raster pansharpen pan.tif ms.tif o.tif
+raster pansharpen pan.tif ms.tif --resampling nearest o.tif -q
+raster pansharpen pan.tif ms.tif --resampling bilinear o.tif -q
+raster pansharpen pan.tif ms.tif --resampling cubic o.tif -q
+raster pansharpen pan.tif ms.tif --resampling cubicspline o.tif -q
+raster pansharpen pan.tif ms.tif --resampling lanczos o.tif -q
+raster pansharpen pan.tif ms.tif --resampling average o.tif -q
+# band selection and multi-dataset spectral stacks
+raster pansharpen pan.tif msa.tif o.tif -q
+raster pansharpen pan.tif ms1.tif o.tif -q
+raster pansharpen pan.tif ms.tif,band=2 o.tif -q
+raster pansharpen pan.tif ms.tif,band=1 msa.tif,band=3 o.tif -q
+raster pansharpen pan.tif ms.tif ms1.tif o.tif -q
+raster pansharpen pan.tif ms.tif msa.tif o.tif -q
+raster pansharpen pan.tif ms.tif ms.tif o.tif -q
+raster pansharpen pan.tif msa.tif,band=4 ms.tif,band=2 ms1.tif o.tif -q
+raster pansharpen pan.tif ms.tif ms.tif,band=1 ms1.tif o.tif -q
+raster pansharpen pan.tif --spectral msa.tif ms.tif o.tif -q
+# weights
+raster pansharpen pan.tif ms.tif --weights 0.2,0.3,0.5 o.tif -q
+raster pansharpen pan.tif ms.tif --weights 1,1,2 o.tif -q
+raster pansharpen pan.tif ms1.tif --weights 0.9 o.tif -q
+raster pansharpen pan.tif ms.tif --weights 0.5 o.tif -q
+# nodata
+raster pansharpen pan.tif ms.tif --nodata 0 o.tif -q
+raster pansharpen pan.tif ms.tif --nodata 7 o.tif -q
+# UInt16 and bit-depth (NBITS-packed outputs)
+raster pansharpen pan16.tif ms16.tif o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 9 o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 10 o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 12 o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 15 o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 16 o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 20 o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 9 --resampling nearest o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 9 --resampling average o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 11 --resampling lanczos o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 10 --nodata 0 o.tif -q
+raster pansharpen pan16.tif ms16.tif ms16.tif,band=2 --bit-depth 9 o.tif -q
+raster pansharpen pan16.tif ms16.tif --bit-depth 9 --weights 0.7,0.3 o.tif -q
+raster pansharpen pan.tif ms.tif --bit-depth 7 o.tif -q
+raster pansharpen pan.tif ms.tif --bit-depth 8 o.tif -q
+# spatial extent adjustment (aligned and shifted spectral grids)
+raster pansharpen pan.tif mss.tif o.tif -q
+raster pansharpen pan.tif mss.tif --spatial-extent-adjustment union o.tif -q
+raster pansharpen pan.tif mss.tif --spatial-extent-adjustment intersection o.tif -q
+raster pansharpen pan.tif ms.tif --spatial-extent-adjustment none o.tif -q
+raster pansharpen pan.tif ms.tif --spatial-extent-adjustment none-without-warning o.tif -q
+# CRS mismatch warning
+raster pansharpen pan.tif msc.tif o.tif -q
+# threads
+raster pansharpen pan.tif ms.tif -j 2 o.tif -q
+raster pansharpen pan.tif ms.tif --num-threads 1 o.tif -q
+raster pansharpen pan.tif ms.tif -j foo o.tif -q
+# pan with several bands / errors
+raster pansharpen ms.tif ms.tif o.tif -q
+raster pansharpen missing.tif ms.tif o.tif -q
+raster pansharpen pan.tif missing.tif o.tif -q
+raster pansharpen pan.tif ms.tif ex.tif -q
+raster pansharpen pan.tif ms.tif --resampling bogus o.tif -q
+raster pansharpen pan.tif ms.tif --overwrite ex.tif -q
+# gdalg streaming output
+raster pansharpen pan.tif ms.tif o.gdalg.json -q
+raster pansharpen pan.tif ms.tif --weights 0.2,0.5,0.3 --resampling nearest -j 4 o.gdalg.json -q
+raster pansharpen pan.tif ms.tif --creation-option COMPRESS=DEFLATE o.tif -q

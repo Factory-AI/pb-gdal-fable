@@ -1,0 +1,14 @@
+ERROR 1: mdim: Unknown command: '__no_such_subcommand__'
+Usage: gdal mdim <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - convert: Convert a multidimensional dataset.
+  - info:    Return information on a multidimensional dataset.
+  - mosaic:  Build a mosaic, either virtual (VRT) or materialized, from multidimensional datasets.
+
+Try 'gdal mdim --help' for help.
+
+For more details, consult https://gdal.org/programs/gdal_mdim.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

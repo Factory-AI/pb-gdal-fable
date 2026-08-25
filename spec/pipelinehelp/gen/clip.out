@@ -1,0 +1,30 @@
+Usage: clip [OPTIONS]
+
+Clip a raster dataset.
+
+Common Options:
+  -h, --help                       Display help message and exit
+  --json-usage                     Display usage as JSON document and exit
+  --config <KEY>=<VALUE>           Configuration option [may be repeated]
+
+Options:
+  --bbox <BBOX>                    Clipping bounding box as xmin,ymin,xmax,ymax
+                                   Mutually exclusive with --window, --geometry, --like
+  --bbox-crs <BBOX-CRS>            CRS of clipping bounding box
+  --window <WINDOW>                Raster window as col,line,width,height in pixels
+                                   Mutually exclusive with --bbox, --geometry, --like
+  --geometry <GEOMETRY>            Clipping geometry (WKT or GeoJSON)
+                                   Mutually exclusive with --bbox, --window, --like
+  --geometry-crs <GEOMETRY-CRS>    CRS of clipping geometry
+  --like <DATASET>                 Dataset to use as a template for bounds
+                                   Mutually exclusive with --bbox, --window, --geometry
+  --like-sql <SELECT-STATEMENT>    SELECT statement to run on the 'like' dataset
+                                   Mutually exclusive with --like-where
+  --like-layer <LAYER-NAME>        Name of the layer of the 'like' dataset
+  --like-where <WHERE-EXPRESSION>  WHERE SQL clause to run on the 'like' dataset
+                                   Mutually exclusive with --like-sql
+  --only-bbox                      For 'geometry' and 'like', only consider their bounding box
+  --allow-bbox-outside-source      Allow clipping box to include pixels outside input dataset
+  --add-alpha                      Adds an alpha mask band to the destination when the source raster have none.
+
+For more details, consult https://gdal.org/programs/gdal_raster_clip.html

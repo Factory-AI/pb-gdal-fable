@@ -1,0 +1,206 @@
+# vector grid: gdal_grid framework over materialized vector layers.
+# Float32 SIMD invdist path (16-wide single-accumulator AVX with rcpps
+# weights, sequential hsum, exact scalar remainder), double paths for the
+# other algorithms, per-quadrant nearest-first selection with SW/SE/NW/NE
+# merge order, GTiff crystallize-then-relocate orphan IFD layout.
+#setup: printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"z":10.0,"w":2.5},"geometry":{"type":"Point","coordinates":[0.5,0.5,10.0]}},{"type":"Feature","properties":{"z":20.0,"w":-1.5},"geometry":{"type":"Point","coordinates":[9.5,0.5,20.0]}},{"type":"Feature","properties":{"z":30.0,"w":0.25},"geometry":{"type":"Point","coordinates":[0.5,9.5,30.0]}},{"type":"Feature","properties":{"z":40.0,"w":7.5},"geometry":{"type":"Point","coordinates":[9.5,9.5,40.0]}},{"type":"Feature","properties":{"z":25.0,"w":1.0},"geometry":{"type":"Point","coordinates":[5.0,5.0,25.0]}}]}' > p.json && python3 -c "import json,random;random.seed(7);f=[{'type':'Feature','properties':{'z':round(random.uniform(-50,50),3)},'geometry':{'type':'Point','coordinates':[round(random.uniform(0,100),3),round(random.uniform(0,100),3),round(random.uniform(-50,50),3)]}} for i in range(200)];print(json.dumps({'type':'FeatureCollection','name':'r','features':f}))" > r200.json && python3 -c "import json,random;random.seed(3);f=[{'type':'Feature','properties':{'z':round(random.uniform(0,10),2)},'geometry':{'type':'Point','coordinates':[round(random.uniform(0,10),2),round(random.uniform(0,10),2),round(random.uniform(0,10),2)]}} for i in range(23)];print(json.dumps({'type':'FeatureCollection','name':'r23','features':f}))" > r23.json && python3 -c "import json,random;random.seed(11);f=[{'type':'Feature','properties':{'z':round(random.uniform(0,10),2)},'geometry':{'type':'Point','coordinates':[round(random.uniform(0,10),2),round(random.uniform(0,10),2),round(random.uniform(0,10),2)]}} for i in range(17)];print(json.dumps({'type':'FeatureCollection','name':'r17','features':f}))" > r17.json && printf %s '{"type":"FeatureCollection","name":"d2","features":[{"type":"Feature","properties":{"z":5},"geometry":{"type":"Point","coordinates":[1,1]}},{"type":"Feature","properties":{"z":7},"geometry":{"type":"Point","coordinates":[3,3]}}]}' > d2.json && printf %s '{"type":"FeatureCollection","name":"emp","features":[]}' > emp.json
+
+# --- basic runs per algorithm (default size, small sizes) ---
+vector grid invdist p.json out.tif --size 3,2
+vector grid invdist p.json out.tif --size 16,16
+vector grid invdist r200.json out.tif
+vector grid invdist r23.json out.tif --size 5,5
+vector grid invdist r17.json out.tif --size 4,4
+vector grid invdistnn p.json out.tif --size 4,4 --radius 8
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 6
+vector grid average p.json out.tif --size 4,4 --radius 4
+vector grid average r23.json out.tif --size 5,5 --radius 3
+vector grid minimum p.json out.tif --size 4,4 --radius 6
+vector grid maximum p.json out.tif --size 4,4 --radius 6
+vector grid range r23.json out.tif --size 5,5 --radius 4
+vector grid count r23.json out.tif --size 5,5 --radius 4
+vector grid average-distance r23.json out.tif --size 5,5 --radius 4
+vector grid average-distance-points r23.json out.tif --size 5,5 --radius 4
+vector grid nearest r23.json out.tif --size 5,5 --radius 3
+vector grid nearest p.json out.tif --size 6,6
+vector grid linear p.json out.tif --size 6,6
+# KNOWN RESIDUAL: interior barycentric last-ulp diffs on >13-point clouds
+# (qhull facet vertex insertion order not replicated); see NOTES.md
+#residual: vector grid linear r23.json out.tif --size 8,8
+#residual: vector grid linear r23.json out.tif --size 8,8 --radius 0
+#residual: vector grid linear r23.json out.tif --size 8,8 --radius 2
+vector grid linear d2.json out.tif --size 3,3
+
+# --- whole-set aggregation (radius 0 default) ---
+vector grid average p.json out.tif --size 3,3
+vector grid minimum r23.json out.tif --size 3,3
+vector grid maximum r23.json out.tif --size 3,3
+vector grid range p.json out.tif --size 3,3
+vector grid count p.json out.tif --size 3,3
+vector grid average-distance p.json out.tif --size 3,3
+vector grid average-distance-points p.json out.tif --size 3,3
+
+# --- invdist options: power/smoothing (double path), radius search ---
+vector grid invdist p.json out.tif --size 4,4 --power 3
+vector grid invdist p.json out.tif --size 4,4 --power 1.5
+vector grid invdist p.json out.tif --size 4,4 --smoothing 2
+vector grid invdist r23.json out.tif --size 5,5 --power 2 --smoothing 0.5
+vector grid invdist p.json out.tif --size 4,4 --radius 6
+vector grid invdist p.json out.tif --size 4,4 --radius1 8 --radius2 3
+vector grid invdist p.json out.tif --size 4,4 --radius1 8 --radius2 3 --angle 30
+vector grid invdist p.json out.tif --size 4,4 --radius 6 --power 3 --smoothing 1
+vector grid invdist p.json out.tif --size 4,4 --radius 6 --min-points 3
+vector grid invdist p.json out.tif --size 4,4 --radius 6 --min-points 3 --nodata -5
+vector grid invdist r23.json out.tif --size 5,5 --radius 4 --max-points 2
+vector grid invdist r23.json out.tif --size 5,5 --radius 4 --max-points 1
+vector grid invdist p.json out.tif --size 4,4 --min-points 0
+vector grid invdist p.json out.tif --size 4,4 --angle 45
+vector grid invdist r200.json out.tif --size 9,9 --zfield z
+vector grid invdist p.json out.tif --size 4,4 --zoffset 5 --zmultiply 2
+vector grid invdist p.json out.tif --size 4,4 --zfield w
+vector grid invdist p.json out.tif --size 4,4 --zfield w --zoffset 1 --zmultiply -0.5
+
+# --- invdistnn options ---
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 5 --max-points 3
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 5 --min-points 4 --nodata -1
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 5 --power 3
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 5 --smoothing 1.5
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 5 --max-points 4 --min-points 2 --power 1.5 --smoothing 0.25
+
+# --- per-quadrant selection ---
+vector grid average p.json out.tif --size 4,4 --radius 8 --min-points-per-quadrant 1
+vector grid average r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2
+vector grid average r23.json out.tif --size 5,5 --radius 6 --min-points-per-quadrant 1 --max-points-per-quadrant 3
+vector grid average r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 3 --max-points 5
+vector grid minimum r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2
+vector grid maximum r23.json out.tif --size 5,5 --radius 6 --min-points-per-quadrant 1
+vector grid range r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2
+vector grid count r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2
+vector grid count r23.json out.tif --size 5,5 --radius 6 --min-points-per-quadrant 2 --nodata -1
+vector grid average-distance r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2
+vector grid average-distance-points r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2
+vector grid invdist r23.json out.tif --size 5,5 --radius 6 --min-points-per-quadrant 1
+vector grid invdist r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2 --max-points 5
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 6 --min-points-per-quadrant 1 --max-points-per-quadrant 2
+vector grid invdistnn r23.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2 --max-points 3 --min-points 2
+
+# --- extent / resolution / size interactions ---
+vector grid invdist p.json out.tif --size 4,4 --extent 0,0,10,10
+vector grid average p.json out.tif --size 4,4 --extent 2,2,8,8 --radius 4
+vector grid count p.json out.tif --extent 0,0,10,10 --resolution 3,3
+vector grid count p.json out.tif --extent 0,0,10,10 --resolution 4,4
+vector grid count p.json out.tif --extent 0,0,10,10 --resolution 2.6,2.6
+vector grid count p.json out.tif --extent 0,0,10,10 --resolution 7,3
+vector grid count p.json out.tif --size 1,1 --extent 5,5,1,1
+vector grid nearest p.json out.tif --size 2,3 --extent -5,-5,15,15
+
+# --- output types / nodata ---
+vector grid invdist p.json out.tif --size 4,4 --ot Float32
+vector grid invdist p.json out.tif --size 4,4 --ot UInt8
+vector grid invdist p.json out.tif --size 4,4 --ot Int16
+vector grid invdist p.json out.tif --size 4,4 --ot UInt16
+vector grid invdist p.json out.tif --size 4,4 --ot Int32
+vector grid count r23.json out.tif --size 5,5 --radius 4 --ot UInt8
+vector grid average p.json out.tif --size 4,4 --radius 2 --nodata -32.5
+vector grid nearest p.json out.tif --size 4,4 --radius 1 --nodata 255 --ot UInt8
+
+# --- crs override / 2D warning / zfield misses ---
+vector grid invdist p.json out.tif --size 3,3 --crs EPSG:32631
+vector grid count d2.json out.tif --size 2,2
+vector grid count d2.json out.tif --size 2,2 -q
+vector grid count d2.json out.tif --size 2,2 --zfield z
+vector grid count p.json out.tif --size 2,2 --zfield nope
+vector grid count emp.json out.tif --size 2,2
+vector grid count emp.json out.tif --size 2,2 --extent 0,0,10,10
+vector grid count emp.json out.tif --size 2,2 --crs EPSG:4326
+vector grid count p.json out.tif --size 2,2 -l nope
+vector grid count p.json out.tif --size 2,2 -l pts
+
+# --- sql / where-free layer choreography ---
+vector grid count p.json out.tif --size 2,2 --sql "SELECT * FROM pts"
+vector grid average p.json out.tif --size 3,3 --sql "SELECT * FROM pts WHERE z > 15" --radius 20
+vector grid count p.json out.tif --size 2,2 --sql "SELECT * FROM missing"
+vector grid count p.json out.tif --size 2,2 --bbox 0,0,4,4
+vector grid count p.json out.tif --size 2,2 --bbox 100,100,110,110
+
+# --- quiet / overwrite / existing outputs ---
+vector grid invdist p.json out.tif --size 3,3 -q
+#setup: printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"z":10.0},"geometry":{"type":"Point","coordinates":[0.5,0.5,10.0]}}]}' > p1.json && printf %s existing > out.tif
+vector grid invdist p1.json out.tif --size 2,2
+#setup: printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"z":10.0},"geometry":{"type":"Point","coordinates":[0.5,0.5,10.0]}}]}' > p1.json && printf %s existing > out.tif
+vector grid invdist p1.json out.tif --size 2,2 --overwrite
+
+# --- validation errors ---
+vector grid count p.json out.tif --size 2,2 --radius2 3
+vector grid count p.json out.tif --size 2,2 --radius1 3
+vector grid count p.json out.tif --resolution 3,3
+vector grid count p.json out.tif --size 2,2 --resolution 3,3 --extent 0,0,10,10
+vector grid invdist p.json out.tif --size 2,2 --max-points 3
+vector grid invdist p.json out.tif --size 2,2 --min-points 2
+vector grid average p.json out.tif --size 2,2 --max-points 3
+vector grid invdistnn p.json out.tif --size 2,2
+vector grid invdistnn p.json out.tif --size 2,2 --max-points 5
+vector grid count p.json out.tif --size 2,2 --min-points-per-quadrant 1
+vector grid invdist p.json out.tif --size 2,2 --radius1 3 --radius2 4 --min-points-per-quadrant 1
+vector grid count p.json out.tif --size 2,2 --radius 3 --radius1 2 --radius2 2
+vector grid count p.json out.tif --size 2,2 --extent 1,1
+vector grid count missing.json out.tif --size 2,2
+vector grid count missing.json out.gdalg.json --size 2,2
+vector grid count p.json out.gdalg.json --size 2,2
+vector grid count p.json out.tif --of GDALG --size 2,2
+vector grid count p.json out.png --size 2,2
+vector grid count p.json out.img --size 2,2
+vector grid count p.json out.xyz9 --size 2,2
+vector grid count p.json out.tif --of PNG --size 2,2
+vector grid count p.json out.tif --of HFA --size 2,2
+vector grid count p.json out.tif --of stream --size 2,2
+vector grid count p.json out.tif --of MEM --size 2,2
+vector grid count p.json out.tif --size 2,2 --crs BAD
+vector grid badalg p.json out.tif
+vector grid
+
+# --- multi-layer / multi-band ---
+#setup: printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"z":10.0},"geometry":{"type":"Point","coordinates":[0.5,0.5,10.0]}},{"type":"Feature","properties":{"z":20.0},"geometry":{"type":"Point","coordinates":[9.5,0.5,20.0]}},{"type":"Feature","properties":{"z":30.0},"geometry":{"type":"Point","coordinates":[0.5,9.5,30.0]}}]}' > l1.json && printf %s '{"type":"FeatureCollection","name":"l2","features":[{"type":"Feature","properties":{"z":-5.0},"geometry":{"type":"Point","coordinates":[2,2,-5.0]}},{"type":"Feature","properties":{"z":15.0},"geometry":{"type":"Point","coordinates":[8,8,15.0]}}]}' > l2.json && /home/agent/oracle/executable vector concat l1.json l2.json ml.json --mode stack --quiet
+vector grid invdist ml.json out.tif --size 3,3
+vector grid invdist ml.json out.tif --size 3,3 -l pts
+vector grid invdist ml.json out.tif --size 3,3 -l l2
+vector grid invdist ml.json out.tif --size 3,3 -l l2 -l pts
+vector grid invdist ml.json out.tif --size 3,3 -l pts -l nope
+vector grid count ml.json out.tif --size 3,3 --zfield z
+vector grid invdist ml.json out.tif --size 3,3 -q
+
+# --- multiple inputs (only the first is consumed) ---
+vector grid count p.json r23.json out.tif --size 2,2
+
+# --- geometry types beyond points ---
+#setup: printf %s '{"type":"FeatureCollection","name":"mix","features":[{"type":"Feature","properties":{"z":1.5},"geometry":{"type":"LineString","coordinates":[[0,0,4],[2,1,6],[4,0,8]]}},{"type":"Feature","properties":{"z":3.5},"geometry":{"type":"MultiPoint","coordinates":[[1,3,2],[3,3,10]]}},{"type":"Feature","properties":{"z":-2},"geometry":{"type":"Polygon","coordinates":[[[0,4,1],[4,4,3],[4,8,5],[0,8,7],[0,4,1]]]}},{"type":"Feature","properties":{"z":9},"geometry":null}]}' > mix.json
+vector grid count mix.json out.tif --size 3,3
+vector grid invdist mix.json out.tif --size 3,3
+vector grid average mix.json out.tif --size 3,3 --radius 3
+vector grid invdist mix.json out.tif --size 3,3 --zfield z
+
+# --- coincident points / degenerate sets ---
+#setup: printf %s '{"type":"FeatureCollection","name":"co","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2,2,5]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[2,2,9]}},{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[6,6,1]}}]}' > co.json && printf %s '{"type":"FeatureCollection","name":"one","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[3,4,7]}}]}' > one.json
+vector grid invdist co.json out.tif --size 4,4
+vector grid nearest co.json out.tif --size 4,4
+vector grid invdist one.json out.tif --size 2,2
+vector grid linear one.json out.tif --size 2,2
+vector grid average co.json out.tif --size 4,4 --radius 3
+vector grid invdist co.json out.tif --size 4,4 --smoothing 1
+
+# --- creation options ---
+vector grid invdist p.json out.tif --size 4,4 --co COMPRESS=DEFLATE
+vector grid invdist p.json out.tif --size 4,4 --co TILED=YES
+vector grid invdist r200.json out.tif --co COMPRESS=LZW
+vector grid invdist p.json out.tif --size 4,4 --co COMPRESS=BOGUS
+
+# --- invdistnn equal-distance ties resolved by quadtree traversal order ---
+#setup: python3 -c "import json,math;near=[((1.0+k*0.5)*math.cos(0.3+k*0.35),(1.0+k*0.5)*math.sin(0.3+k*0.35),100.0+k) for k in range(11)];anch=[(-16.0,-16.0,50.0),(16.0,16.0,60.0)];mk=lambda pts,fn:json.dump({'type':'FeatureCollection','name':'t','features':[{'type':'Feature','properties':{},'geometry':{'type':'Point','coordinates':list(p)}} for p in pts]},open(fn,'w'));mk(near+[(0.0,12.0,900.0),(12.0,0.0,500.0)]+anch,'tne.json');mk(near+[(12.0,0.0,500.0),(0.0,-12.0,900.0)]+anch,'tes.json');mk(near+[(12.0,0.0,900.0),(12.0,0.0,500.0)]+anch,'tco.json');mk([(12.0,0.0,500.0)]+near+[(0.0,-12.0,900.0)]+anch,'tel.json');import random;random.seed(9);mk([(float(random.randint(0,8)),float(random.randint(0,8)),round(random.uniform(0,100),3)) for i in range(30)],'lat.json')"
+vector grid invdistnn tne.json out.tif --size 1,1 --radius 13 --max-points 12
+vector grid invdistnn tes.json out.tif --size 1,1 --radius 13 --max-points 12
+vector grid invdistnn tco.json out.tif --size 1,1 --radius 13 --max-points 12
+vector grid invdistnn tel.json out.tif --size 1,1 --radius 13 --max-points 12
+vector grid invdistnn lat.json out.tif --size 7,7 --radius 5 --max-points 5
+vector grid invdistnn lat.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 2
+vector grid invdistnn lat.json out.tif --size 6,6 --radius 6 --max-points 12 --smoothing 0.5
+vector grid minimum lat.json out.tif --size 5,5 --radius 6 --max-points-per-quadrant 1

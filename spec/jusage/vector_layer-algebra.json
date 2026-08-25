@@ -1,0 +1,282 @@
+{
+  "name":"layer-algebra",
+  "full_path":[
+    "gdal",
+    "vector",
+    "layer-algebra"
+  ],
+  "description":"Perform algebraic operation between 2 layers.",
+  "short_url":"\/programs\/gdal_vector_layer_algebra.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vector_layer_algebra.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"operation",
+      "type":"string",
+      "description":"Operation to perform",
+      "choices":[
+        "union",
+        "intersection",
+        "sym-difference",
+        "identity",
+        "update",
+        "clip",
+        "erase"
+      ],
+      "required":true,
+      "category":"Base"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Input vector dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"method",
+      "type":"dataset",
+      "description":"Method vector dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"update",
+      "type":"boolean",
+      "description":"Whether to open existing dataset in update mode",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite-layer",
+      "type":"boolean",
+      "description":"Whether overwriting existing output layer is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Whether appending to existing layer is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"input-layer",
+      "type":"string",
+      "description":"Input layer name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"method-layer",
+      "type":"string",
+      "description":"Method layer name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"output-layer",
+      "type":"string",
+      "description":"Output layer name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"geometry-type",
+      "type":"string",
+      "description":"Geometry type",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"input-prefix",
+      "type":"string",
+      "description":"Prefix for fields corresponding to input layer",
+      "required":false,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-field",
+      "type":"string_list",
+      "description":"Input field(s) to add to output layer",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "mutual_exclusion_group":"input-field"
+    },
+    {
+      "name":"no-input-field",
+      "type":"boolean",
+      "description":"Do not add any input field to output layer",
+      "required":false,
+      "category":"Advanced",
+      "mutual_exclusion_group":"input-field"
+    },
+    {
+      "name":"all-input-field",
+      "type":"boolean",
+      "description":"Add all input fields to output layer",
+      "required":false,
+      "category":"Advanced",
+      "mutual_exclusion_group":"input-field"
+    },
+    {
+      "name":"method-prefix",
+      "type":"string",
+      "description":"Prefix for fields corresponding to method layer",
+      "required":false,
+      "category":"Advanced"
+    },
+    {
+      "name":"method-field",
+      "type":"string_list",
+      "description":"Method field(s) to add to output layer",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "mutual_exclusion_group":"method-field"
+    },
+    {
+      "name":"no-method-field",
+      "type":"boolean",
+      "description":"Do not add any method field to output layer",
+      "required":false,
+      "category":"Advanced",
+      "mutual_exclusion_group":"method-field"
+    },
+    {
+      "name":"all-method-field",
+      "type":"boolean",
+      "description":"Add all method fields to output layer",
+      "required":false,
+      "category":"Advanced",
+      "mutual_exclusion_group":"method-field"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output vector dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

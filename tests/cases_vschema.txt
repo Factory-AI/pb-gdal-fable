@@ -1,0 +1,176 @@
+# vector export-schema: leaf + terminal pipeline step. Field/geometry type
+# mapping (Boolean subtype, DateTime timezones, shapefile widths), authid vs
+# full wkt+projjson coordinateSystem, --crs none, -l selection (exact-first
+# case-insensitive fallback, dup keep), read-l/info-l two-stage fetch,
+# --if/--oo on info-like steps, +token value-position literalness,
+# ran-short-of-tokens errors, unknown-option suggestions.
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"My Layer-Name","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > ml.json && printf %s '{"type":"FeatureCollection","name":"t","features":[{"type":"Feature","properties":{"i":1,"r":1.5,"s":"x","b":true,"il":[1,2],"sl":["a"],"dt":"2020-01-02T03:04:05Z","d":"2020-01-02","big":1234567890123,"nul":null},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4]]}}]}' > ty.json && printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[10,20]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4],[5,6]]}},{"type":"Feature","properties":{"n":3},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}},{"type":"Feature","properties":{"n":4},"geometry":null},{"type":"Feature","properties":{"n":5},"geometry":{"type":"Point","coordinates":[7,8,9]}}]}' > zp.json && printf %s '{"type":"FeatureCollection","name":"nog","features":[{"type":"Feature","properties":{"n":1},"geometry":null}]}' > nog.json && printf %s '{"type":"FeatureCollection","name":"mix","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4]]}}]}' > mix.json && printf %s '{"type":"FeatureCollection","name":"z3","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2,3]}}]}' > z3.json && printf %s '{"type":"FeatureCollection","name":"nof","features":[{"type":"Feature","properties":{},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > nof.json && printf %s '{"type":"FeatureCollection","name":"tz","features":[{"type":"Feature","properties":{"a":"2020-01-02T03:04:05","b":"2020-01-02T03:04:05+05:30","c":"03:04:05"},"geometry":null}]}' > tz.json && printf %s '{"type":"FeatureCollection","name":"c","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[500000,4649776]}}]}' > crs.json && printf %s '{"type":"FeatureCollection","name":"Aa B","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > l1.json && printf %s '{"type":"FeatureCollection","name":"Cc D","features":[{"type":"Feature","properties":{"n":2},"geometry":{"type":"Point","coordinates":[3,4]}}]}' > l2.json && printf %s '{"type":"FeatureCollection","name":"rr","features":[{"type":"Feature","properties":{"x":1.5},"geometry":{"type":"Point","coordinates":[0,0]}}]}' > rrsrc.json && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" l1.json shpd2 --output-layer AaB && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" l2.json shpd2 --output-layer CcD --update && /home/agent/oracle/executable vector convert --quiet --of "ESRI Shapefile" rrsrc.json shpr && printf %s '{"type":"gdal_streamed_alg","command_line":"gdal vector rename-layer --input ml.json --output-layer q --output-format stream --output streamed_dataset","gdal_version":"3130000"}' > rr2.gdalg.json && python3 /workspace/tests/mk_pipeedit_fixtures.py .
+# ---- leaf: type/geometry mapping
+vector export-schema ml.json
+vector export-schema ty.json
+vector export-schema zp.json
+vector export-schema nog.json
+vector export-schema mix.json
+vector export-schema z3.json
+vector export-schema nof.json
+vector export-schema tz.json
+vector export-schema crs.json
+vector export-schema shpd2
+vector export-schema shpr
+# ---- leaf: layer selection
+vector export-schema -l pts zp.json
+vector export-schema -l nope zp.json
+vector export-schema -l aab shpd2
+vector export-schema -l CcD -l AaB shpd2
+vector export-schema -l AaB -l AaB shpd2
+vector export-schema --layer AaB shpd2
+vector export-schema --input-layer AaB shpd2
+# ---- leaf: inputs and errors
+vector export-schema ml.json zp.json
+vector export-schema ml.json zp.json mix.json
+vector export-schema nosuch.json
+vector export-schema ""
+vector export-schema rr2.gdalg.json
+vector export-schema pe2.tif
+vector export-schema
+vector export-schema -i ml.json
+vector export-schema --dataset ml.json
+vector export-schema --input ml.json
+vector export-schema --if GeoJSON ml.json
+vector export-schema --if GTiff ml.json
+vector export-schema --if nosuch ml.json
+vector export-schema --oo a=b ml.json
+vector export-schema --of json ml.json
+vector export-schema --foo ml.json
+vector export-schema --lyer x ml.json
+vector export-schema --help
+vector export-schema --json-usage
+# ---- pipeline step: terminal placement
+vector pipeline read ml.json ! export-schema
+vector pipeline read ty.json ! export-schema
+vector pipeline read shpd2 ! export-schema
+vector pipeline read nosuch.json ! export-schema
+vector pipeline read ml.json ! export-schema ! info
+vector pipeline read ml.json ! export-schema ! export-schema
+vector pipeline read ml.json ! export-schema ! export-schema ! info
+vector pipeline read ml.json ! filter --where 1=1 ! export-schema
+vector pipeline read ml.json ! export-schema --input zp.json
+vector pipeline read ml.json ! export-schema -i zp.json
+vector pipeline read ml.json ! export-schema extra
+vector pipeline read ml.json ! export-schema --help
+# ---- pipeline step: layer selection (fetch semantics)
+vector pipeline read shpd2 ! export-schema -l AaB
+vector pipeline read shpd2 ! export-schema -l aab
+vector pipeline read shpd2 ! export-schema -l CcD -l AaB
+vector pipeline read shpd2 ! export-schema -l nope
+vector pipeline read shpd2 ! export-schema -l AaB -l nope
+vector pipeline read shpd2 -l AaB ! export-schema
+vector pipeline read shpd2 -l aab ! export-schema
+vector pipeline read shpd2 -l nope ! export-schema
+vector pipeline read shpd2 -l AaB ! export-schema -l CcD
+# ---- pipeline step: after transforms
+vector pipeline read zp.json ! reproject --dst-crs EPSG:32631 ! export-schema
+vector pipeline read crs.json ! edit --crs none ! export-schema
+vector pipeline read ml.json ! edit --crs "+proj=longlat +datum=WGS84" ! export-schema
+vector pipeline read ml.json ! edit --crs EPSG:4326+3855 ! export-schema
+vector pipeline read ml.json ! edit --geometry-type POINTM ! export-schema
+vector pipeline read ml.json ! edit --geometry-type CIRCULARSTRING ! export-schema
+vector pipeline read ml.json ! rename-layer --lower-case ! export-schema
+vector pipeline read ml.json ! select --fields n ! export-schema
+vector pipeline read shpd2 ! sql --sql "select n from AaB" ! export-schema
+# ---- generic pipeline dispatch
+pipeline read ml.json ! export-schema
+pipeline read pe2.tif ! export-schema
+pipeline read nosuch.json ! export-schema
+pipeline read pe2.tif ! export-schema --oo a=b
+pipeline read ml.json ! export-schema --oo a=b
+raster pipeline read pe2.tif ! export-schema
+# ---- single-token invocation
+vector pipeline "read ml.json ! export-schema"
+vector pipeline "read nosuch.json ! export-schema"
+vector pipeline "read shpd2 ! export-schema -l nope"
+# ---- step --if/--oo acceptance and validation
+vector pipeline read ml.json ! export-schema --oo a=b
+vector pipeline read ml.json ! export-schema --oo=a=b
+vector pipeline read ml.json ! export-schema --if GeoJSON
+vector pipeline read ml.json ! export-schema --input-format GeoJSON
+vector pipeline read ml.json ! export-schema --if nosuch
+vector pipeline read ml.json ! export-schema --if GTiff
+vector pipeline read ml.json ! info --oo a=b
+vector pipeline read ml.json ! info --open-option a=b
+vector pipeline read ml.json ! info --if GeoJSON
+vector pipeline read ml.json ! info --if GTiff
+vector pipeline read ml.json ! info --if nosuch
+pipeline read ml.json ! info --oo a=b
+pipeline read pe2.tif ! info --oo a=b
+pipeline read ml.json ! info --oo a=b --features
+raster pipeline read pe2.tif ! info --oo a=b
+raster pipeline read pe2.tif ! info --if GTiff
+# ---- unknown-option suggestions on spec steps
+vector pipeline read ml.json ! export-schema --foo
+vector pipeline read ml.json ! export-schema --lyer x
+vector pipeline read ml.json ! export-schema --outputlayer x
+vector pipeline read ml.json ! info --foo
+vector pipeline read ml.json ! info --ooo
+raster pipeline read pe2.tif ! info --foo
+# ---- ran-short-of-tokens
+vector pipeline read ml.json ! info --oo
+vector pipeline read ml.json ! info --if
+vector pipeline read ml.json ! info -l
+vector pipeline read ml.json ! info --limit
+vector pipeline read ml.json ! write --of
+vector pipeline read --oo ! info
+vector pipeline read -i ! info
+vector pipeline read ml.json ! export-schema -l
+vector pipeline read ml.json ! export-schema -i
+vector pipeline read ml.json ! export-schema --oo
+raster pipeline read pe2.tif ! info --mdd
+vector pipeline read ml.json ! info --mdd
+raster pipeline read pe2.tif ! write --co
+# ---- +token value-position literalness
+vector pipeline read ml.json ! edit --crs "+proj=longlat +datum=WGS84" ! write --quiet --of GeoJSON /vsistdout/
+vector pipeline read ml.json ! reproject --dst-crs "+proj=longlat +datum=WGS84" ! write --quiet --of GeoJSON /vsistdout/
+vector pipeline read ml.json ! edit --crs +proj=invalid ! write --quiet --of GeoJSON /vsistdout/
+vector pipeline read ml.json ! edit --layer-metadata +a=b ! info
+vector pipeline read ml.json ! edit +crs=EPSG:32631 ! write --quiet --of GeoJSON /vsistdout/
+vector pipeline read ml.json +edit +crs=EPSG:32631 +write --quiet --of GeoJSON /vsistdout/
+vector pipeline read ml.json ! filter --where "+x = 1" ! write --quiet --of GeoJSON /vsistdout/
+vector pipeline read ml.json ! edit --crs "+proj=longlat" "+datum=WGS84" ! write --quiet --of GeoJSON /vsistdout/
+# ---- read -l selection + info two-stage
+vector info -l aab shpd2
+vector info --summary -l AaB shpd2
+vector info -l CcD -l AaB shpd2
+vector info -l AaB -l AaB shpd2
+vector info --of json -l AaB shpd2
+vector info --of json -l AaB -l CcD shpd2
+vector info -l nope shpd2
+vector pipeline read shpd2 ! info -l aab
+vector pipeline read shpd2 ! info --summary -l AaB
+vector pipeline read shpd2 ! info -l AaB -l CcD
+vector pipeline read shpd2 ! info --of json -l AaB
+vector pipeline read shpd2 ! info -l nope
+vector pipeline read shpd2 ! info --of json -l nope
+vector pipeline read shpd2 ! info -l AaB -l nope
+vector pipeline read shpd2 ! info -l nope -l AaB
+vector pipeline read shpd2 ! info --summary -l nope
+vector pipeline read shpd2 -l aab ! info
+vector pipeline read shpd2 -l CcD -l AaB ! info
+vector pipeline read shpd2 -l CcD -l AaB ! info --summary
+vector pipeline read shpd2 -l AaB -l AaB ! info --of json
+vector pipeline read shpd2 -l nope ! info
+vector pipeline read shpd2 -l CcD ! info -l CcD
+vector pipeline read shpd2 -l CcD -l AaB ! info -l AaB
+vector pipeline read shpd2 -l CcD ! info -l AaB
+vector pipeline read shpd2 -l CcD ! info -l aab
+vector pipeline read shpd2 -l CcD -l AaB ! info --of json -l AaB
+vector pipeline read shpd2 -l CcD -l AaB ! info --summary -l AaB
+vector pipeline read shpd2 ! swap-xy ! info --of json
+vector pipeline read shpd2 -l AaB ! swap-xy ! info --of json
+vector pipeline read shpd2 -l CcD -l AaB ! swap-xy ! info --summary
+vector pipeline read shpd2 -l CcD -l AaB ! swap-xy ! info -l AaB
+vector pipeline read shpd2 -l AaB ! rename-layer --output-layer Q ! info --summary
+vector pipeline read shpd2 -l AaB ! rename-layer --output-layer Q ! write --quiet --of GeoJSON /vsistdout/
+vector convert --quiet --of GeoJSON -l aab shpd2 /vsistdout/
+vector pipeline read shpd2 -l aab ! write --quiet --of GeoJSON /vsistdout/
+vector pipeline read shpd2 -l aab ! filter --where 1=1 ! write --quiet --of GeoJSON /vsistdout/

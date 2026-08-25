@@ -1,0 +1,15 @@
+Usage: check-coverage [OPTIONS]
+
+Check a polygon coverage for validity
+
+Common Options:
+  -h, --help                               Display help message and exit
+  --json-usage                             Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                   Configuration option [may be repeated]
+
+Options:
+  --include-valid                          Include valid inputs in output, with empty geometry
+  --geometry-field <GEOMETRY-FIELD>        Name of geometry field to check
+  --maximum-gap-width <MAXIMUM-GAP-WIDTH>  Maximum width of a gap to be flagged
+
+For more details, consult https://gdal.org/programs/gdal_vector_check_coverage.html

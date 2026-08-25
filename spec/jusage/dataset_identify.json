@@ -1,0 +1,144 @@
+{
+  "name":"identify",
+  "full_path":[
+    "gdal",
+    "dataset",
+    "identify"
+  ],
+  "description":"Identify driver opening dataset(s).",
+  "short_url":"\/programs\/gdal_dataset_identify.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_dataset_identify.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"filename",
+      "type":"string_list",
+      "description":"File or directory name",
+      "required":true,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "extra_formats":[
+          "json",
+          "text"
+        ],
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"output-layer",
+      "type":"string",
+      "description":"Output layer name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"recursive",
+      "type":"boolean",
+      "description":"Recursively scan files\/folders for datasets",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"force-recursive",
+      "type":"boolean",
+      "description":"Recursively scan folders for datasets, forcing recursion in folders recognized as valid formats",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"detailed",
+      "type":"boolean",
+      "description":"Most detailed output. Reports the presence of georeferencing, if a GeoTIFF file is cloud optimized, etc.",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"report-failures",
+      "type":"boolean",
+      "description":"Report failures if file type is unidentified",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output vector dataset",
+      "required":false,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+Usage: as-features [OPTIONS]
+
+Create features from pixels of a raster dataset
+
+Common Options:
+  -h, --help                       Display help message and exit
+  --json-usage                     Display usage as JSON document and exit
+  --config <KEY>=<VALUE>           Configuration option [may be repeated]
+
+Options:
+  --output-layer <OUTPUT-LAYER>    Output layer name
+  -b, --band <BAND>                Input band(s) (1-based index) [may be repeated]
+  --geometry-type <GEOMETRY-TYPE>  Geometry type. GEOMETRY-TYPE=none|point|polygon (default: none)
+  --skip-nodata                    Omit NoData pixels from the result
+  --include-xy                     Include fields for cell center coordinates
+  --include-row-col                Include columns for row and column
+
+For more details, consult https://gdal.org/programs/gdal_raster_as_features.html

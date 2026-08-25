@@ -1,0 +1,115 @@
+# dataset command group cases; run with tests/run_diff.py
+#setup: cp /tmp/ds/utm.tif /tmp/ds/p2.tif /tmp/ds/p2.tif.aux.xml /tmp/ds/rnd.tif /tmp/ds/w1.tif . ; cp /tmp/ds/utm.tfw w1.tfw ; cp /tmp/dz/t1.tif cog.tif 2>/dev/null || cp /tmp/ds/p2.tif cog.tif ; printf 'hello\n' > t.txt ; printf '{"a":1}' > plain.json ; printf '{"type":"Feature","properties":{},"geometry":null}' > feat.json ; cp /tmp/dz/tt/badstrip.tif /tmp/dz/tt/strip2bad.tif /tmp/dz/tt/badtile.tif /tmp/dz/tt/baddef.tif /tmp/dz/tt/shortstrip.tif /tmp/dz/tt/badlzw.tif /tmp/dz/tt/shortlzw.tif /tmp/dz/tt/shortdef.tif /tmp/dz/tt/badpb.tif . ; cp /tmp/dz/c2.tif /tmp/dz/c3.tif /tmp/dz/c5.tif /tmp/dz/c6.tif . 2>/dev/null ; mkdir sub ; cp /tmp/ds/p2.tif sub/inner.tif ; printf 'x' > sub/note.txt ; mkdir sub/deeper ; cp /tmp/ds/utm.tif sub/deeper/a.tif ; mkdir empty
+dataset identify utm.tif
+dataset identify utm.tif p2.tif t.txt
+dataset identify missing.tif
+dataset identify --report-failures missing.tif t.txt plain.json feat.json
+dataset identify feat.json plain.json
+dataset identify w1.tfw p2.tif.aux.xml --report-failures
+dataset identify GTIFF_DIR:1:utm.tif
+dataset identify --detailed utm.tif
+dataset identify --detailed cog.tif w1.tif p2.tif
+dataset identify --detailed c2.tif
+dataset identify --detailed feat.json
+dataset identify --detailed GTIFF_DIR:1:utm.tif
+dataset identify sub
+dataset identify sub --report-failures
+dataset identify -r sub
+dataset identify -r sub --report-failures
+dataset identify --force-recursive sub
+dataset identify -r empty --report-failures
+dataset identify -r t.txt utm.tif
+dataset identify -o out.json utm.tif t.txt missing.tif
+dataset identify -o out.json --report-failures utm.tif t.txt missing.tif
+dataset identify -o out.json --detailed --report-failures utm.tif w1.tif t.txt
+dataset identify -o out.geojson utm.tif
+dataset identify -f GeoJSON -o out.data utm.tif
+dataset identify -l mylayer -o out.json utm.tif
+dataset identify -o out.dbf utm.tif t.txt --report-failures
+dataset identify -o out.abc utm.tif
+dataset identify -f FOO -o out.json utm.tif
+dataset identify -f GTiff -o out.json utm.tif
+dataset identify -f VRT -o out.json utm.tif
+dataset identify -f ESRIJSON -o out.json utm.tif
+dataset identify -f GDALG -o out.json utm.tif
+dataset identify -f MEM -o out.json utm.tif
+dataset identify
+#setup: cp /tmp/ds/utm.tif . ; printf '{}' > out.json
+dataset identify -o out.json utm.tif
+dataset identify -o out.json --overwrite utm.tif
+#setup: cp /tmp/ds/utm.tif /tmp/ds/p2.tif /tmp/ds/p2.tif.aux.xml /tmp/ds/w1.tif . ; cp /tmp/ds/utm.tfw w1.tfw ; cp /tmp/dz/c2.tif . 2>/dev/null
+dataset copy utm.tif c.tif
+dataset copy p2.tif dc.tif
+dataset copy w1.tif wc.tif
+dataset copy utm.tif single.png
+dataset copy p2.tif multi.png
+dataset copy p2.tif multi.vrt
+dataset copy missing.tif x.tif
+dataset copy -f VRT utm.tif u1.vrt
+dataset copy -f FOO utm.tif u2.tif
+dataset copy c2.tif c2c.tif
+dataset copy utm.tif p2.tif
+dataset copy --overwrite utm.tif p2.tif
+dataset copy utm.tif
+dataset rename utm.tif r.tif
+dataset rename p2.tif dr.tif
+dataset rename w1.tif wr.tif
+dataset rename p2.tif rp.png
+dataset rename missing.tif x.tif
+dataset rename utm.tif p2.tif
+dataset rename --overwrite utm.tif p2.tif
+dataset delete utm.tif
+dataset delete p2.tif
+dataset delete w1.tif
+dataset delete missing.tif
+dataset delete c2.tif
+dataset delete utm.tif missing.tif
+dataset delete missing.tif utm.tif
+dataset delete -f FOO utm.tif
+#setup: cd . ; cp /tmp/ds/utm.tif /tmp/ds/p2.tif /tmp/ds/p2.tif.aux.xml /tmp/ds/rnd.tif /tmp/ds/bigLZW.tif . 2>/dev/null ; cp /tmp/dz/tt/badstrip.tif /tmp/dz/tt/strip2bad.tif /tmp/dz/tt/badtile.tif /tmp/dz/tt/baddef.tif /tmp/dz/tt/shortstrip.tif /tmp/dz/tt/badlzw.tif /tmp/dz/tt/shortlzw.tif /tmp/dz/tt/shortdef.tif /tmp/dz/tt/badpb.tif /tmp/dz/tt/pb_3.tif . ; cp /tmp/dz/c2.tif /tmp/dz/c3.tif /tmp/dz/c5.tif /tmp/dz/c6.tif /tmp/dz/c7.tif /tmp/dz/c8.tif /tmp/dz/mix0.tif . 2>/dev/null ; printf '{"type":"FeatureCollection","features":[]}' > v.json ; cat /tmp/dz/tt/vt/w.vrt > w.vrt ; cp /tmp/ds/p2.tif inner.tif
+dataset check utm.tif
+dataset check p2.tif
+dataset check rnd.tif
+dataset check -q utm.tif
+dataset check badstrip.tif
+dataset check strip2bad.tif
+dataset check badtile.tif
+dataset check baddef.tif
+dataset check shortstrip.tif
+dataset check badlzw.tif
+dataset check shortlzw.tif
+dataset check shortdef.tif
+dataset check badpb.tif
+dataset check pb_3.tif
+dataset check mix0.tif
+dataset check c2.tif
+dataset check c3.tif
+dataset check c5.tif
+dataset check c6.tif
+dataset check missing.tif
+dataset check v.json
+dataset check w.vrt
+dataset check GTIFF_DIR:1:utm.tif
+dataset check
+dataset check --oo FOO=BAR utm.tif
+dataset check --if GTiff utm.tif
+dataset check --if VRT utm.tif
+#setup: cat /tmp/dz/tt/va/bs.vrt > bs.vrt
+dataset check bs.vrt
+dataset identify --output-format json utm.tif
+dataset identify --output-format json utm.tif p2.tif t.txt
+dataset identify --output-format json --report-failures utm.tif t.txt missing.tif
+dataset identify --output-format json --detailed utm.tif p2.tif feat.json
+dataset identify --output-format json missing.tif
+dataset identify --output-format json sub
+dataset identify --output-format json --recursive sub
+dataset identify --output-format json --force-recursive sub
+dataset identify --output-format text utm.tif t.txt
+dataset identify --output-format TEXT utm.tif
+dataset identify --output-format JSON utm.tif
+dataset identify --output-format JSON --output oj.json utm.tif
+dataset identify --output-format GeoJSON utm.tif
+dataset identify --output-format MEM utm.tif
+dataset identify --output-format json --output oj2.json utm.tif p2.tif
+dataset identify --output-format text --output ot.txt --report-failures --detailed utm.tif missing.tif
+dataset identify --output-format json --output oj3.json --output-layer foo utm.tif

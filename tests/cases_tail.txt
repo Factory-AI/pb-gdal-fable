@@ -1,0 +1,409 @@
+# raster tail verbs: set-type / unscale / scale (leaf + pipeline)
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && cp b.tif e.tif && printf '{"type":"FeatureCollection","features":[]}' > v.json
+
+# set-type: full dtype matrix on Int16 source
+raster set-type --ot Byte i16.tif o.tif
+raster set-type --ot Int8 i16.tif o.tif
+raster set-type --ot UInt16 i16.tif o.tif
+raster set-type --ot Int16 i16.tif o.tif
+raster set-type --ot UInt32 i16.tif o.tif
+raster set-type --ot Int32 i16.tif o.tif
+raster set-type --ot UInt64 i16.tif o.tif
+raster set-type --ot Int64 i16.tif o.tif
+raster set-type --ot Float16 i16.tif o.tif
+raster set-type --ot Float32 i16.tif o.tif
+raster set-type --ot Float64 i16.tif o.tif
+raster set-type --ot CInt16 i16.tif o.tif
+raster set-type --ot CInt32 i16.tif o.tif
+raster set-type --ot CFloat32 i16.tif o.tif
+raster set-type --ot CFloat64 i16.tif o.tif
+raster set-type --ot byte i16.tif o.tif
+raster set-type --ot float32 i16.tif o.tif
+raster set-type --ot Bogus i16.tif o.tif
+raster set-type i16.tif o.tif
+raster set-type --ot Byte i16.tif o.tif extra
+raster set-type
+raster set-type --ot Byte nosuch.tif o.tif
+
+# set-type: value conversion edges
+raster set-type --ot Byte f32.tif o.tif
+raster set-type --ot Int16 f32.tif o.tif
+raster set-type --ot UInt64 f32.tif o.tif
+raster set-type --ot Int64 f32.tif o.tif
+raster set-type --ot Float16 f32.tif o.tif
+raster set-type --ot Float32 f64.tif o.tif
+raster set-type --ot Byte f64.tif o.tif
+raster set-type --ot Int64 u64.tif o.tif
+raster set-type --ot UInt32 i64.tif o.tif
+raster set-type --ot Int8 u32.tif o.tif
+raster set-type --ot Byte i8.tif o.tif
+raster set-type --ot UInt16 u16.tif o.tif
+raster set-type --ot Byte ci16.tif o.tif
+raster set-type --ot CFloat64 ci16.tif o.tif
+raster set-type --ot Int16 cf32.tif o.tif
+raster set-type --ot CInt32 cf32.tif o.tif
+raster set-type --ot CInt16 b.tif o.tif
+raster set-type --ot Int32 f32n.tif o.tif
+raster set-type --ot Byte m3.tif o.tif
+raster set-type --ot UInt16 m3.tif o.tif
+raster set-type --ot Float64 cs.tif o.tif
+
+# set-type: output forms
+raster set-type --ot Int32 i16.tif o.vrt
+raster set-type --ot Byte ci16.tif o.vrt
+raster set-type --ot Float16 f32.tif o.vrt
+raster set-type --ot Float64 m3.tif o.vrt
+raster set-type --ot byte i16.tif o.gdalg.json
+raster set-type --ot UInt16 i16.tif o.gdalg.json
+raster set-type --of MEM --ot Byte i16.tif x
+raster set-type --of stream --ot Byte i16.tif x
+raster set-type --ot Byte i16.tif e.tif
+raster set-type --overwrite --ot Byte i16.tif e.tif
+raster set-type --append --ot Byte i16.tif e.tif
+raster set-type -q --ot Byte i16.tif o.tif
+raster set-type --co COMPRESS=LZW --ot Byte i16.tif o.tif
+raster set-type --ot Byte b.tif o.tif
+
+# unscale
+raster unscale cs.tif o.tif
+raster unscale --ot Float64 cs.tif o.tif
+raster unscale --ot Int16 cs.tif o.tif
+raster unscale cs0.tif o.tif
+raster unscale csid.tif o.tif
+raster unscale b.tif o.tif
+raster unscale m3.tif o.tif
+raster unscale i16.tif o.tif
+raster unscale f32n.tif o.tif
+raster unscale ci16.tif o.tif
+raster unscale cs.tif o.vrt
+raster unscale csid.tif o.vrt
+raster unscale m3.tif o.vrt
+raster unscale cs.tif o.gdalg.json
+raster unscale --ot Bogus cs.tif o.tif
+raster unscale
+raster unscale -q cs.tif o.tif
+raster unscale --of MEM cs.tif x
+
+# scale: defaults per dtype
+raster scale b.tif o.tif
+raster scale i16.tif o.tif
+raster scale u16.tif o.tif
+raster scale i32.tif o.tif
+raster scale u32.tif o.tif
+raster scale i8.tif o.tif
+raster scale u64.tif o.tif
+raster scale i64.tif o.tif
+raster scale f32.tif o.tif
+raster scale f64.tif o.tif
+raster scale f32n.tif o.tif
+raster scale m3.tif o.tif
+raster scale cs.tif o.tif
+raster scale ci16.tif o.tif
+
+# scale: explicit ranges / options
+raster scale --ot UInt16 b.tif o.tif
+raster scale --ot Byte f32.tif o.tif
+raster scale --ot Float64 i16.tif o.tif
+raster scale --src-min 5 --src-max 100 b.tif o.tif
+raster scale --src-min 5 b.tif o.tif
+raster scale --src-max 100 b.tif o.tif
+raster scale --dst-min 10 --dst-max 20 b.tif o.tif
+raster scale --dst-min 10 b.tif o.tif
+raster scale --src-min 5 --src-max 100 --dst-min 0 --dst-max 1000 --ot UInt16 b.tif o.tif
+raster scale --exponent 2 b.tif o.tif
+raster scale --exponent 0.5 b.tif o.tif
+raster scale --exponent 2 --src-min 5 --src-max 100 b.tif o.tif
+raster scale --exponent 2 --no-clip b.tif o.tif
+raster scale --no-clip b.tif o.tif
+raster scale --no-clip --dst-min 0 --dst-max 10 f32.tif o.tif
+raster scale --exponent 0 b.tif o.tif
+raster scale --exponent -1 b.tif o.tif
+raster scale --exponent abc b.tif o.tif
+raster scale --src-min abc b.tif o.tif
+raster scale cn.tif o.tif
+raster scale --src-min 7 --src-max 7 b.tif o.tif
+raster scale --src-min 7 --src-max 7 --no-clip b.tif o.tif
+raster scale an.tif o.tif
+raster scale --band 2 m3.tif o.tif
+raster scale --band 3 m3.tif o.tif
+raster scale --band 0 m3.tif o.tif
+raster scale --band 9 m3.tif o.tif
+raster scale --band 1.5 m3.tif o.tif
+raster scale --band 2 --exponent 2 m3.tif o.tif
+raster scale --band 9 m3.tif o.vrt
+
+# scale: output forms
+raster scale b.tif o.vrt
+raster scale --exponent 2 b.tif o.vrt
+raster scale --no-clip f32.tif o.vrt
+raster scale cn.tif o.vrt
+raster scale --src-min 7 --src-max 7 b.tif o.vrt
+raster scale --src-min 7 --src-max 7 --no-clip b.tif o.vrt
+raster scale m3.tif o.vrt
+raster scale f32n.tif o.vrt
+raster scale b.tif o.gdalg.json
+raster scale --src-min 5 --src-max 100 --dst-min 0 --dst-max 1000 --exponent 2 --ot UInt16 b.tif o.gdalg.json
+raster scale --no-clip b.tif o.gdalg.json
+raster scale -q b.tif o.tif
+raster scale --of MEM b.tif x
+raster scale --of stream b.tif x
+raster scale b.tif e.tif
+raster scale --overwrite b.tif e.tif
+raster scale
+
+# infinity handling
+raster set-type --ot Float16 inf.tif o.tif
+raster set-type --ot Float32 inf.tif o.tif
+raster set-type --ot Float64 inf.tif o.tif
+raster set-type --ot Int32 inf.tif o.tif
+raster set-type --ot UInt64 inf.tif o.tif
+raster set-type --ot Int64 inf.tif o.tif
+raster scale inf.tif o.tif
+raster scale --ot Byte inf.tif o.tif
+
+# 64-bit conversion thresholds and dst defaults
+raster scale --ot Int64 i8.tif o.tif
+raster scale --ot UInt64 i8.tif o.tif
+raster scale --ot Int64 i8.tif o.vrt
+raster scale --ot UInt64 b.tif o.vrt
+raster scale --ot Int64 --src-min 0 --src-max 127 --dst-min 0 --dst-max 9223372036854775807 i8.tif o.tif
+raster scale --ot Int64 --src-min 0 --src-max 127 --dst-min -9223372036854775808 --dst-max 0 i8.tif o.tif
+raster scale --ot UInt64 --src-min 0 --src-max 127 --dst-min 0 --dst-max 18446744073709551615 i8.tif o.tif
+raster scale --ot UInt64 --src-min 0 --src-max 127 --dst-min 0 --dst-max 19000000000000000000 i8.tif o.tif
+raster scale --ot Int64 --src-min 0 --src-max 127 --dst-min 0 --dst-max 9223372036854775807 --no-clip i8.tif o.tif
+raster scale --ot UInt64 --src-min 0 --src-max 127 --dst-min 0 --dst-max 18446744073709551615 --no-clip i8.tif o.tif
+raster set-type --ot UInt64 i16.tif o.vrt
+raster unscale --ot UInt64 i16.tif o.tif
+raster set-type --ot UInt64 f32n.tif o.tif
+raster set-type --ot Int64 f32n.tif o.tif
+raster pipeline read i16.tif ! set-type --ot UInt64 ! write o.tif
+
+# complex scaling forms
+raster scale --no-clip ci16.tif o.tif
+raster scale --no-clip ci16.tif o.vrt
+raster scale --no-clip --dst-min 0 --dst-max 10 ci16.tif o.tif
+raster scale --exponent 2 ci16.tif o.tif
+raster scale --dst-min 5 --dst-max 6 ci16.tif o.tif
+raster scale cf32.tif o.tif
+raster scale cf32.tif o.vrt
+raster scale ci16.tif o.vrt
+raster unscale cf32.tif o.vrt
+raster scale --ot CInt32 ci16.tif o.tif
+
+# help / usage surfaces
+raster set-type --help
+raster unscale --help
+raster scale --help
+raster scale --json-usage
+raster pipeline set-type --help
+raster pipeline scale --help
+raster pipeline unscale --help
+
+# pipeline: write paths
+raster pipeline read i16.tif ! set-type --ot Byte ! write o.tif
+raster pipeline read i16.tif ! set-type --ot Byte ! write o.vrt
+raster pipeline read i16.tif ! scale ! write o.vrt
+raster pipeline read i16.tif ! set-type --ot Byte ! scale ! write o.vrt
+raster pipeline read i16.tif ! set-type --ot Byte ! scale ! write o.tif
+raster pipeline read i16.tif ! set-type --ot Byte ! scale ! unscale ! write o.tif
+raster pipeline read cs.tif ! unscale ! write o.tif
+raster pipeline read cs.tif ! unscale --ot Float64 ! write o.vrt
+raster pipeline read m3.tif ! scale --band 2 ! write o.tif
+raster pipeline read b.tif ! scale --src-min 5 --src-max 100 --dst-min 0 --dst-max 1000 ! write o.tif
+raster pipeline read b.tif ! scale --exponent 2 ! write o.tif
+raster pipeline read cn.tif ! scale ! write o.tif
+raster pipeline read an.tif ! scale ! write o.tif
+raster pipeline read f32n.tif ! set-type --ot Int32 ! write o.tif
+raster pipeline read ci16.tif ! set-type --ot Byte ! write o.tif
+raster pipeline read i16.tif ! set-type --ot Int32 ! set-type --ot Byte ! write o.tif
+pipeline read i16.tif ! set-type --ot Byte ! write o.tif
+read i16.tif ! set-type --ot Byte ! write o.tif
+raster pipeline read i16.tif ! scale ! write e.tif
+raster pipeline read i16.tif ! scale ! write --overwrite e.tif
+raster pipeline read i16.tif ! set-type --ot Byte ! write --of MEM x
+raster pipeline read i16.tif ! set-type --ot Byte ! write --of stream x
+raster pipeline read i16.tif ! scale -q ! write o.tif
+raster pipeline read i16.tif ! set-type --ot Byte ! write -q o.tif
+
+# pipeline: gdalg echo
+raster pipeline read i16.tif ! scale --src-min 1 --src-max 2 ! write o.gdalg.json
+raster pipeline read i16.tif ! set-type --ot byte ! write o.gdalg.json
+raster pipeline read cs.tif ! unscale ! scale --exponent 2 ! write o.gdalg.json
+raster pipeline read b.tif ! scale --no-clip --dst-min 3 --dst-max 4 ! write o.gdalg.json
+
+# pipeline: info after transform
+raster pipeline read i16.tif ! set-type --ot Float64 ! info
+raster pipeline read i16.tif ! set-type --ot Float64 ! info --stats
+raster pipeline read i16.tif ! set-type --ot Float64 ! info --hist
+raster pipeline read i16.tif ! set-type --ot Byte ! info --hist
+raster pipeline read i16.tif ! set-type --ot Byte ! info --stats
+raster pipeline read i16.tif ! set-type --ot Byte ! info --min-max
+raster pipeline read i16.tif ! scale ! info --hist
+raster pipeline read i16.tif ! scale ! info --stats
+raster pipeline read i16.tif ! unscale ! info --hist
+raster pipeline read cs.tif ! unscale ! info --hist
+raster pipeline read cs.tif ! unscale ! info
+raster pipeline read i16.tif ! set-type --ot Float64 ! info --of json --checksum
+raster pipeline read m3.tif ! scale ! info --of json --stats
+raster pipeline read b.tif ! set-type --ot UInt16 ! info
+raster pipeline read cn.tif ! scale ! info --stats --hist
+raster pipeline read i16.tif ! set-type --ot Int32 ! set-type --ot Byte ! info --hist
+
+# pipeline: cached histogram from a previous run's sidecar
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && /home/agent/oracle/executable raster pipeline read i16.tif ! set-type --ot Byte ! info --hist >/dev/null 2>&1
+raster pipeline read i16.tif ! set-type --ot Byte ! info --hist
+raster pipeline read i16.tif ! set-type --ot Byte ! info
+raster pipeline read i16.tif ! scale ! info --hist
+raster info --hist i16.tif
+raster info i16.tif
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && /home/agent/oracle/executable raster info --stats i16.tif >/dev/null 2>&1
+raster pipeline read i16.tif ! set-type --ot Float64 ! info
+raster pipeline read i16.tif ! set-type --ot Float64 ! info --stats
+raster pipeline read i16.tif ! set-type --ot Float64 ! info --hist
+raster pipeline read i16.tif ! set-type --ot Float64 ! info --of json
+raster pipeline read i16.tif ! unscale ! write o.tif
+raster pipeline read i16.tif ! set-type --ot Byte ! write o.tif
+raster pipeline read i16.tif ! unscale ! info
+raster pipeline read i16.tif ! scale ! info
+raster set-type --ot Float64 i16.tif o.tif
+raster set-type --ot Float64 i16.tif o.vrt
+raster set-type --ot Byte i16.tif o.tif
+raster set-type --ot Byte i16.tif o.vrt
+raster set-type --ot Int16 i16.tif o.tif
+raster set-type --ot UInt16 i16.tif o.tif
+raster set-type --ot Float32 i16.tif o.tif
+raster set-type --ot Float16 i16.tif o.tif
+raster set-type --ot Int32 i16.tif o.vrt
+raster set-type --ot CInt32 i16.tif o.tif
+raster pipeline read i16.tif ! set-type --ot Byte ! info
+raster pipeline read i16.tif ! set-type --ot Byte ! info --stats
+raster unscale i16.tif o.tif
+raster scale i16.tif o.tif
+raster scale i16.tif o.vrt
+raster info i16.tif
+
+# lossy-predicate anomalies: 64-bit exemption, int->Float32, complex pairs
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && for f in i64 u64 b f32 ci16 i8; do /home/agent/oracle/executable raster info --stats $f.tif >/dev/null 2>&1; done
+raster set-type --ot Int32 i64.tif o.tif
+raster set-type --ot UInt64 i64.tif o.tif
+raster set-type --ot Int64 u64.tif o.tif
+raster set-type --ot Int32 u64.tif o.tif
+raster set-type --ot Float32 b.tif o.tif
+raster set-type --ot Float16 b.tif o.tif
+raster set-type --ot Float64 b.tif o.tif
+raster set-type --ot UInt64 b.tif o.tif
+raster set-type --ot Int8 b.tif o.tif
+raster set-type --ot CFloat32 f32.tif o.tif
+raster set-type --ot Float64 f32.tif o.tif
+raster set-type --ot Int32 f32.tif o.tif
+raster set-type --ot CInt16 ci16.tif o.tif
+raster set-type --ot CInt32 ci16.tif o.tif
+raster set-type --ot Float32 ci16.tif o.tif
+raster set-type --ot Int16 i8.tif o.tif
+raster set-type --ot Byte i8.tif o.tif
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && cp b.tif e.tif && printf '{"type":"FeatureCollection","features":[]}' > v.json
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && cp b.tif e.tif && printf '{"type":"FeatureCollection","features":[]}' > v.json
+
+# pipeline: step errors
+raster pipeline read i16.tif ! set-type ! write o.tif
+raster pipeline read i16.tif ! set-type --ot Bogus ! write o.tif
+raster pipeline read i16.tif ! scale --band 9 ! write o.tif
+raster pipeline read i16.tif ! scale --band 9 ! write o.vrt
+raster pipeline read i16.tif ! scale --exponent 2 --no-clip ! write o.tif
+raster pipeline read i16.tif ! set-type --oot Byte ! write o.tif
+raster pipeline read i16.tif ! set-type --output-data-type Byte --output-data-type Int16 ! write o.tif
+raster pipeline read i16.tif ! scale --src-min abc ! write o.tif
+raster pipeline read i16.tif ! scale --band 1.5 ! write o.tif
+raster pipeline read i16.tif ! scale --band 0 ! write o.tif
+raster pipeline read i16.tif ! set-type foo ! write o.tif
+raster pipeline read i16.tif ! set-type --input b.tif --ot Byte ! write o.tif
+raster pipeline read i16.tif ! scale --input b.tif ! write o.tif
+raster pipeline read v.json ! set-type --ot Byte ! write o.json
+pipeline read v.json ! scale ! write o.json
+raster pipeline set-type --ot Byte ! write o.tif
+raster pipeline read i16.tif ! set-type --ot Byte
+raster pipeline read i16.tif ! set-type --ot Byte --help ! write o.tif
+raster pipeline read i16.tif ! scale --help ! write o.tif
+
+# D9: checksum over exotic types (complex iterates re/im components;
+# Float16 halves decode; NaN/Inf cast INT32_MIN; finite overflow
+# clamps to +/-INT32_MAX)
+raster info --checksum ck16.tif
+raster info --checksum ck32.tif
+raster info --checksum ckf32.tif
+raster info --checksum ckf64.tif
+raster info --checksum ckfn.tif
+raster info --checksum ckh.tif
+raster info --checksum ckbig.tif
+raster info --checksum --of json ck16.tif
+raster info --checksum --of json ckh.tif
+raster info --stats ckh.tif
+raster info --stats ck16.tif
+raster info --stats ckfn.tif
+raster convert ckh.tif o.tif
+raster convert ck16.tif o.tif
+
+# D10: nodata polarity per type + Int64/UInt64 exact text
+raster create --size 2,2 --datatype Float16 --nodata 65505 --burn 1 o.tif
+raster create --size 2,2 --datatype Float16 --nodata 65504 --burn 1 o.tif
+raster create --size 2,2 --datatype Float16 --nodata 1.1 --burn 1 o.tif
+raster create --size 2,2 --datatype Float16 --nodata nan --burn 1 o.tif
+raster create --size 2,2 --datatype Float16 --nodata inf --burn 1 o.tif
+raster create --size 2,2 --datatype Float16 --nodata 6.103515625e-05 --burn 1 o.tif
+raster create --size 2,2 --datatype Float16 --nodata 0.000059 --burn 1 o.tif
+raster create --size 2,2 --datatype CInt16 --nodata 32768 --burn 1 o.tif
+raster create --size 2,2 --datatype CInt16 --nodata 3.5 --burn 1 o.tif
+raster create --size 2,2 --datatype CInt32 --nodata 2147483648 --burn 1 o.tif
+raster create --size 2,2 --datatype CFloat32 --nodata 1e300 --burn 1 o.tif
+raster create --size 2,2 --datatype Int64 --nodata 9223372036854775807 --burn 1 o.tif
+raster create --size 2,2 --datatype Int64 --nodata -9223372036854775808 --burn 1 o.tif
+raster create --size 2,2 --datatype Int64 --nodata 9223372036854775808 --burn 1 o.tif
+raster create --size 2,2 --datatype Int64 --nodata 1e3 --burn 1 o.tif
+raster create --size 2,2 --datatype Int64 --nodata 3.5 --burn 1 o.tif
+raster create --size 2,2 --datatype UInt64 --nodata 18446744073709551615 --burn 1 o.tif
+raster create --size 2,2 --datatype UInt64 --nodata -1 --burn 1 o.tif
+raster info nd64.tif
+raster info --of json nd64.tif
+raster info ndu64.tif
+raster info --of json ndu64.tif
+raster info --of json ndu7.tif
+raster info nde.tif
+raster info ndh.tif
+raster info ndc.tif
+raster convert nd64.tif o.tif
+raster convert ndu64.tif o.tif
+raster convert nd64.tif o.vrt
+raster convert ndu64.tif o.vrt
+# complex/half VRT raw copy fidelity
+raster convert cv16.vrt o.tif
+raster convert cvh.vrt o.tif
+raster convert cvf64.vrt o.tif
+raster info --checksum cv16.vrt
+raster info --checksum cvf64.vrt
+# edit: int64 flavor always rewrites, none leaves the tag
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && cp nd64.tif e64.tif && cp ndu64.tif eu64.tif && cp ndh.tif eh.tif && cp ndc.tif ec.tif
+raster edit --nodata 9223372036854775807 e64.tif
+raster edit --nodata none e64.tif
+raster edit --nodata 3.5 e64.tif
+raster edit --nodata none eu64.tif
+raster edit --nodata 18446744073709551614 eu64.tif
+raster edit --nodata 65505 eh.tif
+raster edit --nodata 7.5 eh.tif
+raster edit --nodata 40000 ec.tif
+# float->half truncation edges (subnormals, overflow, nan)
+raster set-type --ot Float16 ckbig.tif o.tif
+raster set-type --ot Float16 f64.tif o.tif
+raster convert ckh.tif o2.tif
+
+# broken PROJ_DATA dir: db-missing message variants at crs-arg parse
+#setup: python3 /workspace/tests/mk_tail_fixtures.py . && mkdir ep
+raster reproject --config PROJ_DATA=ep --dst-crs EPSG:32631 b.tif o.tif
+raster reproject --config PROJ_DATA=ep --dst-crs urn:ogc:def:crs:EPSG::32631 b.tif o.tif
+raster reproject --config PROJ_DATA=ep --dst-crs ESRI:102100 b.tif o.tif
+raster reproject --config PROJ_DATA=ep --dst-crs EPSG:4326+5773 b.tif o.tif
+raster reproject --config PROJ_DATA=ep --dst-crs 32631 b.tif o.tif
+raster reproject --config PROJ_LIB=ep --dst-crs EPSG:32631 b.tif o.tif
+raster reproject --config PROJ_DATA=nosuchdir --dst-crs EPSG:32631 b.tif o.tif
+raster reproject --config PROJ_DATA=/usr/share/proj --dst-crs EPSG:4326 b.tif o.tif
+raster reproject --dst-crs urn:ogc:def:crs:EPSG::999999 b.tif o.tif
+raster reproject --dst-crs ESRI:999999 b.tif o.tif

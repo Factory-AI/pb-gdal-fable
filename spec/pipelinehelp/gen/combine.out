@@ -1,0 +1,15 @@
+Usage: combine [OPTIONS]
+
+Combine features into collections
+
+Common Options:
+  -h, --help                             Display help message and exit
+  --json-usage                           Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                 Configuration option [may be repeated]
+
+Options:
+  --group-by <GROUP-BY>                  Names of field(s) by which inputs should be grouped [may be repeated]
+  --keep-nested                          Avoid combining the components of multipart geometries
+  --add-extra-fields <ADD-EXTRA-FIELDS>  Whether to add extra fields, depending on if they have identical values within each group. ADD-EXTRA-FIELDS=no|sometimes-identical|always-identical (default: no)
+
+For more details, consult https://gdal.org/programs/gdal_vector_combine.html

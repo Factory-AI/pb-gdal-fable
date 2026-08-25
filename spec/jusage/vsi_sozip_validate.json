@@ -1,0 +1,34 @@
+{
+  "name":"validate",
+  "full_path":[
+    "gdal",
+    "vsi",
+    "sozip",
+    "validate"
+  ],
+  "description":"Validate a ZIP file, possibly using SOZIP optimization.",
+  "short_url":"\/programs\/gdal_vsi_sozip.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vsi_sozip.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input",
+      "type":"string",
+      "description":"Input ZIP filename",
+      "required":true,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+  ]
+}

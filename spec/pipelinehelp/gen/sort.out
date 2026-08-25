@@ -1,0 +1,15 @@
+Usage: sort [OPTIONS]
+
+Spatially order the features in a layer
+
+Common Options:
+  -h, --help                         Display help message and exit
+  --json-usage                       Display usage as JSON document and exit
+  --config <KEY>=<VALUE>             Configuration option [may be repeated]
+
+Options:
+  --geometry-field <GEOMETRY-FIELD>  Name of geometry field to use in sort
+  --method <METHOD>                  Geometry sorting algorithm. METHOD=hilbert|strtree (default: hilbert)
+  --use-tempfile                     Write features to a temporary file to avoid reading the entire input dataset into memory
+
+For more details, consult https://gdal.org/programs/gdal_vector_sort.html

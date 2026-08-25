@@ -1,0 +1,85 @@
+#setup: printf '{"type":"FeatureCollection","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[1,2]}}]}' > f.json && printf 'hello' > junk.tif && /home/agent/oracle/executable raster create -q --size 2,2 r.tif && cp r.tif cex.tif && cp f.json fex.json
+raster calc -i X=r.tif --calc X+1 z1.tif
+raster calc -q -i X=r.tif --calc X+1 z2.tif
+raster calc -i X=miss.tif --calc X+1 z3.tif
+raster calc -i X --calc X+1 z4.tif
+raster calc -i X=r.tif z5.tif
+raster calc --calc X+1 z6.tif
+raster calc r.tif --calc X+1 z7.tif
+raster calc --dialect FOO -i X=r.tif --calc X z8.tif
+raster calc --dialect muparser -i X=r.tif --calc X z9.tif
+raster calc --of FOO -i X=r.tif --calc X z10.tif
+raster calc --of MEM -i X=r.tif --calc X z11
+raster calc --of VRT -i X=r.tif --calc X z12.vrt
+raster calc -i X=r.tif --calc X z13.vrt
+raster calc -i X=r.tif --calc X z14.gdalg.json
+raster calc -q -i X=r.tif --calc X z15.gdalg.json
+raster calc --of GDALG -i X=r.tif --calc X z16.json
+raster calc -i X=miss.tif --calc X z17.gdalg.json
+raster calc -i X=r.tif -i Y=r.tif --calc X+Y z18.tif
+raster calc -i r.tif -i X=r.tif --calc X z19.tif
+raster calc -i miss.tif -i X=r.tif --calc X z20.tif
+raster calc --if FOO -i X=r.tif --calc X z21.tif
+raster calc --if MEM -i X=r.tif --calc X z22.tif
+raster calc --if Memory -i X=r.tif --calc X z23.tif
+raster calc --of Memory -i X=r.tif --calc X z24
+raster calc --overwrite --append -i X=r.tif --calc X z25.tif
+raster calc -i X=junk.tif --calc X z26.tif
+raster calc -i X=r.tif --calc X outnoext
+raster calc --of GeoJSON -i X=r.tif --calc X z27.json
+raster calc -i X=r.tif --calc X cex.tif
+raster calc --overwrite -i X=r.tif --calc X cex.tif
+raster calc --append -i X=r.tif --calc X cex.tif
+raster calc --overwrite -i X=cex.tif --calc X cex.tif
+raster calc --overwrite cex.tif --calc X cex.tif
+raster tile r.tif t1
+raster tile -q r.tif t2
+raster tile --output-format FOO r.tif t3
+raster tile --output-format JPEG r.tif t4
+raster tile --output-format PNG r.tif t5
+raster tile --output-format MEM r.tif t7
+raster tile --output-format Memory r.tif t8
+raster tile --output-format GDALG r.tif t9
+raster tile --output-format VRT r.tif t10
+raster tile --output-format GeoJSON r.tif t11
+raster tile --output-format stream r.tif t12
+raster tile miss.tif t13
+raster tile --output-format FOO miss.tif t14
+raster tile junk.tif t15
+raster info --if Memory r.tif
+vector info --if Memory f.json
+raster convert --if Memory r.tif y1.tif
+vector convert --of Memory f.json y2
+raster convert --of Memory r.tif y3
+raster convert --if Memory --of Memory r.tif y4
+raster convert --of GeoJSON r.tif y5.json
+raster convert --of GNMFile r.tif y7
+raster select --band 1 --of GeoJSON r.tif y8.json
+raster select --band 1 --of Memory r.tif y9
+vector sort --method strtree f.json w1.json
+vector sort -q --method strtree f.json w2.json
+vector sort --method strtree miss.json w3.json
+vector sort --method strtree junk.tif w4.json
+vector sort --method strtree -l nope f.json w5.json
+vector sort --method strtree -l f f.json w6.json
+vector sort --method strtree --of FOO f.json w7.json
+vector sort --method strtree --of GTiff f.json w8.json
+vector sort --method STRTREE f.json w11.json
+vector sort --method strtree f.json g1.gdalg.json
+vector sql --dialect SQLITE --sql select_1 f.json x1.json
+vector sql --dialect sqlite --sql select_1 f.json x2.json
+vector sql --dialect SQLITE --sql select_1 f.json
+vector sql --dialect SQLITE --sql select_1 --update f.json
+vector sql --dialect SQLITE --sql select_1 --sql select_2 f.json
+vector sql --dialect SQLITE --sql select_1 miss.json x3.json
+vector sql --dialect SQLITE --sql select_1 junk.tif x4.json
+vector sql --dialect SQLITE --sql select_1 --of FOO f.json x5.json
+vector sql --dialect SQLITE --sql select_1 --of MEM f.json x6
+vector sql --dialect SQLITE --sql select_1 --update f.json missout.json
+vector sql --dialect SQLITE --sql select_1 --update f.json junk.tif
+vector sql --dialect SQLITE --sql select_1 f.json g3.gdalg.json
+vector sql --dialect SQLITE --sql select_1 fex.json
+vector info --sql select_1 --dialect SQLITE f.json
+vector info --of json --sql select_1 --dialect SQLITE f.json
+vector info --sql select_1 --dialect sqlite f.json
+vector info --dialect SQLITE f.json

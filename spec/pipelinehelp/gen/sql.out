@@ -1,0 +1,17 @@
+Usage: sql [OPTIONS] <statement>|@<filename>
+
+Apply SQL statement(s) to a dataset.
+
+Positional arguments:
+  --sql <statement>|@<filename>      SQL statement(s) [may be repeated] [required]
+
+Common Options:
+  -h, --help                         Display help message and exit
+  --json-usage                       Display usage as JSON document and exit
+  --config <KEY>=<VALUE>             Configuration option [may be repeated]
+
+Options:
+  -l, --output-layer <OUTPUT-LAYER>  Output layer name(s) [may be repeated]
+  --dialect <DIALECT>                SQL dialect (e.g. OGRSQL, SQLITE)
+
+For more details, consult https://gdal.org/programs/gdal_vector_sql.html

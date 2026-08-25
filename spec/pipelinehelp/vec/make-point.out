@@ -1,0 +1,17 @@
+Usage: make-point [OPTIONS]
+
+Create point geometries from attribute fields
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+
+Options:
+  --x <X>                 Field from which X coordinate should be read [required]
+  --y <Y>                 Field from which Y coordinate should be read [required]
+  --z <Z>                 Optional field from which Z coordinate should be read
+  --m <M>                 Optional field from which M coordinate should be read
+  --dst-crs <DST-CRS>     Destination CRS
+
+For more details, consult https://gdal.org/programs/gdal_vector_make_point.html

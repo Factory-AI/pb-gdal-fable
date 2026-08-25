@@ -1,0 +1,190 @@
+{
+  "name":"edit",
+  "full_path":[
+    "gdal",
+    "raster",
+    "edit"
+  ],
+  "description":"Edit a raster dataset.",
+  "short_url":"\/programs\/gdal_raster_edit.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_edit.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"dataset",
+      "type":"dataset",
+      "description":"Dataset (to be updated in-place, unless --auxiliary)",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"auxiliary",
+      "type":"boolean",
+      "description":"Ask for an auxiliary .aux.xml file to be edited",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"crs",
+      "type":"string",
+      "description":"Override CRS (without reprojection)",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"bbox",
+      "type":"real_list",
+      "description":"Bounding box as xmin,ymin,xmax,ymax",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":4,
+      "max_count":4,
+      "category":"Base"
+    },
+    {
+      "name":"nodata",
+      "type":"string",
+      "description":"Assign a specified nodata value to output bands ('none', numeric value, 'nan', 'inf', '-inf')",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"color-interpretation",
+      "type":"string_list",
+      "description":"Set band color interpretation",
+      "metavar":"[all|<BAND>=]<COLOR-INTEPRETATION>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"scale",
+      "type":"string_list",
+      "description":"Override band scale factor",
+      "metavar":"[<BAND>=]<SCALE>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"offset",
+      "type":"string_list",
+      "description":"Override band offset constant",
+      "metavar":"[<BAND>=]<OFFSET>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"metadata",
+      "type":"string_list",
+      "description":"Add\/update dataset metadata item",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"unset-metadata",
+      "type":"string_list",
+      "description":"Remove dataset metadata item(s)",
+      "metavar":"KEY",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"unset-metadata-domain",
+      "type":"string_list",
+      "description":"Remove dataset metadata domain(s)",
+      "metavar":"DOMAIN",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"gcp",
+      "type":"string_list",
+      "description":"Add ground control point, formatted as pixel,line,easting,northing[,elevation], or @filename",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"stats",
+      "type":"boolean",
+      "description":"Compute statistics, using all pixels",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"stats"
+    },
+    {
+      "name":"approx-stats",
+      "type":"boolean",
+      "description":"Compute statistics, using a subset of pixels",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"stats"
+    },
+    {
+      "name":"hist",
+      "type":"boolean",
+      "description":"Compute histogram",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

@@ -1,0 +1,146 @@
+# vector rasterize: create + update burning, dtypes, attributes, deflate updates
+#setup: python3 /workspace/tests/mk_rasterize_fixtures.py .
+
+# ---- create basics: sizing, extent, resolution, tap ----
+vector rasterize --size 10,10 --burn 7 poly.geojson out.tif
+vector rasterize -q --size 10,10 --burn 7 poly.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 7 poly.geojson out.tif
+vector rasterize --resolution 1,1 --burn 7 poly.geojson out.tif
+vector rasterize --resolution 2,2 --tap --burn 7 poly.geojson out.tif
+vector rasterize --resolution 2,2 --extent 0.5,0.7,8.5,9.1 --tap --burn 1 poly.geojson out.tif
+vector rasterize --size 8,8 poly.geojson out.tif
+vector rasterize --size 8,8 --burn 5,6 --init 1 poly.geojson out.tif
+vector rasterize --size 8,8 --init 3,4,5 poly.geojson out.tif
+vector rasterize --size 8,8 --nodata 5 --init 7 --burn 2 poly.geojson out.tif
+vector rasterize --size 8,8 --nodata nan --burn 2 poly.geojson out.tif
+vector rasterize --size 10,10 --crs EPSG:32631 --burn 7 poly.geojson out.tif
+
+# ---- output types, burn conversion, nodata text ----
+vector rasterize --size 8,8 --ot Byte --burn 300 poly.geojson out.tif
+vector rasterize --size 8,8 --ot Int16 --burn -2.5 poly.geojson out.tif
+vector rasterize --size 8,8 --ot Float32 --burn 1.25 poly.geojson out.tif
+vector rasterize --size 8,8 --ot UInt16 --burn 3.5 poly.geojson out.tif
+vector rasterize --size 6,6 --ot Int64 --nodata 5e18 --burn 1 poly.geojson out.tif
+vector rasterize --size 6,6 --ot Int64 --nodata nan --burn 1 poly.geojson out.tif
+vector rasterize --size 6,6 --ot Int64 --nodata 1.9e20 --burn 1 poly.geojson out.tif
+vector rasterize --size 6,6 --ot Int64 --nodata 1.5 --burn 1 poly.geojson out.tif
+vector rasterize --size 6,6 --ot UInt64 --nodata 18446744073709551615 --burn 1 poly.geojson out.tif
+vector rasterize --size 6,6 --ot UInt64 --nodata 2.5 --burn 1 poly.geojson out.tif
+
+# ---- attribute burning and string conversion ----
+vector rasterize --size 10,10 -a v two.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 -a w two.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 -a v strf.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 -a w strf.geojson out.tif
+vector rasterize --size 8,8 -a name strf.geojson out.tif
+
+# ---- 3d burning ----
+vector rasterize --size 10,10 --extent 0,0,10,10 --3d line3d.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --3d x2.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --3d --add x2.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --3d --all-touched x2.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --3d mp3.geojson out.tif
+
+# ---- geometry types, all-touched ----
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 line.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 --all-touched line.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 pt.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 gc.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 mix.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 mp3.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 pconcave.geojson out.tif
+vector rasterize --size 20,20 --extent 0,0,10,10 --burn 1 pconcave.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 --all-touched pconcave.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 phole.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 1 --all-touched phole.geojson out.tif
+
+# ---- invert ----
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 7 --init 5 --invert poly.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 7 --invert mix.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 -a v --invert two.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 --burn 3 --invert --add two.geojson out.tif
+
+# ---- layer selection, where, sql ----
+vector rasterize --size 10,10 -a v --where v=9 two.geojson out.tif
+vector rasterize --size 10,10 --extent 0,0,10,10 -a v --sql "SELECT * FROM two" two.geojson out.tif
+vector rasterize --size 4,4 -a v --where bogus=1 two.geojson out.tif
+vector rasterize --size 8,8 --burn 1 --where 0=1 poly.geojson out.tif
+vector rasterize --size 4,4 --burn 1 -l nope two.geojson out.tif
+
+# ---- creation options ----
+vector rasterize --size 10,10 --burn 1,2,3 --co INTERLEAVE=BAND poly.geojson out.tif
+vector rasterize --size 10,10 --burn 1 --co PREDICTOR=2 --co COMPRESS=DEFLATE poly.geojson out.tif
+vector rasterize --size 33,33 --burn 1 --co BLOCKYSIZE=7 poly.geojson out.tif
+vector rasterize --size 6,6 --ot Float64 --co COMPRESS=DEFLATE --co PREDICTOR=2 --burn 1 poly.geojson out.tif
+vector rasterize --size 6,6 --ot Float64 --co COMPRESS=DEFLATE --co PREDICTOR=3 --burn 1 poly.geojson out.tif
+vector rasterize --size 6,6 --ot Float32 --co COMPRESS=DEFLATE --co PREDICTOR=2 --burn 1 poly.geojson out.tif
+vector rasterize --size 4,0 --co COMPRESS=DEFLATE --co PREDICTOR=9 --burn 1 poly.geojson out.tif
+
+# ---- create errors ----
+vector rasterize --size 4,4 --burn 1 egeom.geojson out.tif
+vector rasterize --burn 1 poly.geojson out.tif
+vector rasterize --size 0,0 --burn 1 poly.geojson out.tif
+vector rasterize --resolution -1,1 --burn 1 poly.geojson out.tif
+vector rasterize --size 4 --burn 1 poly.geojson out.tif
+vector rasterize --extent 0,0,10 --size 4,4 --burn 1 poly.geojson out.tif
+vector rasterize --extent 10,10,0,0 --size 4,4 --burn 1 poly.geojson out.tif
+vector rasterize --size 8,8 --burn abc poly.geojson out.tif
+vector rasterize --size 8,8 --burn 1e400 poly.geojson out.tif
+vector rasterize --size 8,8 --ot Bogus --burn 1 poly.geojson out.tif
+
+# ---- update basics ----
+vector rasterize --update --burn 5 poly.geojson u8.tif
+vector rasterize -q --update --burn 5 poly.geojson u8.tif
+vector rasterize --update --add --burn 200 mp3.geojson u8.tif
+vector rasterize --update --burn -5 -b 2 poly.geojson u16.tif
+vector rasterize --update --burn -5,-6 -b 2,1 poly.geojson u16.tif
+vector rasterize --update --burn 9 pconcave.geojson uf64.tif
+vector rasterize --update --3d x2.geojson u16.tif
+vector rasterize --update --where v>4 -a v two.geojson u8.tif
+vector rasterize --update --sql "SELECT * FROM two" --burn 3 two.geojson u8.tif
+vector rasterize --update --init 5 --burn 3 poly.geojson u8.tif
+vector rasterize --update --all-touched --3d line3d.geojson uf64.tif
+vector rasterize --update --add --3d --all-touched x2.geojson uf64.tif
+vector rasterize --update --burn 3 --invert pconcave.geojson u8.tif
+vector rasterize --update -a v strf.geojson u8.tif
+vector rasterize --update -a name strf.geojson u8.tif
+
+# ---- update layouts: tiled, planar, deflate strips and tiles ----
+vector rasterize --update --burn 9 pconcave.geojson utiled.tif
+vector rasterize --update --burn 9,8 pconcave.geojson uplan.tif
+vector rasterize --update --burn 9 -b 2 pconcave.geojson uplan.tif
+vector rasterize --update --burn 9 pconcave.geojson udz.tif
+vector rasterize --update --add --burn 100 poly.geojson udz.tif
+vector rasterize --update --burn 7 pconcave.geojson udzm.tif
+vector rasterize -q --update --burn 255 line.geojson udzm.tif
+vector rasterize --update --burn 3 --all-touched line.geojson udzm.tif
+vector rasterize --update -i --burn 42 poly.geojson udzm.tif
+vector rasterize --update --burn 9 pconcave.geojson udzt.tif
+vector rasterize -q --update --burn 1 two.geojson udzt.tif
+vector rasterize --update --burn 9 tinypoly.geojson udzw.tif
+vector rasterize --update --burn 0 tinypoly.geojson udzw.tif
+
+# ---- update band choreography and errors ----
+vector rasterize --update -b 5 --burn 1 poly.geojson u16.tif
+vector rasterize --update -b 0 --burn 1 poly.geojson u16.tif
+vector rasterize --update -b 2,5 --burn 1,1 poly.geojson u16.tif
+vector rasterize --update -b 5,2 --burn 1,1 poly.geojson u16.tif
+vector rasterize -q --update -b 2,5 --burn 1,1 poly.geojson u16.tif
+vector rasterize --update --burn 1 nosuch.tif
+vector rasterize --update --burn 1 poly.geojson nosuch.tif
+
+# ---- update SRS handling and empty layers ----
+vector rasterize --update --burn 5 poly.geojson unosrs.tif
+vector rasterize --update --burn 5 tinypoly.geojson uutm.tif
+vector rasterize --update --where 0=1 --burn 5 poly.geojson u8.tif
+vector rasterize --update --burn 5 egeom.geojson u8.tif
+vector rasterize --update --where 0=1 --invert --burn 5 poly.geojson udz.tif
+vector rasterize --size 16,16 --extent 0,0,14,8 --burn 99 --all-touched pbnd.geojson out.tif
+vector rasterize --size 16,16 --extent 0,0,14,8 --burn 99 --all-touched -q pbnd.geojson out.tif
+
+# ---- 3d variant walks: junction ownership, clipping, add dedup ----
+vector rasterize --size 16,16 --extent 0,0,14,8 --3d z3d.geojson out.tif
+vector rasterize --size 16,16 --extent 0,0,14,8 --3d --all-touched z3d.geojson out.tif
+vector rasterize --size 16,16 --extent 0,0,14,8 --3d --all-touched zclip.geojson out.tif
+vector rasterize --size 16,16 --extent 0,0,14,8 --3d --add --all-touched --ot Float64 z3d.geojson out.tif
+vector rasterize --size 16,16 --extent 0,0,14,8 --3d --add --ot Float64 z3d.geojson out.tif

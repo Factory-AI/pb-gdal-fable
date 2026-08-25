@@ -1,0 +1,12 @@
+Usage: gdal driver <SUBCOMMAND> [OPTIONS]
+where <SUBCOMMAND> is one of:
+  - cog: Command for COG driver specific operations.
+
+Common Options:
+  -h, --help              Display help message and exit
+  --json-usage            Display usage as JSON document and exit
+  --config <KEY>=<VALUE>  Configuration option [may be repeated]
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.

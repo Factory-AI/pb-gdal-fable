@@ -1,0 +1,117 @@
+{
+  "name":"info",
+  "full_path":[
+    "gdal",
+    "mdim",
+    "info"
+  ],
+  "description":"Return information on a multidimensional dataset.",
+  "short_url":"\/programs\/gdal_mdim_info.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_mdim_info.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_MULTIDIM_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Input multidimensional raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "multidim_raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"summary",
+      "type":"boolean",
+      "description":"Report only group and array hierarchy, without detailed information on attributes or dimensions.",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"structure_detailed"
+    },
+    {
+      "name":"detailed",
+      "type":"boolean",
+      "description":"Most verbose output. Report attribute data types and array values.",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"structure_detailed"
+    },
+    {
+      "name":"array",
+      "type":"string",
+      "description":"Name of the array, used to restrict the output to the specified array.",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"limit",
+      "type":"integer",
+      "description":"Number of values in each dimension that is used to limit the display of array values.",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"array-option",
+      "type":"string_list",
+      "description":"Option passed to GDALGroup::GetMDArrayNames() to filter reported arrays.",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"stats",
+      "type":"boolean",
+      "description":"Read and display image statistics.",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+    {
+      "name":"output-string",
+      "type":"string",
+      "description":"Output string, in which the result is placed",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "input_output_arguments":[
+  ]
+}

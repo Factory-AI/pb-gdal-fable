@@ -1,0 +1,15 @@
+Usage: check-geometry [OPTIONS]
+
+Check a dataset for invalid geometries
+
+Common Options:
+  -h, --help                         Display help message and exit
+  --json-usage                       Display usage as JSON document and exit
+  --config <KEY>=<VALUE>             Configuration option [may be repeated]
+
+Options:
+  --include-field <INCLUDE-FIELD>    Fields from input layer to include in output (special values: ALL and NONE) (default: NONE) [may be repeated]
+  --include-valid                    Include valid inputs in output, with empty geometry
+  --geometry-field <GEOMETRY-FIELD>  Name of geometry field to check
+
+For more details, consult https://gdal.org/programs/gdal_vector_check_geometry.html

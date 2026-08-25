@@ -1,0 +1,204 @@
+# vector geometry verbs: swap-xy, segmentize, make-point,
+# explode-collections, set-geom-type (leaf + pipeline step + GDALG),
+# merged-stream compare to pin error/progress interleaving
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"pts","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[10,20]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"LineString","coordinates":[[1,2],[3,4],[5,6]]}},{"type":"Feature","properties":{"n":3},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}},{"type":"Feature","properties":{"n":4},"geometry":null},{"type":"Feature","properties":{"n":5},"geometry":{"type":"Point","coordinates":[7,8,9]}}]}' > p.json && printf %s '{"type":"FeatureCollection","name":"tbl","features":[{"type":"Feature","properties":{"px":1.5,"py":2.5,"pz":10,"pm":7,"name":"a"},"geometry":null},{"type":"Feature","properties":{"px":3,"py":4,"pz":null,"pm":8,"name":"b"},"geometry":null}]}' > tbl.json && printf %s '{"type":"FeatureCollection","name":"sv","features":[{"type":"Feature","properties":{"px":"1.5","py":"2.5"},"geometry":null},{"type":"Feature","properties":{"px":"x9","py":"4"},"geometry":null},{"type":"Feature","properties":{"px":"5","py":"6"},"geometry":null}]}' > sv2.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","id":7,"properties":{"k":"a"},"geometry":{"type":"MultiPoint","coordinates":[[1,2],[3,4]]}},{"type":"Feature","id":9,"properties":{"k":"b"},"geometry":{"type":"Point","coordinates":[9,9]}}]}' > mp2.json && printf %s '{"type":"FeatureCollection","name":"z","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Point","coordinates":[1,2,3]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"LineString","coordinates":[[1,2,3],[4,5,6]]}}]}' > zm.json && printf %s '{"type":"FeatureCollection","name":"c","crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::32631"}},"features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"Point","coordinates":[500000,4649776]}}]}' > crs.json && printf %s '{"type":"FeatureCollection","name":"cw","features":[{"type":"Feature","properties":{"n":1},"geometry":{"type":"Polygon","coordinates":[[[0,0],[0,4],[4,4],[4,0],[0,0]],[[1,1],[2,1],[2,2],[1,2],[1,1]]]}},{"type":"Feature","properties":{"n":2},"geometry":{"type":"Point","coordinates":[1,2,3]}}]}' > cw.json
+# ---- swap-xy leaf
+vector swap-xy --quiet --of GeoJSON p.json /vsistdout/
+vector swap-xy --of GeoJSON p.json out.json
+vector swap-xy --active-geometry foo --quiet --of GeoJSON p.json /vsistdout/
+vector swap-xy --active-layer pts --quiet --of GeoJSON p.json /vsistdout/
+vector swap-xy --active-layer nope --quiet --of GeoJSON p.json /vsistdout/
+vector swap-xy --quiet --of GeoJSON zm.json /vsistdout/
+vector swap-xy --quiet --of GeoJSON crs.json /vsistdout/
+vector swap-xy p.json o.gdalg.json
+vector swap-xy --active-layer p --active-geometry geometry p.json o.gdalg.json
+vector swap-xy foo p.json out.json
+# ---- segmentize leaf
+vector segmentize --quiet --of GeoJSON p.json /vsistdout/ 2.5
+vector segmentize --max-length 2.5 --quiet --of GeoJSON p.json /vsistdout/
+vector segmentize --quiet --of GeoJSON zm.json /vsistdout/ 1
+vector segmentize --quiet --of GeoJSON p.json /vsistdout/ 0.75
+vector segmentize p.json out.json
+vector segmentize --max-length 2.50 p.json o.gdalg.json
+vector segmentize p.json out.json 0
+vector segmentize p.json out.json -3
+vector segmentize p.json out.json abc
+vector segmentize p.json out.json 2 3
+# ---- make-point leaf
+vector make-point --x px --y py --quiet --of GeoJSON tbl.json /vsistdout/
+vector make-point --x px --y py --z pz --quiet --of GeoJSON tbl.json /vsistdout/
+vector make-point --x px --y py --m pm --quiet --of GeoJSON tbl.json /vsistdout/
+vector make-point --x px --y py --z pz --m pm --dst-crs EPSG:32631 --quiet --of GeoJSON tbl.json /vsistdout/
+vector make-point --x px --y py --dst-crs bogus tbl.json out.json
+vector make-point --x px --y py tbl.json out.json
+vector make-point --x px --y py --m pm tbl.json out.json
+vector make-point --x fx --y fy --z fz --m fm --dst-crs EPSG:4326 -l p p.json o.gdalg.json
+vector make-point tbl.json out.json
+vector make-point --x px tbl.json out.json
+# make-point failure choreography: missing fields
+vector make-point --x nope --y also --quiet tbl.json out.json
+vector make-point --x nope --y also tbl.json out.json
+vector make-point --x nope --y also --skip-errors tbl.json out.json
+vector make-point --x px --y also tbl.json out.json
+vector make-point --x nope --y also --z zz --m mm tbl.json out.json
+# make-point failure choreography: bad values
+vector make-point --x px --y py --quiet sv2.json out.json
+vector make-point --x px --y py sv2.json out.json
+vector make-point --x px --y py --skip-errors --quiet sv2.json out.json
+vector make-point --x px --y py --skip-errors sv2.json out.json
+# ---- explode-collections leaf
+vector explode-collections --quiet --of GeoJSON mp2.json /vsistdout/
+vector explode-collections --of GeoJSON mp2.json out.json
+vector explode-collections --geometry-type POINT --quiet --of GeoJSON mp2.json /vsistdout/
+vector explode-collections --geometry-type POINTZ --skip-on-type-mismatch --quiet --of GeoJSON p.json /vsistdout/
+vector explode-collections --geometry-type LINESTRING --quiet --of GeoJSON p.json /vsistdout/
+vector explode-collections --geometry-type Foo mp2.json out.json
+vector explode-collections --active-layer p --geometry-type POINTZ --skip-on-type-mismatch p.json o.gdalg.json
+# ---- set-geom-type leaf
+vector set-geom-type --multi --quiet --of GeoJSON mp2.json /vsistdout/
+vector set-geom-type --single --quiet --of GeoJSON mp2.json /vsistdout/
+vector set-geom-type --linear --quiet --of GeoJSON mp2.json /vsistdout/
+vector set-geom-type --dim XYZ --quiet --of GeoJSON p.json /vsistdout/
+vector set-geom-type --dim XYM --quiet --of GeoJSON p.json /vsistdout/
+vector set-geom-type --dim XY --quiet --of GeoJSON zm.json /vsistdout/
+vector set-geom-type --geometry-type MULTIPOINTZ --quiet --of GeoJSON p.json /vsistdout/
+vector set-geom-type --geometry-type GEOMETRYCOLLECTION --quiet --of GeoJSON p.json /vsistdout/
+vector set-geom-type --geometry-type LINESTRING --skip --quiet --of GeoJSON p.json /vsistdout/
+vector set-geom-type --geometry-type POINT --layer-only --quiet --of GeoJSON p.json /vsistdout/
+vector set-geom-type --geometry-type POINT --feature-geometry-only --quiet --of GeoJSON p.json /vsistdout/
+vector set-geom-type --geometry-type Foo p.json out.json
+vector set-geom-type --geometry-type POINT --multi p.json out.json
+vector set-geom-type --multi --single p.json out.json
+vector set-geom-type --dim XX p.json out.json
+vector set-geom-type --active-layer p --multi --linear --dim XYZ --skip --layer-only p.json o.gdalg.json
+vector set-geom-type --geometry-type Foo p.json o.gdalg.json
+vector set-geom-type --geometry-type POINT --multi p.json o.gdalg.json
+vector set-geom-type p.json out.json
+# ---- pipeline steps, multi-token (usage block on parse errors)
+vector pipeline read p.json ! swap-xy ! write out.json
+vector pipeline read p.json ! segmentize 2 ! write out.json
+vector pipeline read p.json ! segmentize --max-length 2 ! info
+vector pipeline read tbl.json ! make-point --x px --y py --z pz ! info --features
+vector pipeline read mp2.json ! explode-collections ! info --features
+vector pipeline read mp2.json ! set-geom-type --single --dim XYZ ! info --features
+vector pipeline read p.json ! set-geom-type --dim XYM ! write o.gdalg.json
+vector pipeline read sv2.json ! make-point --x px --y py ! write out.json
+vector pipeline read sv2.json ! make-point --x px --y py ! info --features
+vector pipeline read p.json ! swap-xy ! filter --where "n < 3" ! segmentize 1 ! write out.json
+vector pipeline read p.json ! segmentize ! write out.json
+vector pipeline read p.json ! segmentize abc ! write out.json
+vector pipeline read p.json ! segmentize 0 ! write out.json
+vector pipeline read p.json ! segmentize 2 3 ! write out.json
+vector pipeline read p.json ! make-point ! write out.json
+vector pipeline read p.json ! set-geom-type --multi --single ! write out.json
+vector pipeline read p.json ! set-geom-type --dim XX ! write out.json
+vector pipeline read p.json ! set-geom-type --geometry-type Foo ! write out.json
+vector pipeline read p.json ! set-geom-type --geometry-type POINT --multi ! write out.json
+vector pipeline read p.json ! explode-collections --geometry-type Foo ! write out.json
+vector pipeline read tbl.json ! make-point --x px --y py --dst-crs bogus ! write out.json
+vector pipeline read p.json ! swap-xy foo ! write out.json
+vector pipeline read p.json ! swap-xy ! write /vsistdout/ --output-format GeoJSON
+vector pipeline read sv2.json ! make-point --x px --y py ! write /vsistdout/ --output-format GeoJSON
+# ---- pipeline, single-token (no usage block, bar reaches /vsistdout/)
+vector pipeline "read p.json ! swap-xy ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read p.json ! segmentize 2 ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read tbl.json ! make-point --x px --y py ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read mp2.json ! explode-collections ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read mp2.json ! set-geom-type --multi ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline 'read p.json ! swap-xy ! filter --where "n < 3" ! segmentize 1 ! write /vsistdout/ --output-format GeoJSON'
+vector pipeline 'read p.json ! filter --where "n < 3" ! write /vsistdout/ --output-format GeoJSON'
+vector pipeline "read crs.json ! reproject --dst-crs EPSG:4326 ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read p.json ! filter --bbox 0,0,50,50 ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline 'read p.json ! sql --sql "SELECT * FROM pts WHERE 0" ! write /vsistdout/ --output-format GeoJSON'
+vector pipeline "read sv2.json ! make-point --x px --y py ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read p.json ! swap-xy ! write /vsistdout/ --output-format GeoJSONSeq"
+vector pipeline 'read p.json ! filter --where "n < 3" ! write /vsistdout/ --output-format GeoJSONSeq'
+vector pipeline "read p.json ! segmentize ! write /vsistdout/"
+vector pipeline "read p.json ! segmentize abc ! write /vsistdout/"
+vector pipeline "read p.json ! make-point ! write /vsistdout/"
+vector pipeline "read p.json ! set-geom-type --geometry-type Foo ! write /vsistdout/"
+vector pipeline "read p.json ! set-geom-type --geometry-type POINT --multi ! write /vsistdout/"
+vector pipeline "read p.json ! swap-xy foo ! write /vsistdout/"
+vector pipeline "read p.json ! select ! write /vsistdout/"
+# ---- seq writer orientation + Z warning suppression
+vector convert --of GeoJSONSeq cw.json /vsistdout/
+vector convert --of GeoJSONSeq cw.json out.geojsonl
+vector convert --quiet --of GeoJSONSeq cw.json /vsistdout/
+# ---- exotic geometry-type targets: curve/TIN/PHS/Triangle/GC, dim
+# suffix parsing (space + glued forms), forced-dim NoData semantics
+#setup: printf %s '{"type":"FeatureCollection","name":"l","features":[{"type":"Feature","properties":{"k":1},"geometry":{"type":"LineString","coordinates":[[0,0,5],[2,1,6],[4,0,7]]}},{"type":"Feature","properties":{"k":2},"geometry":{"type":"LineString","coordinates":[[1,1,2],[3,3,4]]}}]}' > l.json && printf %s '{"type":"FeatureCollection","name":"pg2","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,0]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[5,5],[6,5],[6,6],[5,5]]]}}]}' > pg2.json && printf %s '{"type":"FeatureCollection","name":"mx2","features":[{"type":"Feature","properties":{"a":2},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,4],[0,0]]]}},{"type":"Feature","properties":{"a":1},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,0]]]}}]}' > mx2.json && printf %s '{"type":"FeatureCollection","name":"m3","features":[{"type":"Feature","properties":{},"geometry":{"type":"MultiPolygon","coordinates":[[[[0,0],[4,0],[4,4],[0,0]]],[[[10,10],[20,10],[20,20],[10,20],[10,10]],[[12,12],[13,12],[13,13],[12,12]]]]}}]}' > mp3.json && printf %s '{"type":"FeatureCollection","name":"m2t","features":[{"type":"Feature","properties":{},"geometry":{"type":"MultiPolygon","coordinates":[[[[0,0],[4,0],[4,4],[0,0]]],[[[10,10],[14,10],[14,14],[10,10]]]]}}]}' > mp2t.json && printf %s '{"type":"FeatureCollection","name":"dn","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[10,0],[10,10],[0,10],[0,0]],[[2,2],[3,2],[3,3],[2,2]]]}}]}' > dn.json
+vector set-geom-type --geometry-type "LINESTRING ZM" l.json out.shp
+vector set-geom-type --geometry-type LINESTRINGM l.json out.shp
+vector set-geom-type --geometry-type CIRCULARSTRINGM l.json out.shp
+vector set-geom-type --geometry-type CURVEM l.json out.shp
+vector set-geom-type --geometry-type MULTICURVEZM l.json out.shp
+vector set-geom-type --geometry-type COMPOUNDCURVEZ l.json out.shp
+vector set-geom-type --geometry-type GEOMETRYZM l.json out.shp
+vector set-geom-type --geometry-type GEOMETRY25D l.json out.shp
+vector set-geom-type --geometry-type "LINESTRING QAZ" l.json out.shp
+vector set-geom-type --geometry-type MULTICURVE --quiet --of GeoJSON l.json /vsistdout/
+vector set-geom-type --geometry-type MULTICURVE l.json out.geojson
+vector set-geom-type --geometry-type MULTICURVE l.json out.geojsonl
+vector set-geom-type --geometry-type TIN pg2.json out.shp
+vector set-geom-type --geometry-type POLYHEDRALSURFACE pg2.json out.shp
+vector set-geom-type --geometry-type TRIANGLEZ pg2.json out.shp
+vector set-geom-type --geometry-type TIN --feature-only pg2.json out.shp
+vector set-geom-type --geometry-type TIN pg2.json out.geojson
+vector set-geom-type --geometry-type TIN pg2.json out.geojsonl
+vector set-geom-type --geometry-type TIN pg2.json out.geojson --skip-errors
+vector set-geom-type --geometry-type TIN mx2.json out.geojson
+vector set-geom-type --geometry-type TIN mp2t.json out.shp
+vector set-geom-type --geometry-type TIN mp2t.json out.geojson
+vector set-geom-type --geometry-type POLYHEDRALSURFACE mp3.json out.shp
+vector set-geom-type --geometry-type TINZM l.json out.shp
+vector set-geom-type --geometry-type GEOMETRYCOLLECTION l.json out.shp
+vector convert pg2.json out.shp --layer-creation-option SHPT=MULTIPATCH
+vector convert dn.json out.shp --layer-creation-option SHPT=MULTIPATCH
+vector convert mp3.json out.shp --layer-creation-option SHPT=MULTIPATCH
+# forced-dim semantics (Z up-front even on failed conversion, full
+# normalize only on success or linear target), pipeline stream gating,
+# deferred final tick past close-time layer failures
+#setup: printf %s '{"type":"FeatureCollection","name":"pg2","features":[{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[0,0],[4,0],[4,4],[0,0]]]}},{"type":"Feature","properties":{},"geometry":{"type":"Polygon","coordinates":[[[5,5],[6,5],[6,6],[5,5]]]}}]}' > pg2.json && printf %s '{"type":"FeatureCollection","name":"l","features":[{"type":"Feature","properties":{"k":1},"geometry":{"type":"LineString","coordinates":[[0,0,5],[2,1,6],[4,0,7]]}},{"type":"Feature","properties":{"k":2},"geometry":{"type":"LineString","coordinates":[[1,1,2],[3,3,4]]}}]}' > l.json && printf %s '{"type":"FeatureCollection","name":"l2","features":[{"type":"Feature","properties":{},"geometry":{"type":"LineString","coordinates":[[0,0],[2,1]]}}]}' > l2.json && python3 -c "import json;fs=[{'type':'Feature','properties':{},'geometry':{'type':'Polygon','coordinates':[[[i,0],[i+1,0],[i+1,1],[i,0]]]}} for i in range(5)];open('pg5.json','w').write(json.dumps({'type':'FeatureCollection','name':'pg5','features':fs}))"
+vector set-geom-type --geometry-type TIN pg5.json out.geojson
+vector set-geom-type --geometry-type TIN pg5.json out.geojsonl
+vector set-geom-type --geometry-type CURVE l.json out.geojson
+vector set-geom-type --geometry-type CIRCULARSTRING l.json out.geojson
+vector set-geom-type --geometry-type CIRCULARSTRINGZ l2.json out.geojson
+vector set-geom-type --geometry-type MULTIPOINT l.json out.geojson
+vector set-geom-type --geometry-type MULTIPOINTZ l2.json out.geojson
+vector set-geom-type --geometry-type POLYGONZ l2.json out.geojson
+vector set-geom-type --geometry-type MULTICURVE --quiet l.json out.geojson
+vector set-geom-type --geometry-type MULTICURVE --quiet l.json out.shp
+vector pipeline read pg2.json ! set-geom-type --geometry-type TIN ! write /vsistdout/ --output-format GeoJSON
+vector pipeline read pg2.json ! set-geom-type --geometry-type TIN ! write out.geojson
+vector pipeline read l.json ! set-geom-type --geometry-type MULTICURVE ! write /vsistdout/ --output-format GeoJSON
+vector pipeline read l.json ! set-geom-type --geometry-type MULTICURVE ! write out.geojson
+vector pipeline read l.json ! set-geom-type --geometry-type MULTICURVE ! write out.shp
+vector pipeline read l.json ! set-geom-type --geometry-type MULTICURVE ! write out.geojsonl
+vector pipeline "read pg2.json ! set-geom-type --geometry-type TIN ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read pg5.json ! set-geom-type --geometry-type TIN ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read l.json ! set-geom-type --geometry-type MULTICURVE ! write /vsistdout/ --output-format GeoJSON"
+vector pipeline "read l.json ! set-geom-type --geometry-type MULTICURVE ! write /vsistdout/ --output-format GeoJSONSeq"
+vector pipeline "read pg2.json ! set-geom-type --geometry-type TIN ! write /vsistdout/ --output-format GeoJSONSeq"
+vector set-geom-type --geometry-type TIN pg2.json out.csv
+vector set-geom-type --geometry-type MULTICURVE l.json out.csv
+# ---- deferred shapefile type resolution (Unknown layer decl, c8):
+# the first geometry-bearing feature's OWN dims pick the shape type
+# (Z wins over M) and the measured-ness of every record; decl Z/M
+# flags on an Unknown decl are ignored entirely
+#setup: printf %s '{"type":"FeatureCollection","name":"mixl","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"LineString","coordinates":[[0,0],[1,1],[2,0]]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"MultiLineString","coordinates":[[[3,3],[4,4]],[[5,5],[6,4],[7,3]]]}}]}' > mixl.json && printf %s '{"type":"FeatureCollection","name":"lsx","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"LineString","coordinates":[[0,0],[1,1],[2,0]]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"LineString","coordinates":[[3,3],[4,4]]}}]}' > lsx.json && printf %s '{"type":"FeatureCollection","name":"mx34","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"LineString","coordinates":[[0,0,1,10],[1,1,2,20]]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"LineString","coordinates":[[3,3,5],[4,4,6]]}}]}' > mx34.json && printf %s '{"type":"FeatureCollection","name":"mtx","features":[{"type":"Feature","properties":{"a":1},"geometry":{"type":"LineString","coordinates":[[0,0,1,10],[1,1,2,20]]}},{"type":"Feature","properties":{"a":2},"geometry":{"type":"MultiLineString","coordinates":[[[3,3,5],[4,4,6]]]}}]}' > mtx.json
+vector set-geom-type --dim XYZM --of "ESRI Shapefile" mixl.json out.shp
+vector set-geom-type --dim XYM --of "ESRI Shapefile" mixl.json out.shp
+vector set-geom-type --dim XYZ --of "ESRI Shapefile" mixl.json out.shp
+vector set-geom-type --dim XYZM --of "ESRI Shapefile" lsx.json out.shp
+vector set-geom-type --dim XYM --of "ESRI Shapefile" lsx.json out.shp
+vector set-geom-type --dim XYM --feature-only --of "ESRI Shapefile" mixl.json out.shp
+vector set-geom-type --dim XYM --layer-only --of "ESRI Shapefile" mixl.json out.shp
+vector set-geom-type --dim XYZM --feature-only --of "ESRI Shapefile" mixl.json out.shp
+vector set-geom-type --dim XYZM --layer-only --of "ESRI Shapefile" mixl.json out.shp
+vector set-geom-type --dim XYM --layer-only --of "ESRI Shapefile" lsx.json out.shp
+vector set-geom-type --dim XYZM --layer-only --of "ESRI Shapefile" lsx.json out.shp
+vector set-geom-type --dim XYM --feature-only --of "ESRI Shapefile" lsx.json out.shp
+vector convert --of "ESRI Shapefile" mx34.json out.shp
+vector convert --of "ESRI Shapefile" mtx.json out.shp

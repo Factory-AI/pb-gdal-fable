@@ -1,0 +1,69 @@
+# raster as-features: pixel-to-feature dump. Field order (CENTER_X/Y,
+# ROW/COL, BAND_1..N), geometry-type none/point/polygon with cell-center
+# math on rotated geotransforms, band-1 skip-nodata, SRS only consumed by
+# real geometries, GeoJSON non-finite skip vs DBF width warnings, sequence
+# layer No-SRS choreography, and the delegated update/append/overwrite
+# family with driver-guess errors.
+#setup: python3 /workspace/tests/mk_asfcc_fixtures.py .
+raster as-features afa.tif o.json
+raster as-features afa.tif o.json --include-xy
+raster as-features afa.tif o.json --include-row-col
+raster as-features afa.tif o.json --include-xy --include-row-col --geometry-type point
+raster as-features afa.tif o.json --geometry-type polygon
+raster as-features afa.tif o.geojsonl --geometry-type point
+raster as-features afa.tif o.geojsonl
+raster as-features afa.tif o.shp --geometry-type point --include-xy --include-row-col
+raster as-features afa.tif o.shp
+raster as-features afm.tif o.json
+raster as-features afm.tif o.json --skip-nodata
+raster as-features afm.tif o.geojsonl --skip-nodata --include-row-col
+raster as-features afm.tif o.json --band 2
+raster as-features afm.tif o.shp
+raster as-features afm.tif o.json --band 5
+raster as-features afm.tif o.json --band 1 --band 9
+raster as-features afm.tif o.json --band 0
+raster as-features afg.tif o.json --include-xy --geometry-type point
+raster as-features afg.tif o.json --geometry-type polygon
+raster as-features afg.tif o.geojsonl
+raster as-features afg.tif o.geojsonl --geometry-type point
+raster as-features afg.tif o.json --geometry-type point --lco RFC7946=YES --co FOO=BAR
+raster as-features afg.tif o.shp
+raster as-features afw.tif o.json --geometry-type point
+raster as-features afw.tif o.geojsonl --geometry-type point
+raster as-features afw.tif o.json --geometry-type polygon --include-xy
+raster as-features afu.tif o.geojsonl --geometry-type point
+raster as-features afu.tif o.json --geometry-type point --co FOO=BAR
+raster as-features afu.tif o.json --include-xy
+raster as-features afu.tif omem --of MEM --geometry-type point
+raster as-features afu.tif ostr --of stream
+raster as-features afn.tif o.json --skip-nodata
+raster as-features afn.tif o.json --skip-nodata --band 2
+raster as-features afnn.tif o.json --skip-nodata
+raster as-features afnn.tif o.json
+raster as-features afnn.tif o.geojsonl
+raster as-features afi16.tif o.json
+raster as-features afrot.tif o.json --include-xy --geometry-type polygon
+raster as-features aff64.tif o.json
+raster as-features aff64.tif o.shp
+raster as-features afi64.tif o.json
+raster as-features afa.tif ex.json
+raster as-features afa.tif ex2.json
+raster as-features afa.tif ex2.json --overwrite
+raster as-features afa.tif ex.json --band 7
+raster as-features missing.tif o.json
+raster as-features missing.tif ex.json
+raster as-features afa.tif o.gdalg.json
+raster as-features afa.tif o.json --of GDALG
+raster as-features afa.tif noext
+raster as-features afa.tif o.json --of FOO
+raster as-features afa.tif o.json --geometry-type line
+raster as-features afa.tif dirj.json --update
+raster as-features afa.tif miss.json --update
+raster as-features afa.tif miss.json --overwrite-layer
+raster as-features afa.tif o.json --output-layer mypix --geometry-type point
+raster as-features afa.tif o.json --output-layer mypix --include-xy --of GeoJSON
+raster as-features afa.tif apx.json --append
+raster as-features afa.tif apx.geojsonl --append
+raster as-features afg.tif apx.json --update
+raster as-features afa.tif apx.json --overwrite-layer
+raster as-features afa.tif apx.geojsonl --update

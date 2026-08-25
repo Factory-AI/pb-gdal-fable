@@ -1,0 +1,40 @@
+{
+  "description":"Return information on a dataset (shortcut for 'gdal raster info' or 'gdal vector info').",
+  "short_url":"\/programs\/gdal_info.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_info.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format",
+      "choices":[
+        "json",
+        "text"
+      ],
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"input",
+      "type":"dataset",
+      "description":"Input raster, vector or multidimensional raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster",
+        "vector",
+        "multidim_raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+  ]
+}

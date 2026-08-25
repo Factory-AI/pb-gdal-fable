@@ -1,0 +1,66 @@
+# D6: measured shapefiles (M/ZM), ADJUST_GEOM_TYPE, .shx recovery
+#setup: python3 /workspace/tests/mk_m_fixtures.py .
+
+# read model: FIRST_SHAPE measured-ness adjust, nodata display, names
+vector info --features rpm.shp
+vector info --features rpmn.shp
+vector info --features rpzm.shp
+vector info --features ram.shp
+vector info --features mix1.shp
+vector info --features mix2.shp
+vector info --features mix3.shp
+vector info --features mnull.shp
+vector info --features mshort.shp
+vector info --features thr.shp
+vector info --features zmn.shp
+vector info --features mpm.shp
+vector info --features pgm.shp
+vector info e23.shp
+vector info --oo ADJUST_GEOM_TYPE=ALL_SHAPES --features mix1.shp
+vector info --oo ADJUST_GEOM_TYPE=ALL_SHAPES --features mix2.shp
+vector info --oo ADJUST_GEOM_TYPE=NO --features mix1.shp
+vector info --oo ADJUST_GEOM_TYPE=NO --features mshort.shp
+vector info --oo ADJUST_GEOM_TYPE=NO --features mnull.shp
+vector info --oo ADJUST_GEOM_TYPE=BOGUS --features mshort.shp
+vector info --output-format json --features ram.shp
+vector info --output-format json --features rpzm.shp
+vector info --output-format json --features mpm.shp
+vector info --output-format json --features pgm.shp
+vector info --output-format json --summary ram.shp
+vector info --summary ram.shp
+
+# WKT number rendering (E-notation, fixed expansion)
+vector info --features tiny.json
+
+# writes: M preservation, demotion, append measured-ness
+vector convert ram.shp w.json
+vector convert -q mix2.shp w.json
+vector convert ram.shp w.shp
+vector convert mix1.shp w.shp
+vector convert mix2.shp w.shp
+vector convert mix3.shp w.shp
+vector convert mnull.shp w.shp
+vector convert rpm.shp w.shp
+vector convert rpzm.shp w.shp
+vector convert mpm.shp w.shp
+vector convert pgm.shp w.shp
+vector convert --append ap1.json ram.shp
+vector convert --append ap1.json mix1.shp
+vector convert --append ap1.json mix2.shp
+
+# .shx pathology: hard errors, SHAPE_RESTORE_SHX rebuilds
+vector info ns.shp
+vector info --features ns.dbf
+vector convert ns.shp o.json
+--config SHAPE_RESTORE_SHX=NO vector info ns.shp
+--config SHAPE_RESTORE_SHX=YES vector info --features ns.shp
+--config SHAPE_RESTORE_SHX=YES vector convert ns.shp o.json
+vector info ts.shp
+vector info zs.shp
+--config SHAPE_RESTORE_SHX=YES vector info ts.shp
+--config SHAPE_RESTORE_SHX=YES vector info zs.shp
+vector info dd
+vector info db1
+--config SHAPE_RESTORE_SHX=YES vector info dd
+vector convert dd o.json
+dataset identify ns.shp

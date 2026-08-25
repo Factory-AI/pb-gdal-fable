@@ -1,0 +1,112 @@
+# raster clean-collar: nearblack-style collar removal. Floodfill default
+# vs twopasses scan automaton, color-threshold/pixel-distance knobs,
+# black/white/arbitrary color lists, add-alpha and 1-bit mask sub-IFD
+# emission (strip size rule, tiled masks), dtype clamping on --update
+# writeback, VRT/MEM/GDALG/PNG format choreography, and the update-family
+# and option-validation error surfaces.
+#setup: python3 /workspace/tests/mk_asfcc_fixtures.py .
+raster clean-collar cc1.tif o.tif
+raster clean-collar cc1.tif o.tif --algorithm twopasses
+raster clean-collar cc1.tif o.tif --pixel-distance 0
+raster clean-collar cc1.tif o.tif --color-threshold 40 --algorithm twopasses
+raster clean-collar cc1.tif o.tif --add-alpha
+raster clean-collar cc1.tif o.tif --add-mask --algorithm twopasses
+raster clean-collar cc2.tif o.tif
+raster clean-collar cc2.tif o.tif --algorithm twopasses
+raster clean-collar cc2.tif o.tif --pixel-distance 0
+raster clean-collar cc2.tif o.tif --color-threshold 40 --algorithm twopasses
+raster clean-collar cc2.tif o.tif --add-alpha
+raster clean-collar cc2.tif o.tif --add-mask --algorithm twopasses
+raster clean-collar ccrgb2.tif o.tif
+raster clean-collar ccrgb2.tif o.tif --algorithm twopasses
+raster clean-collar ccrgb2.tif o.tif --pixel-distance 0
+raster clean-collar ccrgb2.tif o.tif --color-threshold 40 --algorithm twopasses
+raster clean-collar ccrgb2.tif o.tif --add-alpha
+raster clean-collar ccrgb2.tif o.tif --add-mask --algorithm twopasses
+raster clean-collar ccb2.tif o.tif
+raster clean-collar ccb2.tif o.tif --algorithm twopasses
+raster clean-collar ccb2.tif o.tif --pixel-distance 0
+raster clean-collar ccb2.tif o.tif --color-threshold 40 --algorithm twopasses
+raster clean-collar ccb2.tif o.tif --add-alpha
+raster clean-collar ccb2.tif o.tif --add-mask --algorithm twopasses
+raster clean-collar ccbig.tif o.tif
+raster clean-collar ccbig.tif o.tif --algorithm twopasses
+raster clean-collar ccbig.tif o.tif --pixel-distance 0
+raster clean-collar ccbig.tif o.tif --color-threshold 40 --algorithm twopasses
+raster clean-collar ccbig.tif o.tif --add-alpha
+raster clean-collar ccbig.tif o.tif --add-mask --algorithm twopasses
+raster clean-collar ccrgb.tif o.tif
+raster clean-collar ccrgb2.tif o.tif --color white
+raster clean-collar cc2.tif o.tif --color white --algorithm twopasses
+raster clean-collar cc2.tif o.tif --color 16
+raster clean-collar cc2.tif o.tif --color 0 --color 255
+raster clean-collar cc2.tif o.tif --color black --color white
+raster clean-collar ccrgb2.tif o.tif --color 255,0,10 --algorithm twopasses
+raster clean-collar ccrgb2.tif o.tif --color 0,5,10 --color 255,255,250
+raster clean-collar ccb2.tif o.tif --color 0,8
+raster clean-collar ccu16.tif o.tif
+raster clean-collar ccu16.tif o.tif --color white --algorithm twopasses
+raster clean-collar ccu16.tif o.tif --color 240 --pixel-distance 0
+raster clean-collar cci16.tif o.tif --algorithm twopasses
+raster clean-collar ccf32.tif o.tif --color-threshold 0 --pixel-distance 0 --algorithm twopasses
+raster clean-collar ccsrs.tif o.tif
+raster clean-collar ccnogt.tif o.tif
+raster clean-collar ccnd.tif o.tif
+raster clean-collar cctall.tif o.tif
+raster clean-collar cctall.tif o.tif --add-alpha
+raster clean-collar cctall.tif o.tif --add-mask
+raster clean-collar ccbig.tif o.tif --add-mask --color white
+raster clean-collar ccbig.tif o.tif --add-alpha --color white
+raster clean-collar cc1.tif o.tif -q
+raster clean-collar cc1.tif o.tif --co COMPRESS=DEFLATE
+raster clean-collar cc1.tif o.tif --co TILED=YES
+raster clean-collar cc1.tif o.tif --co COMPRESS=DEFLATE --co ZLEVEL=9 --co PREDICTOR=2
+raster clean-collar cc1.tif o.tif --co COMPRESS=FOO
+raster clean-collar cc1.tif o.vrt
+raster clean-collar ccsrs.tif o.vrt
+raster clean-collar ccu16.tif o.vrt
+raster clean-collar ccrgb.tif o.vrt --add-alpha
+raster clean-collar cc1.tif o.tif --of MEM
+raster clean-collar cc1.tif noext
+raster clean-collar cc1.tif o.png
+raster clean-collar cc1.tif o4.png --of GTiff
+raster clean-collar cc1.tif o.tif --of PNG
+raster clean-collar cc1.tif o.tif --of FOO
+raster clean-collar cc1.tif o.tif --of gdalg
+raster clean-collar cc1.tif o.gdalg.json
+raster clean-collar nope.tif o.gdalg.json
+raster clean-collar cc1.tif y.gdalg.json
+raster clean-collar cc1.tif
+raster clean-collar cc1.tif --color 1,2
+raster clean-collar nope.tif o.tif
+raster clean-collar garb.tif o.tif
+raster clean-collar cc1.tif exist.tif
+raster clean-collar cc1.tif empty.tif
+raster clean-collar cc1.tif adir.tif
+raster clean-collar cc1.tif exist.tif --overwrite
+raster clean-collar nope.tif exist.tif
+raster clean-collar cc1.tif exist.tif --add-alpha --add-mask
+raster clean-collar cc1.tif o.tif --add-alpha --add-mask
+raster clean-collar cc1.tif o.tif --color chartreuse
+raster clean-collar cc1.tif o.tif --color 10,
+raster clean-collar cc1.tif o.tif --color -5
+raster clean-collar cc1.tif o.tif --color 300
+raster clean-collar cc1.tif o.tif --color BLACK
+raster clean-collar cc1.tif o.tif --color-threshold -1
+raster clean-collar cc1.tif o.tif --pixel-distance -1
+raster clean-collar ccrgb.tif o.tif --color 1,2
+raster clean-collar ccrgb.tif o.tif --color 1,2 --add-alpha
+raster clean-collar ccrgb.tif o.tif --of MEM --color 1,2
+raster clean-collar ccu16.tif o.tif --color 1,2
+raster clean-collar ccsame.tif --update
+raster clean-collar ccu16.tif --update
+raster clean-collar ccnd.tif --update
+raster clean-collar cc1.tif ccsame.tif --update
+raster clean-collar cc1.tif exist.tif --update
+raster clean-collar cc1.tif nope.tif --update
+raster clean-collar cc1.tif empty.tif --update
+raster clean-collar cc1.tif ccb2.tif --update
+raster clean-collar ccbig.tif --update --add-mask
+raster clean-collar cc1.tif --update --add-alpha
+raster clean-collar cc1.tif --update --color 1,2
+raster clean-collar cctall.tif --update --add-mask --color white

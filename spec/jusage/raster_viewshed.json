@@ -1,0 +1,340 @@
+{
+  "name":"viewshed",
+  "full_path":[
+    "gdal",
+    "raster",
+    "viewshed"
+  ],
+  "description":"Compute the viewshed of a raster dataset.",
+  "short_url":"\/programs\/gdal_raster_viewshed.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_raster_viewshed.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input raster datasets",
+      "required":true,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":1,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"quiet",
+      "type":"boolean",
+      "description":"Quiet mode (no progress bar or warning message)",
+      "required":false,
+      "category":"Common"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_RASTER",
+          "DCAP_CREATECOPY"
+        ]
+      }
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"append",
+      "type":"boolean",
+      "description":"Append as a subdataset to existing output",
+      "default":false,
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"overwrite-append"
+    },
+    {
+      "name":"position",
+      "type":"real_list",
+      "description":"Observer position",
+      "metavar":"<X,Y> or <X,Y,H>",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":false,
+      "min_count":2,
+      "max_count":3,
+      "category":"Base"
+    },
+    {
+      "name":"height",
+      "type":"real",
+      "description":"Observer height",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"sd-filename",
+      "type":"dataset",
+      "description":"Filename of standard-deviation raster",
+      "required":false,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ]
+    },
+    {
+      "name":"target-height",
+      "type":"real",
+      "description":"Height of the target above the DEM surface in the height unit of the DEM.",
+      "default":0.0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"mode",
+      "type":"string",
+      "description":"Sets what information the output contains.",
+      "choices":[
+        "normal",
+        "DEM",
+        "ground",
+        "cumulative"
+      ],
+      "default":"normal",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"max-distance",
+      "type":"real",
+      "description":"Maximum distance from observer to compute visibility. It is also used to clamp the extent of the output raster.",
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"min-distance",
+      "type":"real",
+      "description":"Mask all cells less than this distance from the observer. Must be less than 'max-distance'.",
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"start-angle",
+      "type":"real",
+      "description":"Mask all cells outside of the arc ('start-angle', 'end-angle'). Clockwise degrees from north. Also used to clamp the extent of the output raster.",
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":360.0,
+      "max_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"end-angle",
+      "type":"real",
+      "description":"Mask all cells outside of the arc ('start-angle', 'end-angle'). Clockwise degrees from north. Also used to clamp the extent of the output raster.",
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":360.0,
+      "max_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"high-pitch",
+      "type":"real",
+      "description":"Mark all cells out-of-range where the observable height would be higher than the 'high-pitch' angle from the observer. Degrees from horizontal - positive is up. Must be greater than 'low-pitch'.",
+      "min_value":-90.0,
+      "min_value_is_included":false,
+      "max_value":90.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"low-pitch",
+      "type":"real",
+      "description":"Bound observable height to be no lower than the 'low-pitch' angle from the observer. Degrees from horizontal - positive is up. Must be less than 'high-pitch'.",
+      "min_value":-90.0,
+      "min_value_is_included":true,
+      "max_value":90.0,
+      "max_value_is_included":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"curvature-coefficient",
+      "type":"real",
+      "description":"Coefficient to consider the effect of the curvature and refraction.",
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"band",
+      "type":"integer",
+      "description":"Input band (1-based index)",
+      "default":1,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"visible-value",
+      "type":"real",
+      "description":"Pixel value to set for visible areas",
+      "default":255.0,
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":255.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"invisible-value",
+      "type":"real",
+      "description":"Pixel value to set for invisible areas",
+      "default":0.0,
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":255.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"maybe-visible-value",
+      "type":"real",
+      "description":"Pixel value to set for potentially visible areas",
+      "default":2.0,
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":255.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"out-of-range-value",
+      "type":"real",
+      "description":"Pixel value to set for the cells that fall outside of the range specified by the observer location and the maximum distance",
+      "default":0.0,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"dst-nodata",
+      "type":"real",
+      "description":"The value to be set for the cells in the output raster that have no data.",
+      "min_value":0.0,
+      "min_value_is_included":true,
+      "max_value":255.0,
+      "max_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"observer-spacing",
+      "type":"integer",
+      "description":"Cell Spacing between observers",
+      "default":10,
+      "min_value":1,
+      "min_value_is_included":true,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"num-threads",
+      "type":"string",
+      "description":"Number of jobs (or ALL_CPUS)",
+      "default":"3",
+      "required":false,
+      "category":"Base"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output raster dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "raster"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ],
+  "supports_streamed_output":true
+}

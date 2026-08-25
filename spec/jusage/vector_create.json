@@ -1,0 +1,227 @@
+{
+  "name":"create",
+  "full_path":[
+    "gdal",
+    "vector",
+    "create"
+  ],
+  "description":"Create a vector dataset.",
+  "short_url":"\/programs\/gdal_vector_create.html",
+  "url":"https:\/\/gdal.org\/programs\/gdal_vector_create.html",
+  "sub_algorithms":[
+  ],
+  "input_arguments":[
+    {
+      "name":"input-format",
+      "type":"string_list",
+      "description":"Input formats",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR"
+        ]
+      }
+    },
+    {
+      "name":"open-option",
+      "type":"string_list",
+      "description":"Open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"input",
+      "type":"dataset_list",
+      "description":"Input vector datasets",
+      "metavar":"TEMPLATE-DATASET",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":1,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "mutual_exclusion_group":"like-schema-field"
+    },
+    {
+      "name":"input-layer",
+      "type":"string_list",
+      "description":"Input layer name(s)",
+      "required":false,
+      "packed_values_allowed":true,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"output-format",
+      "type":"string",
+      "description":"Output format (\"GDALG\" allowed)",
+      "required":false,
+      "category":"Base",
+      "metadata":{
+        "required_capabilities":[
+          "DCAP_VECTOR",
+          "DCAP_CREATE"
+        ]
+      }
+    },
+    {
+      "name":"output-open-option",
+      "type":"string_list",
+      "description":"Output open options",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Advanced"
+    },
+    {
+      "name":"creation-option",
+      "type":"string_list",
+      "description":"Creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"layer-creation-option",
+      "type":"string_list",
+      "description":"Layer creation option",
+      "metavar":"<KEY>=<VALUE>",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite",
+      "type":"boolean",
+      "description":"Whether overwriting existing output dataset is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"update",
+      "type":"boolean",
+      "description":"Whether to open existing dataset in update mode",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"overwrite-layer",
+      "type":"boolean",
+      "description":"Whether overwriting existing output layer is allowed",
+      "default":false,
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"output-layer",
+      "type":"string",
+      "description":"Output layer name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"geometry-type",
+      "type":"string",
+      "description":"Layer geometry type",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"geometry-field",
+      "type":"string",
+      "description":"Name of the geometry field to create (if supported by the output format)",
+      "default":"geom",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"crs",
+      "type":"string",
+      "description":"Set CRS",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"fid",
+      "type":"string",
+      "description":"FID column name",
+      "required":false,
+      "category":"Base"
+    },
+    {
+      "name":"schema",
+      "type":"string",
+      "description":"Read OGR_SCHEMA and populate field definitions from it",
+      "metavar":"SCHEMA_JSON",
+      "required":false,
+      "category":"Base",
+      "mutual_exclusion_group":"like-schema-field"
+    },
+    {
+      "name":"field",
+      "type":"string_list",
+      "description":"Add a field definition to the output layer",
+      "metavar":"<NAME>:<TYPE>[(,<WIDTH>[,<PRECISION>])]",
+      "required":false,
+      "packed_values_allowed":false,
+      "repeated_arg_allowed":true,
+      "min_count":0,
+      "max_count":2147483647,
+      "category":"Base",
+      "mutual_exclusion_group":"like-schema-field"
+    }
+  ],
+  "output_arguments":[
+  ],
+  "input_output_arguments":[
+    {
+      "name":"output",
+      "type":"dataset",
+      "description":"Output vector dataset",
+      "required":true,
+      "category":"Base",
+      "dataset_type":[
+        "vector"
+      ],
+      "input_flags":[
+        "name",
+        "dataset"
+      ],
+      "output_flags":[
+        "dataset"
+      ]
+    }
+  ],
+  "supports_streamed_output":true
+}

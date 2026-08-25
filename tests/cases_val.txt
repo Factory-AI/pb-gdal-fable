@@ -1,0 +1,73 @@
+#setup: /home/agent/oracle/executable raster create -q --size 2,2 --burn 3 r.tif && printf '{"type":"FeatureCollection","features":[]}' > v.json && echo hello > junk.tif && mkdir ed && mkdir dd && /home/agent/oracle/executable vector convert -q v.json dd/l1.shp && /home/agent/oracle/executable raster convert -q r.tif g2.gdalg.json && cp r.tif out1.tif
+raster convert --of FOO missing.tif out.tif
+raster convert missing.tif out1.tif
+raster convert --of MEM missing.tif out1.tif
+raster select --band 1 missing.tif out1.tif
+vector convert --of MEM missing.json v.json
+raster convert junk.tif out1.tif
+raster convert --overwrite r.tif ed
+raster convert --append missing.tif out1.tif
+raster convert --overwrite --append missing.tif out1.tif
+raster convert r.tif v.json
+raster select --band 1 r.tif v.json
+vector convert --of FOO missing.json out.json
+vector convert --if GTiff missing.json out2.json
+raster select --band 1 --of FOO missing.tif o.tif
+raster select --band x missing.tif o.tif
+raster convert r.tif junk.tif
+raster convert r.tif ed
+raster convert r.tif g2.gdalg.json
+vector convert v.json g2.gdalg.json
+vector convert missing.json g2.gdalg.json
+raster convert --append missing.tif noout.tif
+raster convert --append r.tif junk.tif
+raster convert --append junk.tif out1.tif
+vector convert --update missing.json v.json
+vector convert --append missing.json v.json
+vector convert --append missing.json noout.json
+vector convert --update missing.json noout.json
+vector convert --append v.json bad2.json
+vector convert v.json dd
+vector convert --overwrite v.json dd
+vector convert --append v.json ed
+vector convert --update v.json ed
+vector convert --append v.json nodir
+vector convert --update v.json nodir2
+vector convert missing.json v.json
+raster convert --append r.tif v.json
+raster select --of FOO --band x r.tif o.tif
+raster select --band x --of FOO r.tif o.tif
+raster select --of FOO r.tif o.tif x
+raster select --band 7 r.tif out1.tif
+raster select --band 1 --of MEM missing.tif out1.tif
+raster convert --overwrite missing.tif out1.tif
+vector convert --overwrite missing.json dd
+raster convert -co COMPRESS=LZW r.tif od1.tif
+raster convert -quiet r.tif od2.tif
+raster convert -zz r.tif od3.tif
+raster convert -of GTiff r.tif od4.tif
+raster convert -qo r.tif od5.tif
+raster convert -oq r.tif od6.tif
+raster convert -qz r.tif od7.tif
+raster info -mm r.tif
+vector info --crs-format WKT2 --output-format json v.json
+vector info --crs-format PROJJSON v.json
+vector info --crs-format WKT2 v.json
+vector info --crs-format AUTO --output-format json v.json
+vector info --crs-format WKT2 --output-format json missing.json
+vector info --crs-format WKT2 --output-format json
+raster info --crs-format WKT2 --output-format json missing.tif
+info --crs-format WKT2 --output-format json v.json
+raster calc -i A=r.tif --calc A+1 oc1.tif
+raster calc -i A=r.tif -i B=r.tif --calc A+B oc2.tif
+raster calc -i A=r.tif -i A=r.tif --calc A oc3.tif
+raster calc -i A=r.tif -i A=missing.tif --calc A oc3.gdalg.json
+raster calc -i A=missing.tif --calc A oc4.tif
+# value-level checks (choices, prevalidators, driver existence) precede
+# positional-count diagnostics; positional overflow still precedes
+# required-argument checks
+vector set-field-type --field-type Zzz --field-name pop p.geojson o.geojson extra
+vector set-field-type --field-type Zzz --field-name pop p.geojson
+vector set-field-type p.geojson o.geojson extra
+raster edit --nodata abc in.tif extra
+raster convert --output-format BadDrv in.tif o.tif extra.tif

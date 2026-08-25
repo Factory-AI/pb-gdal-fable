@@ -1,0 +1,61 @@
+# Top-level surface
+--version
+--license
+--formats
+--drivers
+--help
+-h
+--json-usage
+
+# tree walking / errors
+raster
+vector
+vsi
+dataset
+driver
+mdim
+raster --help
+vector --help
+vsi --help
+raster conv
+notacommand
+info
+convert
+raster convert --help
+raster convert --json-usage
+raster info --help
+vector info --help
+vsi list --help
+raster convert
+raster convert --nope
+raster convert -x
+raster convert a.tif
+raster convert a.tif b.tif c.tif
+raster convert --overwrite --append a.tif b.tif
+vsi list --output-format=yaml x
+vsi list --depth=abc x
+vsi list --depth=0 x
+vsi list --depth 5
+raster neighbours --help
+raster neighbors --help
+--config
+--config FOO
+--config FOO=BAR
+--config FOO=BAR raster
+raster convert in.tif out.tif
+raster --nope
+vsi --nope
+--config=FOO=BAR
+--config=FOO=BAR raster
+vsi list --config=FOO=BAR .
+raster warp
+vector translate
+dataset cp --help
+vsi ls --depth=abc x
+vsi ls
+raster neighbours --json-usage
+raster warp --json-usage
+--debug ON
+--optfile /nonexistent.txt
+--drivers extra
+--drivers --config=A=B

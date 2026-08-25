@@ -1,0 +1,170 @@
+# vector set-field-type (leaf + pipeline step): two conversion engines.
+# Leaf/fallback translates SetFrom-style (declared source type drives
+# coercion, incomplete-parse/overflow/subtype warning set, inconvertible
+# values warn then drop the whole feature); a step directly following a
+# GeoJSON read is absorbed into the read as a schema override (raw JSON
+# reinterpretation, silent clamps, %.17g strings) with mutex/required
+# validation skipped, unless the terminal is GDALG. Conversion warnings
+# only surface when the writer pulls features (unguessable driver and
+# unconsumed stream outputs stay silent); warning replay follows the
+# terminal's pull count.
+#merge: on
+#setup: printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":7},"geometry":null},{"type":"Feature","properties":{"f":2147483648},"geometry":null},{"type":"Feature","properties":{"f":null},"geometry":null}]}' > si.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":1.5},"geometry":null},{"type":"Feature","properties":{"f":-2.999},"geometry":null},{"type":"Feature","properties":{"f":1e300},"geometry":null}]}' > sr.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":"12x"},"geometry":null},{"type":"Feature","properties":{"f":"-4"},"geometry":null},{"type":"Feature","properties":{"f":"1.5"},"geometry":null},{"type":"Feature","properties":{"f":"2020-01-02T03:04:05"},"geometry":null},{"type":"Feature","properties":{"f":"true"},"geometry":null},{"type":"Feature","properties":{"f":"{\"a\":1}"},"geometry":null}]}' > ss.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":true},"geometry":null},{"type":"Feature","properties":{"f":false},"geometry":null}]}' > sb.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":[1,2]},"geometry":null},{"type":"Feature","properties":{"f":[9]},"geometry":null},{"type":"Feature","properties":{"f":[]},"geometry":null}]}' > sil.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":[1,2147483648]},"geometry":null},{"type":"Feature","properties":{"f":[9]},"geometry":null}]}' > si64l.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":[1.5,2.5]},"geometry":null},{"type":"Feature","properties":{"f":[9.25]},"geometry":null}]}' > srl.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":["a","2"]},"geometry":null},{"type":"Feature","properties":{"f":["3"]},"geometry":null}]}' > ssl.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":"2020-01-02"},"geometry":null},{"type":"Feature","properties":{"f":"2021-12-31"},"geometry":null}]}' > sd.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":"2020-01-02T03:04:05"},"geometry":null},{"type":"Feature","properties":{"f":"2021-03-04T05:06:07.250+02:00"},"geometry":null}]}' > sdt.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":["a"],"g":5},"geometry":null},{"type":"Feature","properties":{"f":null,"g":6},"geometry":null}]}' > mfd.json && mkdir S D && /home/agent/oracle/executable vector convert -q si.json S/m.shp && /home/agent/oracle/executable vector convert -q si.json D/a.shp && /home/agent/oracle/executable vector convert -q sr.json D/b.shp && /home/agent/oracle/executable vector set-field-type -q si.json pre.gdalg.json --field-name f --field-type Real
+# ---- leaf: SetFrom conversion representatives
+vector set-field-type si.json out.json --field-name f --field-type Integer
+vector set-field-type si.json out.json --field-name f --field-type Integer64
+vector set-field-type si.json out.json --field-name f --field-type Boolean
+vector set-field-type si.json out.json --field-name f --field-type Int16
+vector set-field-type si.json out.json --field-name f --field-type Float32
+vector set-field-type si.json out.json --field-name f --field-type String
+vector set-field-type si.json out.json --field-name f --field-type Date
+vector set-field-type sr.json out.json --field-name f --field-type Integer
+vector set-field-type sr.json out.json --field-name f --field-type String
+vector set-field-type sr.json out.json --field-name f --field-type RealList
+vector set-field-type ss.json out.json --field-name f --field-type Integer
+vector set-field-type ss.json out.json --field-name f --field-type Real
+vector set-field-type ss.json out.json --field-name f --field-type Date
+vector set-field-type ss.json out.json --field-name f --field-type DateTime
+vector set-field-type ss.json out.json --field-name f --field-type Boolean
+vector set-field-type ss.json out.json --field-name f --field-type JSON
+vector set-field-type ss.json out.json --field-name f --field-type UUID
+vector set-field-type ss.json out.json --field-name f --field-type StringList
+vector set-field-type sb.json out.json --field-name f --field-type String
+vector set-field-type sb.json out.json --field-name f --field-type Integer
+vector set-field-type sil.json out.json --field-name f --field-type Integer
+vector set-field-type sil.json out.json --field-name f --field-type String
+vector set-field-type sil.json out.json --field-name f --field-type RealList
+vector set-field-type si64l.json out.json --field-name f --field-type IntegerList
+vector set-field-type si64l.json out.json --field-name f --field-type Integer
+vector set-field-type srl.json out.json --field-name f --field-type IntegerList
+vector set-field-type srl.json out.json --field-name f --field-type String
+vector set-field-type ssl.json out.json --field-name f --field-type StringList
+vector set-field-type sd.json out.json --field-name f --field-type String
+vector set-field-type sd.json out.json --field-name f --field-type DateTime
+vector set-field-type sdt.json out.json --field-name f --field-type Date
+vector set-field-type sdt.json out.json --field-name f --field-type Time
+vector set-field-type sdt.json out.json --field-name f --field-type String
+# ---- leaf: inconvertible values drop the whole feature
+vector set-field-type ssl.json out.json --field-name f --field-type Integer
+vector set-field-type sd.json out.json --field-name f --field-type Real
+vector set-field-type sdt.json out.json --field-name f --field-type Boolean
+vector set-field-type mfd.json out.json --field-name f --field-type Integer
+# ---- leaf: Binary target and its write warning
+vector set-field-type si.json out.json --field-name f --field-type Binary
+vector set-field-type -q si.json out.json --field-name f --field-type Binary
+vector set-field-type si.json out.geojsonl --field-name f --field-type Binary
+vector set-field-type si.json --of GeoJSON /vsistdout/ --field-name f --field-type Binary
+vector set-field-type si.json --of GeoJSONSeq /vsistdout/ --field-name f --field-type Binary
+# ---- leaf: emission gating by output driver resolution
+vector set-field-type si.json /vsistdout/ --field-name f --field-type Integer
+vector set-field-type si.json --of GeoJSON /vsistdout/ --field-name f --field-type Integer
+vector set-field-type si.json out.xyz --field-name f --field-type Integer
+vector set-field-type si.json streamed_dataset --of stream --field-name f --field-type Integer
+vector set-field-type si.json md --of MEM --field-name f --field-type Integer
+vector set-field-type -q si.json out.json --field-name f --field-type Integer
+# ---- leaf: validation and selection
+vector set-field-type si.json out.json --field-name zz --field-type Integer
+vector set-field-type si.json out.json --field-name F --field-type String
+vector set-field-type si.json out.json -l zz --field-name f --field-type Integer
+vector set-field-type si.json out.json --active-layer zz --field-name f --field-type Integer
+vector set-field-type si.json out.json --active-layer m --field-name f --field-type String
+vector set-field-type si.json out.json --src-field-type Integer64 --field-type Real
+vector set-field-type si.json out.json --src-field-type Integer --field-type Real
+vector set-field-type sb.json out.json --src-field-type Boolean --field-type String
+vector set-field-type si.json out.json --field-name f --src-field-type Integer --field-type Real
+vector set-field-type si.json out.json --field-type Real
+vector set-field-type si.json out.json --field-name f
+vector set-field-type si.json out.json --field-name f --field-type Foo
+vector set-field-type si.json out.json --src-field-type Foo --field-type Real
+vector set-field-type si.json out.json --field-name f --dst-field-type integer64list
+vector set-field-type si.json sr.json --field-name f --field-type Real
+vector set-field-type --overwrite si.json sr.json --field-name f --field-type Real
+# ---- leaf: shapefile and multilayer sources
+vector set-field-type S/m.shp out.json --field-name f --field-type Integer
+vector set-field-type S/m.shp out.json --field-name f --field-type String
+vector set-field-type D md --of MEM --field-name f --field-type String
+vector set-field-type D md --of MEM -l a --field-name f --field-type String
+vector set-field-type D md --of MEM --active-layer a --field-name f --field-type String
+vector set-field-type D out.json -l b --field-name f --field-type Integer
+# ---- leaf: GDALG serialization
+vector set-field-type si.json g.gdalg.json --field-name f --field-type Real
+vector set-field-type --active-layer m --field-name f --field-type real si.json g.gdalg.json
+vector set-field-type --src-field-type Integer64 --field-type STRING si.json g.gdalg.json
+vector set-field-type -q si.json g.gdalg.json --field-name f --field-type Real
+vector set-field-type si.json g.gdalg.json --field-name zz --field-type Real
+# ---- step: read-absorbed cast representatives
+vector pipeline read si.json ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type Int16 ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type String ! write out.json
+vector pipeline read sr.json ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read sr.json ! set-field-type --field-name f --field-type Float32 ! write out.json
+vector pipeline read sr.json ! set-field-type --field-name f --field-type String ! write out.json
+vector pipeline read ss.json ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read ss.json ! set-field-type --field-name f --field-type Real ! write out.json
+vector pipeline read ss.json ! set-field-type --field-name f --field-type Date ! write out.json
+vector pipeline read sd.json ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read sd.json ! set-field-type --field-name f --field-type Real ! write out.json
+vector pipeline read sdt.json ! set-field-type --field-name f --field-type Date ! write out.json
+vector pipeline read sil.json ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read sil.json ! set-field-type --field-name f --field-type String ! write out.json
+vector pipeline read ssl.json ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type Binary ! write out.json
+vector pipeline read si64l.json ! set-field-type --field-name f --field-type IntegerList ! write out.json
+# ---- step: cast partial arguments act as identity, validation subset
+vector pipeline read si.json ! set-field-type --field-name f ! write out.json
+vector pipeline read si.json ! set-field-type --field-type Real ! write out.json
+vector pipeline read si.json ! set-field-type ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --src-field-type Integer64 --field-type Real ! write out.json
+vector pipeline read si.json ! set-field-type --field-name zz --field-type Real ! write out.json
+vector pipeline read si.json ! set-field-type --src-field-type Integer64 --field-type Real ! write out.json
+vector pipeline read si.json ! set-field-type --src-field-type Boolean --field-type Real ! write out.json
+vector pipeline read si.json ! set-field-type --active-layer m --field-name f --field-type Real ! write out.json
+vector pipeline read si.json ! set-field-type --active-layer zz --field-name f --field-type Real ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type Bad ! write out.json
+# ---- step: fallback engine (non-GeoJSON read or non-leading position)
+vector pipeline read S/m.shp ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read S/m.shp ! set-field-type --field-name f --field-type String ! write out.json
+vector pipeline read S/m.shp ! set-field-type --field-name f ! write out.json
+vector pipeline read S/m.shp ! set-field-type --field-name f --src-field-type Integer --field-type Real ! write out.json
+vector pipeline read S/m.shp ! set-field-type --field-name zz --field-type Real ! write out.json
+vector pipeline read si.json ! filter --where 1=1 ! set-field-type --field-name f --field-type Boolean ! write out.json
+vector pipeline read si.json ! filter --where 1=1 ! set-field-type --field-name f ! write out.json
+vector pipeline read pre.gdalg.json ! set-field-type --field-name f --field-type Integer ! write out.json
+# ---- step: followers and multiplicity across terminals
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! filter --where 1=1 ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! select --fields f ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! set-field-type --field-name f --field-type Integer ! write out.json
+vector pipeline read ss.json ! set-field-type --field-name f --field-type Integer ! set-field-type --field-name f --field-type String ! write out.json
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! info
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! info --features
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! info --summary
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! info --fid 1
+vector pipeline read S/m.shp ! set-field-type --field-name f --field-type Integer ! info --features
+vector pipeline read S/m.shp ! set-field-type --field-name f --field-type Integer ! info --summary
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! write --of GeoJSONSeq out.geojsonl
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! write streamed_dataset --of stream
+# ---- step: GDALG terminal always fully validates and echoes
+vector pipeline read si.json ! set-field-type --field-name f --field-type Boolean ! write g.gdalg.json
+vector pipeline read si.json ! set-field-type --field-name f ! write g.gdalg.json
+vector pipeline read si.json ! set-field-type --field-name f --src-field-type Integer64 --field-type Real ! write g.gdalg.json
+vector pipeline read si.json ! set-field-type --active-layer m --src-field-type integer64 --field-type real ! write g.gdalg.json
+# ---- generic pipeline dispatch
+pipeline read si.json ! set-field-type --field-name f --field-type Integer ! write out.json
+
+# Float32 stores unclamped doubles: GeoJSON write clamps to float with
+# %.8g json-c tokens, info text clamps at print (".0" marker on integral
+# values), info json and the xbase writer see the raw double; leaf open
+# failure reproduces the reference SIGSEGV
+#setup: printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":1e300},"geometry":null},{"type":"Feature","properties":{"f":0.1},"geometry":null},{"type":"Feature","properties":{"f":123456789.0},"geometry":null}]}' > sf3.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":[1e300,0.1,123456789.0,-2.999]},"geometry":null}]}' > sfl.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":16777217},"geometry":null}]}' > sic.json && printf %s '{"type":"FeatureCollection","name":"m","features":[{"type":"Feature","properties":{"f":"0.1"},"geometry":null}]}' > ssc.json && echo garbage > gar.txt
+vector pipeline read sf3.json ! set-field-type --field-name f --field-type Float32 ! write o.json -q
+vector pipeline read sf3.json ! set-field-type --field-name f --field-type Float32 ! write o.shp -q
+vector pipeline read sf3.json ! set-field-type --field-name f --field-type Float32 ! info --features --of json
+vector pipeline read sf3.json ! set-field-type --field-name f --field-type Float32 ! info --features
+vector pipeline read sfl.json ! set-field-type --field-name f --field-type Float32 ! info --features
+vector set-field-type sf3.json l.shp -q --field-name f --field-type Float32
+vector set-field-type sic.json a.shp -q --field-name f --field-type Float32
+vector set-field-type ssc.json b.shp -q --field-name f --field-type Float32
+vector set-field-type sf3.json lg.json -q --field-name f --field-type Float32
+vector set-field-type nosuch.json z.json --field-name f --field-type Integer
+vector set-field-type gar.txt z.json --field-name f --field-type Integer

@@ -1,0 +1,61 @@
+# raster convert --of COG: ghost header, IFDs-before-data layout,
+# leader/trailer framed row-major tiles, overview cascade
+# Known accepted residual (1 case, big_Int16): the shared cubic
+# overview resampler sits on the .5 rounding knife for ~0.02% of
+# Int16 pixels ("overview add -r cubic" shows the same 14 px delta);
+# the COG container itself is byte-exact.
+#setup: python3 /workspace/tests/mk_cog_fixtures.py .
+
+# datatype sweep (single tile)
+raster convert --of COG g_Byte.tif o.tif --overwrite -q
+raster convert --of COG g_Int8.tif o.tif --overwrite -q
+raster convert --of COG g_Int16.tif o.tif --overwrite -q
+raster convert --of COG g_UInt16.tif o.tif --overwrite -q
+raster convert --of COG g_Int32.tif o.tif --overwrite -q
+raster convert --of COG g_Float32.tif o.tif --overwrite -q
+raster convert --of COG g_Float64.tif o.tif --overwrite -q
+
+# bands, nodata, bare rasters
+raster convert --of COG g3.tif o.tif --overwrite -q
+raster convert --of COG gn_Byte.tif o.tif --overwrite -q
+raster convert --of COG gn_Float32.tif o.tif --overwrite -q
+raster convert --of COG g2n.tif o.tif --overwrite -q
+raster convert --of COG gplain.tif o.tif --overwrite -q
+raster convert --of COG g_Byte.tif o.tif --overwrite
+
+# compression + predictor + level
+raster convert --of COG --co COMPRESS=NONE g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co COMPRESS=DEFLATE g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co COMPRESS=ZSTD g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co COMPRESS=DEFLATE --co LEVEL=9 g_Int16.tif o.tif --overwrite -q
+raster convert --of COG --co COMPRESS=ZSTD --co LEVEL=15 g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co PREDICTOR=2 g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co PREDICTOR=YES g_UInt16.tif o.tif --overwrite -q
+raster convert --of COG --co PREDICTOR=3 g_Float32.tif o.tif --overwrite -q
+raster convert --of COG --co PREDICTOR=NO g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co COMPRESS=DEFLATE --co PREDICTOR=2 g_Int16.tif o.tif --overwrite -q
+raster convert --of COG --co BLOCKSIZE=256 g_Byte.tif o.tif --overwrite -q
+
+# overview cascade (>512px sources)
+raster convert --of COG big_Byte.tif o.tif --overwrite -q
+raster convert --of COG big_Int16.tif o.tif --overwrite -q
+raster convert --of COG big_Float32.tif o.tif --overwrite -q
+raster convert --of COG big3.tif o.tif --overwrite -q
+raster convert --of COG big14.tif o.tif --overwrite -q
+raster convert --of COG --co BLOCKSIZE=256 big_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co COMPRESS=DEFLATE big_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co OVERVIEW_RESAMPLING=NEAREST big_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co OVERVIEW_RESAMPLING=AVERAGE big_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co OVERVIEW_RESAMPLING=BILINEAR big_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co OVERVIEW_RESAMPLING=CUBICSPLINE big_Byte.tif o.tif --overwrite -q
+
+# creation-option diagnostics
+raster convert --of COG --co COMPRESS=PACKBITS g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co FOO=BAR g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co TILED=YES g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co NUM_THREADS=4 g_Byte.tif o.tif --overwrite -q
+raster convert --of COG --co BIGTIFF=IF_NEEDED g_Byte.tif o.tif --overwrite -q
+
+# pipeline surface
+raster pipeline read g_Byte.tif ! write --output-format COG o.tif --overwrite -q
+raster pipeline read gn_Byte.tif ! write --output-format COG o.tif --overwrite -q

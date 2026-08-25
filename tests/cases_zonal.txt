@@ -1,0 +1,63 @@
+# raster zonal-stats: raster/vector strategies, weights, stat set,
+# validation choreography (suite written post-merge; verb built by the
+# viewshed/zonal worker)
+#setup: python3 /workspace/tests/mk_zonal_fixtures.py .
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat count --stat sum --stat mean --stat min --stat max --stat stdev --stat median --stat mode --stat minority -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat variance --stat variety --stat unique --stat values -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat center_x --stat center_y --stat min_center_x --stat min_center_y --stat max_center_x --stat max_center_y -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat coverage --stat frac -q
+raster zonal-stats zin.tif out.json --zones zpoly.json --stat mean -q
+raster zonal-stats zin.tif out.json --zones zpoly.json --stat coverage --stat frac --stat weighted_mean -q
+raster zonal-stats zin.tif out.json --zones zpoint.json --stat mean --stat count -q
+raster zonal-stats zin.tif out.json --zones zmulti.json --stat mean --stat sum -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --weights zw.tif --stat weighted_mean --stat weighted_sum --stat weighted_stdev --stat weighted_variance --stat weights -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --weights zw_nd.tif --stat weighted_mean --stat sum -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --weights zw_c.tif --stat weighted_mean -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --weights zw_2b.tif --stat weighted_mean -q
+raster zonal-stats zmb.tif out.json --zones zzone.tif -b 2 --stat mean -q
+raster zonal-stats zmb.tif out.json --zones zzone.tif -b 1 -b 2 --stat mean --stat min -q
+raster zonal-stats zmb.tif out.json --zones zzone.tif --stat mean -q
+raster zonal-stats zin_nd.tif out.json --zones zzone.tif --stat mean --stat count -q
+raster zonal-stats zin_nan.tif out.json --zones zzone.tif --stat mean --stat count -q
+raster zonal-stats zin_i16.tif out.json --zones zzone.tif --stat mean --stat mode -q
+raster zonal-stats zin.tif out.json --zones zzone_nd.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone_f.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone_2b.tif --zones-band 2 --stat mean -q
+raster zonal-stats zin.tif out.json --zones zone_lyr.json --zones-layer lyr1 --stat mean -q
+raster zonal-stats zin.tif out.json --zones zone_lyr.json --zones-layer lyr2 --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone_srs2.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone_c.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zpoly_crs84.json --stat mean -q
+raster zonal-stats zin_nosrs.tif out.json --zones zzone.tif --stat mean -q
+raster zonal-stats zin_nosrs.tif out.json --zones zpoly.json --stat mean -q
+raster zonal-stats zin.tif out.geojson --zones zpoly.json --stat mean -q
+raster zonal-stats zin.tif out.gdalg.json --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif out.gdalg.json --zones zpoly.json --zones-layer zones --stat mean --stat sum -b 1 --overwrite -q
+raster zonal-stats zin.tif out.gpkg --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --output-layer foo --stat mean -q
+raster zonal-stats zin.tif exists.json --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif exists.json --zones zzone.tif --stat mean --overwrite -q
+raster zonal-stats zin.tif exists.txt --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean --strategy feature -q
+raster zonal-stats zin.tif out.json --zones zpoly.json --stat mean --strategy raster -q
+raster zonal-stats zin.tif out.json --zones zpoly.json --stat mean --strategy feature -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat foo -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat foo,bar -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat stdev --stat majority -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat foo --strategy bogus -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean -b 9 -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean -b 0 -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean --zones-band 5 -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean --zones-band 1 --zones-layer a -q
+raster zonal-stats zin.tif out.json --zones zpoly.json --stat mean --zones-layer nope -q
+raster zonal-stats zin.tif out.json --zones zzone.tif -q
+raster zonal-stats zin.tif out.json --stat mean -q
+raster zonal-stats out.json --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones nofile.tif --stat mean -q
+raster zonal-stats nofile.tif out.json --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean --append --upsert -q
+raster zonal-stats zin.tif out.nope --zones zzone.tif --stat mean -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat mean --of NOPE -q
+raster zonal-stats zin.tif out.json --zones zzone.tif --stat foo --of NOPE -q

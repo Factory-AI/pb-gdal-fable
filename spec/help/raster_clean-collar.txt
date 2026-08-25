@@ -1,0 +1,37 @@
+Usage: gdal raster clean-collar [OPTIONS] <INPUT> [<OUTPUT>]
+
+Clean the collar of a raster dataset, removing noise.
+
+Positional arguments:
+  -i, --input <INPUT>                                  Input raster dataset [required]
+  -o, --output <OUTPUT>                                Output raster dataset
+
+Common Options:
+  -h, --help                                           Display help message and exit
+  --json-usage                                         Display usage as JSON document and exit
+  --config <KEY>=<VALUE>                               Configuration option [may be repeated]
+  -q, --quiet                                          Quiet mode (no progress bar or warning message)
+
+Options:
+  -f, --of, --format, --output-format <OUTPUT-FORMAT>  Output format
+  --co, --creation-option <KEY>=<VALUE>                Creation option [may be repeated]
+  --overwrite                                          Whether overwriting existing output dataset is allowed
+  --update                                             Whether to open existing dataset in update mode
+  --color <COLOR>                                      Transparent color(s): tuple of integer (like 'r,g,b'), 'black', 'white' (default: black) [may be repeated]
+  --color-threshold <COLOR-THRESHOLD>                  Select how far from specified transparent colors the pixel values are considered transparent. (default: 15)
+  --pixel-distance <PIXEL-DISTANCE>                    Number of consecutive transparent pixels that can be encountered before the giving up search inwards. (default: 2)
+  --add-alpha                                          Adds an alpha band to the output dataset.
+                                                       Mutually exclusive with --add-mask
+  --add-mask                                           Adds a mask band to the output dataset.
+                                                       Mutually exclusive with --add-alpha
+  --algorithm <ALGORITHM>                              Algorithm to apply. ALGORITHM=floodfill|twopasses (default: floodfill)
+
+Advanced Options:
+  --oo, --open-option <KEY>=<VALUE>                    Open options [may be repeated]
+  --if, --input-format <INPUT-FORMAT>                  Input formats [may be repeated]
+
+For more details, consult https://gdal.org/programs/gdal_raster_clean_collar.html
+
+WARNING: the gdal command is provisionally provided as an alternative interface to GDAL and OGR command line utilities.
+The project reserves the right to modify, rename, reorganize, and change the behavior of the utility
+until it is officially frozen in a future feature release of GDAL.
