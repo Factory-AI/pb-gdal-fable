@@ -14,7 +14,7 @@ execute-only binary: GDAL `3.13.0dev-cbc00e6b71`, trimmed to 11 drivers with no
 GEOS. No source, no headers, no build system, no tests, no network. Every
 behavior here was recovered by running that binary and comparing bytes.
 
-Write-up: [Rebuilding Software from the Outside In](https://factory.ai/news/rebuilding-software-from-the-outside-in)
+Write-up: [What it Takes for Coding Agents to Complete Large Software Tasks](https://factory.ai/news/what-it-takes-for-coding-agents-to-complete-large-software-tasks)
 
 ## Result
 
